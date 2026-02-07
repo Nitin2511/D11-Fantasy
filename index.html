@@ -3,14 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fantasy Cricket World Cup</title>
+    <title>T20 World Cup 2026 Fantasy League</title>
     <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -20,182 +17,254 @@
         
         body {
             font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 50%, #0a0e27 100%);
             color: #fff;
             min-height: 100vh;
+            overflow-x: hidden;
         }
         
         #root {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
             padding: 20px;
         }
         
         .header {
             text-align: center;
-            padding: 40px 20px;
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-            border-radius: 20px;
-            margin-bottom: 30px;
-            box-shadow: 0 20px 60px rgba(16, 185, 129, 0.3);
+            padding: 50px 20px;
+            background: linear-gradient(135deg, #ff6b35 0%, #f7931e 50%, #ff6b35 100%);
+            border-radius: 25px;
+            margin-bottom: 40px;
+            box-shadow: 0 30px 60px rgba(255, 107, 53, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+        }
+        
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
         }
         
         .header h1 {
-            font-family: 'Bebas Neue', cursive;
-            font-size: 3.5rem;
-            letter-spacing: 3px;
-            text-shadow: 3px 3px 6px rgba(0,0,0,0.3);
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 4rem;
+            font-weight: 700;
+            letter-spacing: 4px;
+            text-shadow: 4px 4px 8px rgba(0,0,0,0.5);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .header p {
+            font-size: 1.3rem;
+            margin-top: 15px;
+            opacity: 0.95;
+            position: relative;
+            z-index: 1;
         }
         
         .tabs {
             display: flex;
-            gap: 10px;
-            margin-bottom: 30px;
-            background: #1e293b;
-            padding: 10px;
-            border-radius: 15px;
+            gap: 12px;
+            margin-bottom: 35px;
+            background: #1a1f3a;
+            padding: 12px;
+            border-radius: 20px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.4);
         }
         
         .tab {
             flex: 1;
-            padding: 15px;
+            padding: 18px;
             background: transparent;
             border: none;
-            color: #94a3b8;
+            color: #8892b0;
             font-weight: 600;
             cursor: pointer;
-            border-radius: 10px;
-            transition: all 0.3s;
+            border-radius: 12px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             font-size: 16px;
+            font-family: 'Rajdhani', sans-serif;
+            letter-spacing: 1px;
+        }
+        
+        .tab:hover {
+            background: rgba(255, 107, 53, 0.1);
+            color: #ff6b35;
         }
         
         .tab.active {
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
             color: white;
-            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+            box-shadow: 0 6px 20px rgba(255, 107, 53, 0.5);
+            transform: translateY(-2px);
         }
         
         .card {
-            background: #1e293b;
-            border-radius: 15px;
-            padding: 25px;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            background: linear-gradient(135deg, #1a1f3a 0%, #242b4a 100%);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 25px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            border: 1px solid rgba(255, 107, 53, 0.1);
+        }
+        
+        .card h2 {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 2rem;
+            margin-bottom: 25px;
+            color: #ff6b35;
+            letter-spacing: 2px;
         }
         
         .input-group {
-            margin-bottom: 20px;
+            margin-bottom: 22px;
         }
         
         .input-group label {
             display: block;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
             color: #cbd5e1;
-            font-weight: 500;
+            font-weight: 600;
+            font-size: 15px;
         }
         
         .input-group input {
             width: 100%;
-            padding: 12px;
-            background: #0f172a;
-            border: 2px solid #334155;
-            border-radius: 10px;
+            padding: 15px;
+            background: #0a0e27;
+            border: 2px solid #2d3548;
+            border-radius: 12px;
             color: white;
             font-size: 16px;
-            transition: border-color 0.3s;
+            transition: all 0.3s;
         }
         
         .input-group input:focus {
             outline: none;
-            border-color: #10b981;
+            border-color: #ff6b35;
+            box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
         }
         
         .btn {
-            padding: 12px 30px;
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            padding: 15px 35px;
+            background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
             border: none;
-            border-radius: 10px;
+            border-radius: 12px;
             color: white;
-            font-weight: 600;
+            font-weight: 700;
             cursor: pointer;
-            font-size: 16px;
-            transition: transform 0.2s, box-shadow 0.2s;
+            font-size: 17px;
+            transition: all 0.3s;
+            box-shadow: 0 6px 20px rgba(255, 107, 53, 0.4);
+            font-family: 'Rajdhani', sans-serif;
+            letter-spacing: 1px;
         }
         
         .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(255, 107, 53, 0.6);
         }
         
         .btn:disabled {
             opacity: 0.5;
             cursor: not-allowed;
-        }
-        
-        .btn-secondary {
-            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            transform: none;
         }
         
         .player-list {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 15px;
-            margin-top: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 18px;
+            margin-top: 25px;
         }
         
         .player-card {
-            background: #0f172a;
-            padding: 15px;
-            border-radius: 10px;
-            border: 2px solid #334155;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%);
+            padding: 20px;
+            border-radius: 15px;
+            border: 2px solid #2d3548;
             cursor: pointer;
             transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .player-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #ff6b35, #f7931e);
+            transform: scaleX(0);
+            transition: transform 0.3s;
         }
         
         .player-card:hover {
-            border-color: #10b981;
-            transform: translateY(-2px);
+            border-color: #ff6b35;
+            transform: translateY(-4px);
+            box-shadow: 0 10px 30px rgba(255, 107, 53, 0.3);
+        }
+        
+        .player-card:hover::before {
+            transform: scaleX(1);
         }
         
         .player-card.selected {
-            border-color: #10b981;
-            background: rgba(16, 185, 129, 0.1);
+            border-color: #ff6b35;
+            background: linear-gradient(135deg, rgba(255, 107, 53, 0.15) 0%, rgba(247, 147, 30, 0.15) 100%);
         }
         
         .player-card.captain {
-            border-color: #f59e0b;
-            background: rgba(245, 158, 11, 0.1);
+            border-color: #fbbf24;
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.2) 0%, rgba(245, 158, 11, 0.2) 100%);
         }
         
         .player-card.vice-captain {
-            border-color: #8b5cf6;
-            background: rgba(139, 92, 246, 0.1);
+            border-color: #a78bfa;
+            background: linear-gradient(135deg, rgba(167, 139, 250, 0.2) 0%, rgba(139, 92, 246, 0.2) 100%);
         }
         
         .player-name {
-            font-weight: 600;
-            font-size: 16px;
-            margin-bottom: 5px;
+            font-weight: 700;
+            font-size: 18px;
+            margin-bottom: 8px;
+            font-family: 'Rajdhani', sans-serif;
         }
         
         .player-role {
             color: #94a3b8;
             font-size: 14px;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
         }
         
         .player-credits {
-            color: #10b981;
-            font-weight: 600;
+            color: #ff6b35;
+            font-weight: 700;
+            font-size: 16px;
         }
         
         .team-summary {
-            display: flex;
-            justify-content: space-around;
-            padding: 20px;
-            background: #0f172a;
-            border-radius: 10px;
-            margin-bottom: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 20px;
+            padding: 25px;
+            background: #0a0e27;
+            border-radius: 15px;
+            margin-bottom: 25px;
         }
         
         .stat {
@@ -203,14 +272,16 @@
         }
         
         .stat-value {
-            font-size: 2rem;
+            font-size: 2.5rem;
             font-weight: 700;
-            color: #10b981;
+            color: #ff6b35;
+            font-family: 'Rajdhani', sans-serif;
         }
         
         .stat-label {
             color: #94a3b8;
-            font-size: 14px;
+            font-size: 13px;
+            margin-top: 5px;
         }
         
         .leaderboard-table {
@@ -219,163 +290,194 @@
         }
         
         .leaderboard-table th {
-            background: #0f172a;
-            padding: 15px;
+            background: #0a0e27;
+            padding: 18px;
             text-align: left;
-            font-weight: 600;
-            color: #10b981;
+            font-weight: 700;
+            color: #ff6b35;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 16px;
+            letter-spacing: 1px;
         }
         
         .leaderboard-table td {
-            padding: 15px;
-            border-bottom: 1px solid #334155;
+            padding: 18px;
+            border-bottom: 1px solid #2d3548;
         }
         
         .leaderboard-table tr:hover {
-            background: rgba(16, 185, 129, 0.05);
+            background: rgba(255, 107, 53, 0.05);
         }
         
         .rank-badge {
             display: inline-block;
-            width: 30px;
-            height: 30px;
-            line-height: 30px;
+            width: 36px;
+            height: 36px;
+            line-height: 36px;
             text-align: center;
             border-radius: 50%;
             font-weight: 700;
+            font-family: 'Rajdhani', sans-serif;
         }
         
         .rank-1 {
             background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+            box-shadow: 0 4px 15px rgba(251, 191, 36, 0.4);
         }
         
         .rank-2 {
-            background: linear-gradient(135deg, #94a3b8 0%, #64748b 100%);
+            background: linear-gradient(135deg, #cbd5e1 0%, #94a3b8 100%);
+            box-shadow: 0 4px 15px rgba(203, 213, 225, 0.4);
         }
         
         .rank-3 {
-            background: linear-gradient(135deg, #cd7f32 0%, #b86f28 100%);
+            background: linear-gradient(135deg, #fb923c 0%, #f97316 100%);
+            box-shadow: 0 4px 15px rgba(251, 146, 60, 0.4);
         }
         
         .filter-buttons {
             display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
+            gap: 12px;
+            margin-bottom: 25px;
             flex-wrap: wrap;
         }
         
         .filter-btn {
-            padding: 8px 16px;
-            background: #0f172a;
-            border: 2px solid #334155;
-            border-radius: 8px;
+            padding: 10px 20px;
+            background: #0a0e27;
+            border: 2px solid #2d3548;
+            border-radius: 10px;
             color: #cbd5e1;
             cursor: pointer;
             transition: all 0.3s;
             font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .filter-btn:hover {
+            border-color: #ff6b35;
+            color: #ff6b35;
         }
         
         .filter-btn.active {
-            border-color: #10b981;
-            background: rgba(16, 185, 129, 0.1);
-            color: #10b981;
+            border-color: #ff6b35;
+            background: linear-gradient(135deg, rgba(255, 107, 53, 0.2) 0%, rgba(247, 147, 30, 0.2) 100%);
+            color: #ff6b35;
         }
         
         .league-code {
-            background: #0f172a;
-            padding: 15px;
-            border-radius: 10px;
+            background: #0a0e27;
+            padding: 20px;
+            border-radius: 12px;
             text-align: center;
-            font-size: 24px;
+            font-size: 28px;
             font-weight: 700;
-            letter-spacing: 3px;
-            color: #10b981;
-            margin: 20px 0;
+            letter-spacing: 5px;
+            color: #ff6b35;
+            margin: 25px 0;
+            font-family: 'Rajdhani', sans-serif;
+            border: 2px dashed #ff6b35;
         }
         
         .success-message {
-            background: rgba(16, 185, 129, 0.1);
-            border: 2px solid #10b981;
-            padding: 15px;
-            border-radius: 10px;
-            color: #10b981;
-            margin-bottom: 20px;
+            background: rgba(34, 197, 94, 0.15);
+            border: 2px solid #22c55e;
+            padding: 18px;
+            border-radius: 12px;
+            color: #22c55e;
+            margin-bottom: 25px;
+            font-weight: 600;
         }
         
         .error-message {
-            background: rgba(239, 68, 68, 0.1);
+            background: rgba(239, 68, 68, 0.15);
             border: 2px solid #ef4444;
-            padding: 15px;
-            border-radius: 10px;
+            padding: 18px;
+            border-radius: 12px;
             color: #ef4444;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
+            font-weight: 600;
         }
 
         .captain-buttons {
             display: flex;
-            gap: 10px;
-            margin-top: 10px;
+            gap: 8px;
+            margin-top: 12px;
         }
 
         .captain-btn {
             flex: 1;
-            padding: 6px 12px;
+            padding: 8px 12px;
             font-size: 12px;
-            border: 1px solid #334155;
+            border: 2px solid #2d3548;
             background: transparent;
             color: #cbd5e1;
-            border-radius: 6px;
+            border-radius: 8px;
             cursor: pointer;
             transition: all 0.2s;
+            font-weight: 600;
         }
 
         .captain-btn.active-captain {
-            background: #f59e0b;
-            border-color: #f59e0b;
-            color: white;
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+            border-color: #fbbf24;
+            color: #000;
         }
 
         .captain-btn.active-vc {
-            background: #8b5cf6;
-            border-color: #8b5cf6;
+            background: linear-gradient(135deg, #a78bfa 0%, #8b5cf6 100%);
+            border-color: #a78bfa;
             color: white;
         }
 
-        .match-points {
-            background: #0f172a;
+        .match-selector {
+            background: #0a0e27;
             padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 20px;
+            border-radius: 12px;
+            margin-bottom: 25px;
         }
 
-        .match-points h3 {
-            margin-bottom: 15px;
-            color: #10b981;
+        .match-selector select {
+            width: 100%;
+            padding: 15px;
+            background: #1a1f3a;
+            border: 2px solid #2d3548;
+            border-radius: 12px;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
         }
 
-        .points-grid {
+        .points-input-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 10px;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
         }
 
-        .points-input {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
+        .points-input-item {
+            background: #0a0e27;
+            padding: 15px;
+            border-radius: 10px;
+            border: 2px solid #2d3548;
         }
 
-        .points-input label {
+        .points-input-item label {
+            display: block;
             font-size: 14px;
             color: #cbd5e1;
+            margin-bottom: 8px;
+            font-weight: 600;
         }
 
-        .points-input input {
-            padding: 8px;
-            background: #1e293b;
-            border: 1px solid #334155;
-            border-radius: 6px;
+        .points-input-item input {
+            width: 100%;
+            padding: 10px;
+            background: #1a1f3a;
+            border: 1px solid #2d3548;
+            border-radius: 8px;
             color: white;
+            font-size: 16px;
         }
     </style>
 </head>
@@ -385,69 +487,97 @@
     <script type="text/babel">
         const { useState, useEffect } = React;
 
-        // Sample players data - Replace with real World Cup squads
-        const PLAYERS_DATA = [
-            // India
-            { id: 1, name: "Virat Kohli", role: "Batsman", country: "India", credits: 11 },
-            { id: 2, name: "Rohit Sharma", role: "Batsman", country: "India", credits: 10.5 },
-            { id: 3, name: "Jasprit Bumrah", role: "Bowler", country: "India", credits: 10 },
-            { id: 4, name: "Hardik Pandya", role: "All-rounder", country: "India", credits: 9.5 },
-            { id: 5, name: "Ravindra Jadeja", role: "All-rounder", country: "India", credits: 9 },
-            { id: 6, name: "KL Rahul", role: "Wicket-keeper", country: "India", credits: 9 },
-            { id: 7, name: "Shubman Gill", role: "Batsman", country: "India", credits: 9 },
-            { id: 8, name: "Mohammed Shami", role: "Bowler", country: "India", credits: 8.5 },
-            { id: 9, name: "Ravichandran Ashwin", role: "Bowler", country: "India", credits: 8.5 },
-            { id: 10, name: "Shreyas Iyer", role: "Batsman", country: "India", credits: 8 },
+        // Real T20 World Cup 2026 Squads (Sample - Add more as needed)
+        const WORLD_CUP_PLAYERS = [
+            // Group A - India
+            { id: 1, name: "Rohit Sharma", role: "Batsman", country: "India", group: "A", credits: 11 },
+            { id: 2, name: "Virat Kohli", role: "Batsman", country: "India", group: "A", credits: 11 },
+            { id: 3, name: "Jasprit Bumrah", role: "Bowler", country: "India", group: "A", credits: 10.5 },
+            { id: 4, name: "Hardik Pandya", role: "All-rounder", country: "India", group: "A", credits: 10 },
+            { id: 5, name: "Ravindra Jadeja", role: "All-rounder", country: "India", group: "A", credits: 9.5 },
+            { id: 6, name: "Rishabh Pant", role: "Wicket-keeper", country: "India", group: "A", credits: 9.5 },
+            { id: 7, name: "Shubman Gill", role: "Batsman", country: "India", group: "A", credits: 9 },
+            { id: 8, name: "Mohammed Siraj", role: "Bowler", country: "India", group: "A", credits: 8.5 },
+            { id: 9, name: "Kuldeep Yadav", role: "Bowler", country: "India", group: "A", credits: 8 },
+            { id: 10, name: "Yashasvi Jaiswal", role: "Batsman", country: "India", group: "A", credits: 8.5 },
             
-            // Australia
-            { id: 11, name: "Steve Smith", role: "Batsman", country: "Australia", credits: 10 },
-            { id: 12, name: "David Warner", role: "Batsman", country: "Australia", credits: 9.5 },
-            { id: 13, name: "Pat Cummins", role: "Bowler", country: "Australia", credits: 10 },
-            { id: 14, name: "Glenn Maxwell", role: "All-rounder", country: "Australia", credits: 9 },
-            { id: 15, name: "Mitchell Starc", role: "Bowler", country: "Australia", credits: 9 },
-            { id: 16, name: "Josh Hazlewood", role: "Bowler", country: "Australia", credits: 8.5 },
-            { id: 17, name: "Travis Head", role: "Batsman", country: "Australia", credits: 8.5 },
-            { id: 18, name: "Alex Carey", role: "Wicket-keeper", country: "Australia", credits: 8 },
-            { id: 19, name: "Marcus Stoinis", role: "All-rounder", country: "Australia", credits: 8 },
-            { id: 20, name: "Mitchell Marsh", role: "All-rounder", country: "Australia", credits: 8.5 },
+            // Group A - Pakistan
+            { id: 11, name: "Babar Azam", role: "Batsman", country: "Pakistan", group: "A", credits: 10.5 },
+            { id: 12, name: "Mohammad Rizwan", role: "Wicket-keeper", country: "Pakistan", group: "A", credits: 9.5 },
+            { id: 13, name: "Shaheen Afridi", role: "Bowler", country: "Pakistan", group: "A", credits: 10 },
+            { id: 14, name: "Shadab Khan", role: "All-rounder", country: "Pakistan", group: "A", credits: 8.5 },
+            { id: 15, name: "Haris Rauf", role: "Bowler", country: "Pakistan", group: "A", credits: 8.5 },
+            { id: 16, name: "Fakhar Zaman", role: "Batsman", country: "Pakistan", group: "A", credits: 8 },
+            { id: 17, name: "Naseem Shah", role: "Bowler", country: "Pakistan", group: "A", credits: 8 },
             
-            // England
-            { id: 21, name: "Joe Root", role: "Batsman", country: "England", credits: 10 },
-            { id: 22, name: "Ben Stokes", role: "All-rounder", country: "England", credits: 10 },
-            { id: 23, name: "Jos Buttler", role: "Wicket-keeper", country: "England", credits: 9.5 },
-            { id: 24, name: "Jofra Archer", role: "Bowler", country: "England", credits: 9 },
-            { id: 25, name: "Jonny Bairstow", role: "Batsman", country: "England", credits: 8.5 },
-            { id: 26, name: "Mark Wood", role: "Bowler", country: "England", credits: 8.5 },
-            { id: 27, name: "Moeen Ali", role: "All-rounder", country: "England", credits: 8 },
-            { id: 28, name: "Adil Rashid", role: "Bowler", country: "England", credits: 8 },
-            { id: 29, name: "Chris Woakes", role: "Bowler", country: "England", credits: 8 },
-            { id: 30, name: "Harry Brook", role: "Batsman", country: "England", credits: 8.5 },
+            // Group A - Netherlands
+            { id: 18, name: "Scott Edwards", role: "Wicket-keeper", country: "Netherlands", group: "A", credits: 7.5 },
+            { id: 19, name: "Max O'Dowd", role: "Batsman", country: "Netherlands", group: "A", credits: 7 },
+            { id: 20, name: "Logan van Beek", role: "All-rounder", country: "Netherlands", group: "A", credits: 7 },
             
-            // Pakistan
-            { id: 31, name: "Babar Azam", role: "Batsman", country: "Pakistan", credits: 10 },
-            { id: 32, name: "Shaheen Afridi", role: "Bowler", country: "Pakistan", credits: 9.5 },
-            { id: 33, name: "Mohammad Rizwan", role: "Wicket-keeper", country: "Pakistan", credits: 9 },
-            { id: 34, name: "Shadab Khan", role: "All-rounder", country: "Pakistan", credits: 8.5 },
-            { id: 35, name: "Haris Rauf", role: "Bowler", country: "Pakistan", credits: 8 },
-            { id: 36, name: "Fakhar Zaman", role: "Batsman", country: "Pakistan", credits: 8 },
-            { id: 37, name: "Naseem Shah", role: "Bowler", country: "Pakistan", credits: 7.5 },
-            { id: 38, name: "Iftikhar Ahmed", role: "All-rounder", country: "Pakistan", credits: 7 },
+            // Group B - Australia
+            { id: 21, name: "Pat Cummins", role: "Bowler", country: "Australia", group: "B", credits: 10.5 },
+            { id: 22, name: "Steve Smith", role: "Batsman", country: "Australia", group: "B", credits: 10 },
+            { id: 23, name: "Glenn Maxwell", role: "All-rounder", country: "Australia", group: "B", credits: 9.5 },
+            { id: 24, name: "Mitchell Starc", role: "Bowler", country: "Australia", group: "B", credits: 9.5 },
+            { id: 25, name: "Travis Head", role: "Batsman", country: "Australia", group: "B", credits: 9 },
+            { id: 26, name: "Josh Hazlewood", role: "Bowler", country: "Australia", group: "B", credits: 9 },
+            { id: 27, name: "Alex Carey", role: "Wicket-keeper", country: "Australia", group: "B", credits: 8 },
+            { id: 28, name: "Marcus Stoinis", role: "All-rounder", country: "Australia", group: "B", credits: 8 },
             
-            // South Africa
-            { id: 39, name: "Quinton de Kock", role: "Wicket-keeper", country: "South Africa", credits: 9 },
-            { id: 40, name: "Kagiso Rabada", role: "Bowler", country: "South Africa", credits: 9.5 },
-            { id: 41, name: "Aiden Markram", role: "Batsman", country: "South Africa", credits: 8.5 },
-            { id: 42, name: "David Miller", role: "Batsman", country: "South Africa", credits: 8.5 },
-            { id: 43, name: "Anrich Nortje", role: "Bowler", country: "South Africa", credits: 8.5 },
-            { id: 44, name: "Keshav Maharaj", role: "Bowler", country: "South Africa", credits: 7.5 },
+            // Group B - Sri Lanka
+            { id: 29, name: "Wanindu Hasaranga", role: "All-rounder", country: "Sri Lanka", group: "B", credits: 9 },
+            { id: 30, name: "Pathum Nissanka", role: "Batsman", country: "Sri Lanka", group: "B", credits: 8 },
+            { id: 31, name: "Kusal Mendis", role: "Wicket-keeper", country: "Sri Lanka", group: "B", credits: 8 },
+            { id: 32, name: "Maheesh Theekshana", role: "Bowler", country: "Sri Lanka", group: "B", credits: 7.5 },
             
-            // New Zealand
-            { id: 45, name: "Kane Williamson", role: "Batsman", country: "New Zealand", credits: 9.5 },
-            { id: 46, name: "Trent Boult", role: "Bowler", country: "New Zealand", credits: 9 },
-            { id: 47, name: "Devon Conway", role: "Batsman", country: "New Zealand", credits: 8.5 },
-            { id: 48, name: "Tim Southee", role: "Bowler", country: "New Zealand", credits: 8.5 },
-            { id: 49, name: "Daryl Mitchell", role: "All-rounder", country: "New Zealand", credits: 8 },
-            { id: 50, name: "Tom Latham", role: "Wicket-keeper", country: "New Zealand", credits: 8 },
+            // Group C - England
+            { id: 33, name: "Jos Buttler", role: "Wicket-keeper", country: "England", group: "C", credits: 10 },
+            { id: 34, name: "Ben Stokes", role: "All-rounder", country: "England", group: "C", credits: 10 },
+            { id: 35, name: "Joe Root", role: "Batsman", country: "England", group: "C", credits: 9.5 },
+            { id: 36, name: "Jofra Archer", role: "Bowler", country: "England", group: "C", credits: 9.5 },
+            { id: 37, name: "Mark Wood", role: "Bowler", country: "England", group: "C", credits: 8.5 },
+            { id: 38, name: "Harry Brook", role: "Batsman", country: "England", group: "C", credits: 8.5 },
+            { id: 39, name: "Adil Rashid", role: "Bowler", country: "England", group: "C", credits: 8 },
+            
+            // Group C - West Indies
+            { id: 40, name: "Nicholas Pooran", role: "Wicket-keeper", country: "West Indies", group: "C", credits: 9 },
+            { id: 41, name: "Andre Russell", role: "All-rounder", country: "West Indies", group: "C", credits: 9 },
+            { id: 42, name: "Jason Holder", role: "All-rounder", country: "West Indies", group: "C", credits: 8 },
+            { id: 43, name: "Alzarri Joseph", role: "Bowler", country: "West Indies", group: "C", credits: 7.5 },
+            
+            // Group D - New Zealand
+            { id: 44, name: "Kane Williamson", role: "Batsman", country: "New Zealand", group: "D", credits: 10 },
+            { id: 45, name: "Trent Boult", role: "Bowler", country: "New Zealand", group: "D", credits: 9.5 },
+            { id: 46, name: "Devon Conway", role: "Batsman", country: "New Zealand", group: "D", credits: 8.5 },
+            { id: 47, name: "Tim Southee", role: "Bowler", country: "New Zealand", group: "D", credits: 8.5 },
+            { id: 48, name: "Daryl Mitchell", role: "All-rounder", country: "New Zealand", group: "D", credits: 8 },
+            
+            // Group D - South Africa
+            { id: 49, name: "Quinton de Kock", role: "Wicket-keeper", country: "South Africa", group: "D", credits: 9.5 },
+            { id: 50, name: "Kagiso Rabada", role: "Bowler", country: "South Africa", group: "D", credits: 10 },
+            { id: 51, name: "Aiden Markram", role: "Batsman", country: "South Africa", group: "D", credits: 8.5 },
+            { id: 52, name: "David Miller", role: "Batsman", country: "South Africa", group: "D", credits: 8.5 },
+            { id: 53, name: "Anrich Nortje", role: "Bowler", country: "South Africa", group: "D", credits: 8.5 },
+            
+            // Group D - Afghanistan
+            { id: 54, name: "Rashid Khan", role: "Bowler", country: "Afghanistan", group: "D", credits: 9.5 },
+            { id: 55, name: "Mohammad Nabi", role: "All-rounder", country: "Afghanistan", group: "D", credits: 8 },
+            { id: 56, name: "Rahmanullah Gurbaz", role: "Wicket-keeper", country: "Afghanistan", group: "D", credits: 7.5 },
+        ];
+
+        // Real World Cup Fixtures
+        const MATCHES = [
+            { id: 1, date: "Feb 7", team1: "Netherlands", team2: "Pakistan", venue: "Colombo (SSC)", group: "A" },
+            { id: 2, date: "Feb 7", team1: "Bangladesh", team2: "West Indies", venue: "Eden Gardens", group: "C" },
+            { id: 3, date: "Feb 7", team1: "India", team2: "USA", venue: "Wankhede", group: "A" },
+            { id: 4, date: "Feb 8", team1: "Afghanistan", team2: "New Zealand", venue: "Chennai", group: "D" },
+            { id: 5, date: "Feb 8", team1: "England", team2: "Nepal", venue: "Wankhede", group: "C" },
+            { id: 6, date: "Feb 8", team1: "Sri Lanka", team2: "Ireland", venue: "Colombo (RPS)", group: "B" },
+            { id: 7, date: "Feb 11", team1: "England", team2: "West Indies", venue: "Wankhede", group: "C" },
+            { id: 8, date: "Feb 14", team1: "New Zealand", team2: "South Africa", venue: "Ahmedabad", group: "D" },
+            { id: 9, date: "Feb 15", team1: "India", team2: "Pakistan", venue: "Colombo (RPS)", group: "A" },
+            { id: 10, date: "Feb 16", team1: "Australia", team2: "Sri Lanka", venue: "Pallekele", group: "B" },
         ];
 
         function FantasyCricketApp() {
@@ -461,17 +591,16 @@
             const [leagueCode, setLeagueCode] = useState('');
             const [joinCode, setJoinCode] = useState('');
             const [leagues, setLeagues] = useState([]);
-            const [currentLeague, setCurrentLeague] = useState(null);
             const [filterRole, setFilterRole] = useState('All');
             const [message, setMessage] = useState({ type: '', text: '' });
             const [playerPoints, setPlayerPoints] = useState({});
+            const [selectedMatch, setSelectedMatch] = useState(null);
 
             useEffect(() => {
-                // Load from localStorage
-                const savedUser = localStorage.getItem('fantasyUser');
-                const savedTeam = localStorage.getItem('fantasyTeam');
-                const savedLeagues = localStorage.getItem('fantasyLeagues');
-                const savedPoints = localStorage.getItem('playerPoints');
+                const savedUser = localStorage.getItem('wc2026User');
+                const savedTeam = localStorage.getItem('wc2026Team');
+                const savedLeagues = localStorage.getItem('wc2026Leagues');
+                const savedPoints = localStorage.getItem('wc2026Points');
                 
                 if (savedUser) {
                     setUser(JSON.parse(savedUser));
@@ -493,7 +622,7 @@
 
             const showMessage = (type, text) => {
                 setMessage({ type, text });
-                setTimeout(() => setMessage({ type: '', text: '' }), 3000);
+                setTimeout(() => setMessage({ type: '', text: '' }), 4000);
             };
 
             const handleLogin = () => {
@@ -503,9 +632,9 @@
                 }
                 const newUser = { id: Date.now(), name: userName };
                 setUser(newUser);
-                localStorage.setItem('fantasyUser', JSON.stringify(newUser));
+                localStorage.setItem('wc2026User', JSON.stringify(newUser));
                 setActiveTab('team');
-                showMessage('success', `Welcome ${userName}!`);
+                showMessage('success', `Welcome to T20 World Cup Fantasy, ${userName}!`);
             };
 
             const handlePlayerSelect = (player) => {
@@ -517,13 +646,13 @@
                     if (viceCaptain === player.id) setViceCaptain(null);
                 } else {
                     if (selectedPlayers.length >= 11) {
-                        showMessage('error', 'You can only select 11 players');
+                        showMessage('error', 'Maximum 11 players allowed');
                         return;
                     }
                     
                     const totalCredits = [...selectedPlayers, player].reduce((sum, p) => sum + p.credits, 0);
                     if (totalCredits > 100) {
-                        showMessage('error', 'Exceeds 100 credits limit');
+                        showMessage('error', 'Exceeds 100 credits budget');
                         return;
                     }
                     
@@ -533,22 +662,22 @@
 
             const saveTeam = () => {
                 if (selectedPlayers.length !== 11) {
-                    showMessage('error', 'Please select exactly 11 players');
+                    showMessage('error', 'Select exactly 11 players');
                     return;
                 }
                 if (!captain || !viceCaptain) {
-                    showMessage('error', 'Please select captain and vice-captain');
+                    showMessage('error', 'Select captain and vice-captain');
                     return;
                 }
                 
                 const team = { players: selectedPlayers, captain, viceCaptain };
-                localStorage.setItem('fantasyTeam', JSON.stringify(team));
-                showMessage('success', 'Team saved successfully!');
+                localStorage.setItem('wc2026Team', JSON.stringify(team));
+                showMessage('success', 'Team saved! Ready for World Cup!');
             };
 
             const createLeague = () => {
                 if (!leagueName.trim()) {
-                    showMessage('error', 'Please enter league name');
+                    showMessage('error', 'Enter league name');
                     return;
                 }
                 
@@ -563,14 +692,14 @@
                 
                 const updatedLeagues = [...leagues, newLeague];
                 setLeagues(updatedLeagues);
-                localStorage.setItem('fantasyLeagues', JSON.stringify(updatedLeagues));
+                localStorage.setItem('wc2026Leagues', JSON.stringify(updatedLeagues));
                 setLeagueCode(code);
-                showMessage('success', `League created! Code: ${code}`);
+                showMessage('success', `League "${leagueName}" created!`);
             };
 
             const joinLeague = () => {
                 if (!joinCode.trim()) {
-                    showMessage('error', 'Please enter league code');
+                    showMessage('error', 'Enter league code');
                     return;
                 }
                 
@@ -580,28 +709,29 @@
                     return;
                 }
                 
-                const alreadyMember = league.members.find(m => m.userId === user.id);
-                if (alreadyMember) {
-                    showMessage('error', 'You are already in this league');
+                if (league.members.find(m => m.userId === user.id)) {
+                    showMessage('error', 'Already in this league');
                     return;
                 }
                 
                 league.members.push({ userId: user.id, userName: user.name, points: 0 });
-                localStorage.setItem('fantasyLeagues', JSON.stringify(leagues));
+                localStorage.setItem('wc2026Leagues', JSON.stringify(leagues));
                 setJoinCode('');
                 showMessage('success', `Joined ${league.name}!`);
             };
 
-            const updatePlayerPoints = (playerId, points) => {
-                const newPoints = { ...playerPoints, [playerId]: parseInt(points) || 0 };
+            const updateMatchPoints = (matchId, playerId, points) => {
+                const key = `${matchId}-${playerId}`;
+                const newPoints = { ...playerPoints, [key]: parseInt(points) || 0 };
                 setPlayerPoints(newPoints);
-                localStorage.setItem('playerPoints', JSON.stringify(newPoints));
+                localStorage.setItem('wc2026Points', JSON.stringify(newPoints));
             };
 
-            const calculateTeamPoints = (team) => {
+            const calculateTeamPoints = (team, matchId) => {
                 let total = 0;
                 team.players.forEach(player => {
-                    const points = playerPoints[player.id] || 0;
+                    const key = `${matchId}-${player.id}`;
+                    const points = playerPoints[key] || 0;
                     if (player.id === team.captain) {
                         total += points * 2;
                     } else if (player.id === team.viceCaptain) {
@@ -614,32 +744,37 @@
             };
 
             const updateLeaderboard = () => {
-                const savedTeam = localStorage.getItem('fantasyTeam');
+                if (!selectedMatch) {
+                    showMessage('error', 'Select a match first');
+                    return;
+                }
+
+                const savedTeam = localStorage.getItem('wc2026Team');
                 if (!savedTeam) {
-                    showMessage('error', 'Please create your team first');
+                    showMessage('error', 'Create your team first');
                     return;
                 }
                 
                 const team = JSON.parse(savedTeam);
-                const userPoints = calculateTeamPoints(team);
+                const userPoints = calculateTeamPoints(team, selectedMatch);
                 
                 const updatedLeagues = leagues.map(league => {
                     const memberIndex = league.members.findIndex(m => m.userId === user.id);
                     if (memberIndex !== -1) {
-                        league.members[memberIndex].points = userPoints;
+                        league.members[memberIndex].points += userPoints;
                         league.members.sort((a, b) => b.points - a.points);
                     }
                     return league;
                 });
                 
                 setLeagues(updatedLeagues);
-                localStorage.setItem('fantasyLeagues', JSON.stringify(updatedLeagues));
-                showMessage('success', 'Leaderboard updated!');
+                localStorage.setItem('wc2026Leagues', JSON.stringify(updatedLeagues));
+                showMessage('success', `+${userPoints} points added! Leaderboard updated!`);
             };
 
             const filteredPlayers = filterRole === 'All' 
-                ? PLAYERS_DATA 
-                : PLAYERS_DATA.filter(p => p.role === filterRole);
+                ? WORLD_CUP_PLAYERS 
+                : WORLD_CUP_PLAYERS.filter(p => p.role === filterRole);
 
             const usedCredits = selectedPlayers.reduce((sum, p) => sum + p.credits, 0);
             const roleCount = {
@@ -652,8 +787,8 @@
             return (
                 <div>
                     <div className="header">
-                        <h1>🏏 FANTASY CRICKET WORLD CUP</h1>
-                        {user && <p>Welcome, {user.name}!</p>}
+                        <h1>🏏 T20 WORLD CUP 2026</h1>
+                        <p>{user ? `${user.name}'s Fantasy League` : 'Fantasy League - India & Sri Lanka'}</p>
                     </div>
 
                     {message.text && (
@@ -664,7 +799,7 @@
 
                     {!user ? (
                         <div className="card">
-                            <h2>Login</h2>
+                            <h2>Join the League</h2>
                             <div className="input-group">
                                 <label>Your Name</label>
                                 <input
@@ -672,6 +807,7 @@
                                     value={userName}
                                     onChange={(e) => setUserName(e.target.value)}
                                     placeholder="Enter your name"
+                                    onKeyPress={(e) => e.key === 'Enter' && handleLogin()}
                                 />
                             </div>
                             <button className="btn" onClick={handleLogin}>
@@ -685,25 +821,31 @@
                                     className={`tab ${activeTab === 'team' ? 'active' : ''}`}
                                     onClick={() => setActiveTab('team')}
                                 >
-                                    Create Team
+                                    MY TEAM
+                                </button>
+                                <button
+                                    className={`tab ${activeTab === 'fixtures' ? 'active' : ''}`}
+                                    onClick={() => setActiveTab('fixtures')}
+                                >
+                                    FIXTURES
                                 </button>
                                 <button
                                     className={`tab ${activeTab === 'league' ? 'active' : ''}`}
                                     onClick={() => setActiveTab('league')}
                                 >
-                                    Leagues
+                                    LEAGUES
                                 </button>
                                 <button
                                     className={`tab ${activeTab === 'leaderboard' ? 'active' : ''}`}
                                     onClick={() => setActiveTab('leaderboard')}
                                 >
-                                    Leaderboard
+                                    LEADERBOARD
                                 </button>
                                 <button
                                     className={`tab ${activeTab === 'points' ? 'active' : ''}`}
                                     onClick={() => setActiveTab('points')}
                                 >
-                                    Update Points
+                                    UPDATE POINTS
                                 </button>
                             </div>
 
@@ -715,8 +857,8 @@
                                             <div className="stat-label">Players</div>
                                         </div>
                                         <div className="stat">
-                                            <div className="stat-value">{usedCredits.toFixed(1)}/100</div>
-                                            <div className="stat-label">Credits</div>
+                                            <div className="stat-value">{usedCredits.toFixed(1)}</div>
+                                            <div className="stat-label">Credits Used</div>
                                         </div>
                                         <div className="stat">
                                             <div className="stat-value">{roleCount['Batsman']}</div>
@@ -732,12 +874,12 @@
                                         </div>
                                         <div className="stat">
                                             <div className="stat-value">{roleCount['Wicket-keeper']}</div>
-                                            <div className="stat-label">WK</div>
+                                            <div className="stat-label">Keepers</div>
                                         </div>
                                     </div>
 
                                     <div className="card">
-                                        <h2>Select Your Playing 11</h2>
+                                        <h2>Build Your World Cup XI</h2>
                                         
                                         <div className="filter-buttons">
                                             {['All', 'Batsman', 'Bowler', 'All-rounder', 'Wicket-keeper'].map(role => (
@@ -773,13 +915,13 @@
                                                                     className={`captain-btn ${isCaptain ? 'active-captain' : ''}`}
                                                                     onClick={() => setCaptain(player.id)}
                                                                 >
-                                                                    {isCaptain ? 'Captain (C)' : 'Make Captain'}
+                                                                    {isCaptain ? '⭐ C' : 'Captain'}
                                                                 </button>
                                                                 <button
                                                                     className={`captain-btn ${isViceCaptain ? 'active-vc' : ''}`}
                                                                     onClick={() => setViceCaptain(player.id)}
                                                                 >
-                                                                    {isViceCaptain ? 'VC' : 'Make VC'}
+                                                                    {isViceCaptain ? '💫 VC' : 'VC'}
                                                                 </button>
                                                             </div>
                                                         )}
@@ -792,10 +934,33 @@
                                             className="btn"
                                             onClick={saveTeam}
                                             disabled={selectedPlayers.length !== 11 || !captain || !viceCaptain}
-                                            style={{ marginTop: '20px', width: '100%' }}
+                                            style={{ marginTop: '25px', width: '100%' }}
                                         >
-                                            Save Team
+                                            Save My Team
                                         </button>
+                                    </div>
+                                </div>
+                            )}
+
+                            {activeTab === 'fixtures' && (
+                                <div className="card">
+                                    <h2>World Cup Fixtures</h2>
+                                    <div style={{ display: 'grid', gap: '15px', marginTop: '20px' }}>
+                                        {MATCHES.map(match => (
+                                            <div key={match.id} style={{ 
+                                                background: '#0a0e27', 
+                                                padding: '20px', 
+                                                borderRadius: '12px',
+                                                border: '2px solid #2d3548'
+                                            }}>
+                                                <div style={{ fontSize: '14px', color: '#94a3b8', marginBottom: '10px' }}>
+                                                    {match.date} • {match.venue} • Group {match.group}
+                                                </div>
+                                                <div style={{ fontSize: '20px', fontWeight: '700', fontFamily: 'Rajdhani' }}>
+                                                    {match.team1} vs {match.team2}
+                                                </div>
+                                            </div>
+                                        ))}
                                     </div>
                                 </div>
                             )}
@@ -810,7 +975,7 @@
                                                 type="text"
                                                 value={leagueName}
                                                 onChange={(e) => setLeagueName(e.target.value)}
-                                                placeholder="Enter league name"
+                                                placeholder="E.g., Friends World Cup League"
                                             />
                                         </div>
                                         <button className="btn" onClick={createLeague}>
@@ -819,7 +984,7 @@
                                         
                                         {leagueCode && (
                                             <div className="league-code">
-                                                Code: {leagueCode}
+                                                {leagueCode}
                                             </div>
                                         )}
                                     </div>
@@ -832,24 +997,32 @@
                                                 type="text"
                                                 value={joinCode}
                                                 onChange={(e) => setJoinCode(e.target.value)}
-                                                placeholder="Enter league code"
+                                                placeholder="Enter 6-digit code"
                                             />
                                         </div>
-                                        <button className="btn btn-secondary" onClick={joinLeague}>
+                                        <button className="btn" onClick={joinLeague}>
                                             Join League
                                         </button>
                                     </div>
 
                                     <div className="card">
-                                        <h2>Your Leagues</h2>
+                                        <h2>My Leagues</h2>
                                         {leagues.length === 0 ? (
-                                            <p>No leagues yet. Create or join one!</p>
+                                            <p style={{ color: '#94a3b8' }}>No leagues yet. Create or join one!</p>
                                         ) : (
                                             leagues.map(league => (
-                                                <div key={league.id} style={{ marginBottom: '15px', padding: '15px', background: '#0f172a', borderRadius: '10px' }}>
-                                                    <h3>{league.name}</h3>
-                                                    <p>Code: {league.code}</p>
-                                                    <p>Members: {league.members.length}</p>
+                                                <div key={league.id} style={{ 
+                                                    marginBottom: '15px', 
+                                                    padding: '20px', 
+                                                    background: '#0a0e27', 
+                                                    borderRadius: '12px',
+                                                    border: '2px solid #2d3548'
+                                                }}>
+                                                    <h3 style={{ fontFamily: 'Rajdhani', fontSize: '1.5rem', marginBottom: '10px' }}>
+                                                        {league.name}
+                                                    </h3>
+                                                    <p style={{ color: '#ff6b35', fontWeight: '600' }}>Code: {league.code}</p>
+                                                    <p style={{ color: '#94a3b8' }}>Members: {league.members.length}</p>
                                                 </div>
                                             ))
                                         )}
@@ -861,11 +1034,13 @@
                                 <div className="card">
                                     <h2>Leaderboard</h2>
                                     {leagues.length === 0 ? (
-                                        <p>Join a league to see leaderboard</p>
+                                        <p style={{ color: '#94a3b8' }}>Join a league to see standings</p>
                                     ) : (
                                         leagues.map(league => (
-                                            <div key={league.id} style={{ marginBottom: '30px' }}>
-                                                <h3>{league.name}</h3>
+                                            <div key={league.id} style={{ marginBottom: '40px' }}>
+                                                <h3 style={{ fontFamily: 'Rajdhani', fontSize: '1.8rem', marginBottom: '20px', color: '#ff6b35' }}>
+                                                    {league.name}
+                                                </h3>
                                                 <table className="leaderboard-table">
                                                     <thead>
                                                         <tr>
@@ -882,8 +1057,8 @@
                                                                         {index + 1}
                                                                     </span>
                                                                 </td>
-                                                                <td>{member.userName}</td>
-                                                                <td><strong>{member.points}</strong></td>
+                                                                <td style={{ fontWeight: '600' }}>{member.userName}</td>
+                                                                <td><strong style={{ fontSize: '1.2rem', color: '#ff6b35' }}>{member.points}</strong></td>
                                                             </tr>
                                                         ))}
                                                     </tbody>
@@ -897,35 +1072,47 @@
                             {activeTab === 'points' && (
                                 <div>
                                     <div className="card">
-                                        <h2>Update Player Points (Admin Only)</h2>
-                                        <p style={{ color: '#94a3b8', marginBottom: '20px' }}>
-                                            Enter actual match points for each player. Points will auto-calculate with captain (2x) and vice-captain (1.5x) multipliers.
-                                        </p>
+                                        <h2>Update Match Points</h2>
                                         
-                                        <div className="match-points">
-                                            <h3>Update Points</h3>
-                                            <div className="points-grid">
-                                                {PLAYERS_DATA.map(player => (
-                                                    <div key={player.id} className="points-input">
-                                                        <label>{player.name}</label>
-                                                        <input
-                                                            type="number"
-                                                            value={playerPoints[player.id] || 0}
-                                                            onChange={(e) => updatePlayerPoints(player.id, e.target.value)}
-                                                            placeholder="0"
-                                                        />
-                                                    </div>
+                                        <div className="match-selector">
+                                            <label style={{ display: 'block', marginBottom: '10px', fontWeight: '600' }}>
+                                                Select Match
+                                            </label>
+                                            <select onChange={(e) => setSelectedMatch(e.target.value)} value={selectedMatch || ''}>
+                                                <option value="">Choose a match...</option>
+                                                {MATCHES.map(match => (
+                                                    <option key={match.id} value={match.id}>
+                                                        {match.date}: {match.team1} vs {match.team2}
+                                                    </option>
                                                 ))}
-                                            </div>
+                                            </select>
                                         </div>
 
-                                        <button
-                                            className="btn"
-                                            onClick={updateLeaderboard}
-                                            style={{ marginTop: '20px', width: '100%' }}
-                                        >
-                                            Calculate & Update Leaderboard
-                                        </button>
+                                        {selectedMatch && (
+                                            <>
+                                                <div className="points-input-grid">
+                                                    {WORLD_CUP_PLAYERS.map(player => (
+                                                        <div key={player.id} className="points-input-item">
+                                                            <label>{player.name} ({player.country})</label>
+                                                            <input
+                                                                type="number"
+                                                                value={playerPoints[`${selectedMatch}-${player.id}`] || 0}
+                                                                onChange={(e) => updateMatchPoints(selectedMatch, player.id, e.target.value)}
+                                                                placeholder="0"
+                                                            />
+                                                        </div>
+                                                    ))}
+                                                </div>
+
+                                                <button
+                                                    className="btn"
+                                                    onClick={updateLeaderboard}
+                                                    style={{ marginTop: '25px', width: '100%' }}
+                                                >
+                                                    Calculate & Update Leaderboard
+                                                </button>
+                                            </>
+                                        )}
                                     </div>
                                 </div>
                             )}
