@@ -560,11 +560,53 @@
         const { useState, useEffect } = React;
 
         const MATCHES = [
-            { id: 1, team1: 'India', team2: 'Pakistan', date: '2026-06-01', venue: 'New York' },
-            { id: 2, team1: 'Australia', team2: 'England', date: '2026-06-02', venue: 'Barbados' },
-            { id: 3, team1: 'South Africa', team2: 'West Indies', date: '2026-06-03', venue: 'Trinidad' },
-            { id: 4, team1: 'New Zealand', team2: 'Sri Lanka', date: '2026-06-04', venue: 'Dallas' },
-            { id: 5, team1: 'Bangladesh', team2: 'Afghanistan', date: '2026-06-05', venue: 'New York' },
+            // Group A Matches
+            { id: 1, team1: 'Netherlands', team2: 'Pakistan', date: '2026-02-07', venue: 'Colombo (SSC)' },
+            { id: 3, team1: 'India', team2: 'United States', date: '2026-02-07', venue: 'Mumbai (Wankhede)' },
+            { id: 10, team1: 'Namibia', team2: 'Netherlands', date: '2026-02-10', venue: 'Delhi' },
+            { id: 12, team1: 'Pakistan', team2: 'United States', date: '2026-02-10', venue: 'Colombo (SSC)' },
+            { id: 18, team1: 'India', team2: 'Namibia', date: '2026-02-12', venue: 'Delhi' },
+            { id: 21, team1: 'Netherlands', team2: 'United States', date: '2026-02-13', venue: 'Chennai' },
+            { id: 26, team1: 'Namibia', team2: 'United States', date: '2026-02-15', venue: 'Chennai' },
+            { id: 27, team1: 'India', team2: 'Pakistan', date: '2026-02-15', venue: 'Colombo (RPS)' },
+            { id: 35, team1: 'Namibia', team2: 'Pakistan', date: '2026-02-18', venue: 'Colombo (SSC)' },
+            { id: 36, team1: 'India', team2: 'Netherlands', date: '2026-02-18', venue: 'Ahmedabad' },
+            
+            // Group B Matches  
+            { id: 6, team1: 'Sri Lanka', team2: 'Ireland', date: '2026-02-08', venue: 'Colombo (RPS)' },
+            { id: 8, team1: 'Oman', team2: 'Zimbabwe', date: '2026-02-09', venue: 'Colombo (SSC)' },
+            { id: 14, team1: 'Australia', team2: 'Ireland', date: '2026-02-11', venue: 'Colombo (RPS)' },
+            { id: 16, team1: 'Sri Lanka', team2: 'Oman', date: '2026-02-12', venue: 'Pallekele' },
+            { id: 19, team1: 'Australia', team2: 'Zimbabwe', date: '2026-02-13', venue: 'Colombo (RPS)' },
+            { id: 22, team1: 'Ireland', team2: 'Oman', date: '2026-02-14', venue: 'Colombo (SSC)' },
+            { id: 30, team1: 'Australia', team2: 'Sri Lanka', date: '2026-02-16', venue: 'Pallekele' },
+            { id: 32, team1: 'Ireland', team2: 'Zimbabwe', date: '2026-02-17', venue: 'Pallekele' },
+            { id: 38, team1: 'Sri Lanka', team2: 'Zimbabwe', date: '2026-02-19', venue: 'Colombo (RPS)' },
+            { id: 40, team1: 'Australia', team2: 'Oman', date: '2026-02-20', venue: 'Pallekele' },
+            
+            // Group C Matches
+            { id: 2, team1: 'Bangladesh', team2: 'West Indies', date: '2026-02-07', venue: 'Kolkata (Eden Gardens)' },
+            { id: 5, team1: 'England', team2: 'Nepal', date: '2026-02-08', venue: 'Mumbai (Wankhede)' },
+            { id: 7, team1: 'Bangladesh', team2: 'Italy', date: '2026-02-09', venue: 'Kolkata (Eden Gardens)' },
+            { id: 15, team1: 'England', team2: 'West Indies', date: '2026-02-11', venue: 'Mumbai (Wankhede)' },
+            { id: 17, team1: 'Italy', team2: 'Nepal', date: '2026-02-12', venue: 'Mumbai (Wankhede)' },
+            { id: 23, team1: 'Bangladesh', team2: 'England', date: '2026-02-14', venue: 'Kolkata (Eden Gardens)' },
+            { id: 25, team1: 'Nepal', team2: 'West Indies', date: '2026-02-15', venue: 'Mumbai (Wankhede)' },
+            { id: 29, team1: 'England', team2: 'Italy', date: '2026-02-16', venue: 'Kolkata (Eden Gardens)' },
+            { id: 33, team1: 'Bangladesh', team2: 'Nepal', date: '2026-02-17', venue: 'Mumbai (Wankhede)' },
+            { id: 37, team1: 'Italy', team2: 'West Indies', date: '2026-02-19', venue: 'Kolkata (Eden Gardens)' },
+            
+            // Group D Matches
+            { id: 4, team1: 'Afghanistan', team2: 'New Zealand', date: '2026-02-08', venue: 'Chennai' },
+            { id: 9, team1: 'Canada', team2: 'South Africa', date: '2026-02-09', venue: 'Ahmedabad' },
+            { id: 11, team1: 'New Zealand', team2: 'United Arab Emirates', date: '2026-02-10', venue: 'Chennai' },
+            { id: 13, team1: 'Afghanistan', team2: 'South Africa', date: '2026-02-11', venue: 'Ahmedabad' },
+            { id: 20, team1: 'Canada', team2: 'United Arab Emirates', date: '2026-02-13', venue: 'Delhi' },
+            { id: 24, team1: 'New Zealand', team2: 'South Africa', date: '2026-02-14', venue: 'Ahmedabad' },
+            { id: 28, team1: 'Afghanistan', team2: 'United Arab Emirates', date: '2026-02-16', venue: 'Delhi' },
+            { id: 31, team1: 'Canada', team2: 'New Zealand', date: '2026-02-17', venue: 'Chennai' },
+            { id: 34, team1: 'South Africa', team2: 'United Arab Emirates', date: '2026-02-18', venue: 'Delhi' },
+            { id: 39, team1: 'Afghanistan', team2: 'Canada', date: '2026-02-19', venue: 'Chennai' },
         ];
 
         // Verified squads — ICC Men's T20 World Cup 2026 (20 teams × 15 players)
@@ -1080,11 +1122,21 @@ const PLAYERS = [
                     if (viceCaptain === player.id) setViceCaptain(null);
                 } else if (selectedPlayers.length < 11) {
                     const newTeam = [...selectedPlayers, player];
-                    const totalCredits = getTotalCredits(newTeam);
                     
+                    // Check credit limit
+                    const totalCredits = getTotalCredits(newTeam);
                     if (totalCredits > 100) {
                         alert(`Cannot add player. Total credits would be ${totalCredits.toFixed(1)}/100. Credit limit exceeded!`);
                         return;
+                    }
+                    
+                    // Check max 7 from one team
+                    const { teamCounts } = validateTeamComposition(newTeam);
+                    for (const team in teamCounts) {
+                        if (teamCounts[team] > 7) {
+                            alert(`Cannot add player. You already have 7 players from ${team}. Maximum 7 players allowed from one team.`);
+                            return;
+                        }
                     }
                     
                     setSelectedPlayers(newTeam);
@@ -1352,7 +1404,7 @@ const PLAYERS = [
             return (
                 <div>
                     <div className="header">
-                        <h1> T20 WORLD CUP FANTASY</h1>
+                        <h1>🏏 T20 WORLD CUP FANTASY</h1>
                         <p>Build Your Dream Team & Compete!</p>
                         <div className="user-badge">
                             {currentUser.isAdmin && <span className="admin-badge">ADMIN</span>}
