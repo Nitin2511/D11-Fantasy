@@ -2,18 +2,20 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>T20 Fantasy - Ready</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>T20 World Cup Fantasy - Fixed</title>
 
 <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
 <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
 <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
 <style>
-body{font-family:Arial;background:#0a0e27;color:white;margin:0;padding:20px}
+body{font-family:Inter,Arial;background:#0a0e27;color:white;margin:0;padding:20px}
 .card{background:#111827;padding:20px;border-radius:12px;margin-bottom:15px}
 .player{border:1px solid #444;padding:10px;margin:6px;cursor:pointer;border-radius:8px}
 .selected{background:#065f46}
-.btn{padding:10px 20px;background:#10b981;border:none;color:white;cursor:pointer}
+.btn{padding:10px 20px;background:#10b981;border:none;color:white;cursor:pointer;border-radius:6px}
+.error{color:#ef4444}
 </style>
 </head>
 
@@ -22,9 +24,11 @@ body{font-family:Arial;background:#0a0e27;color:white;margin:0;padding:20px}
 
 <script type="text/babel">
 
-const {useState}=React;
+const { useState } = React;
 
-const RULES={
+/* ---------------- RULES ---------------- */
+
+const RULES = {
  MAX_PLAYERS:11,
  MAX_CREDITS:100,
  MAX_PER_TEAM:7,
@@ -34,76 +38,169 @@ const RULES={
  MIN_AR:1
 };
 
-const PLAYERS={
+/* ---------------- PLAYERS ---------------- */
+
+const PLAYERS = {
 
 India:[
-{id:'i1',name:'Rohit Sharma',team:'India',role:'Batsman',credits:11},
-{id:'i2',name:'Virat Kohli',team:'India',role:'Batsman',credits:11},
-{id:'i3',name:'Jasprit Bumrah',team:'India',role:'Bowler',credits:10.5},
-{id:'i4',name:'Hardik Pandya',team:'India',role:'All-rounder',credits:10},
-{id:'i5',name:'Ravindra Jadeja',team:'India',role:'All-rounder',credits:9.5},
-{id:'i6',name:'Rishabh Pant',team:'India',role:'Wicket-keeper',credits:9.5},
-{id:'i7',name:'Shubman Gill',team:'India',role:'Batsman',credits:9},
-{id:'i8',name:'Siraj',team:'India',role:'Bowler',credits:8.5},
-{id:'i9',name:'Kuldeep',team:'India',role:'Bowler',credits:8},
-{id:'i10',name:'Jaiswal',team:'India',role:'Batsman',credits:8.5},
-{id:'i11',name:'Axar',team:'India',role:'All-rounder',credits:8}
+{id:'i1',name:'Rohit Sharma',role:'Batsman',credits:11},
+{id:'i2',name:'Virat Kohli',role:'Batsman',credits:11},
+{id:'i3',name:'Jasprit Bumrah',role:'Bowler',credits:10.5},
+{id:'i4',name:'Hardik Pandya',role:'All-rounder',credits:10},
+{id:'i5',name:'Ravindra Jadeja',role:'All-rounder',credits:9.5},
+{id:'i6',name:'Rishabh Pant',role:'Wicket-keeper',credits:9.5},
+{id:'i7',name:'Shubman Gill',role:'Batsman',credits:9},
+{id:'i8',name:'Mohammed Siraj',role:'Bowler',credits:8.5},
+{id:'i9',name:'Kuldeep Yadav',role:'Bowler',credits:8},
+{id:'i10',name:'Yashasvi Jaiswal',role:'Batsman',credits:8.5},
+{id:'i11',name:'Axar Patel',role:'All-rounder',credits:8}
 ],
 
 Pakistan:[
-{id:'p1',name:'Babar Azam',team:'Pakistan',role:'Batsman',credits:10.5},
-{id:'p2',name:'Rizwan',team:'Pakistan',role:'Wicket-keeper',credits:9.5},
-{id:'p3',name:'Shaheen',team:'Pakistan',role:'Bowler',credits:10},
-{id:'p4',name:'Shadab',team:'Pakistan',role:'All-rounder',credits:8.5},
-{id:'p5',name:'Haris Rauf',team:'Pakistan',role:'Bowler',credits:8.5},
-{id:'p6',name:'Fakhar',team:'Pakistan',role:'Batsman',credits:8},
-{id:'p7',name:'Naseem',team:'Pakistan',role:'Bowler',credits:8},
-{id:'p8',name:'Iftikhar',team:'Pakistan',role:'All-rounder',credits:7.5},
-{id:'p9',name:'Nawaz',team:'Pakistan',role:'All-rounder',credits:7},
-{id:'p10',name:'Usama Mir',team:'Pakistan',role:'Bowler',credits:6.5}
+{id:'p1',name:'Babar Azam',role:'Batsman',credits:10.5},
+{id:'p2',name:'Mohammad Rizwan',role:'Wicket-keeper',credits:9.5},
+{id:'p3',name:'Shaheen Afridi',role:'Bowler',credits:10},
+{id:'p4',name:'Shadab Khan',role:'All-rounder',credits:8.5},
+{id:'p5',name:'Haris Rauf',role:'Bowler',credits:8.5},
+{id:'p6',name:'Fakhar Zaman',role:'Batsman',credits:8},
+{id:'p7',name:'Naseem Shah',role:'Bowler',credits:8},
+{id:'p8',name:'Iftikhar Ahmed',role:'All-rounder',credits:7.5},
+{id:'p9',name:'Mohammad Nawaz',role:'All-rounder',credits:7},
+{id:'p10',name:'Usama Mir',role:'Bowler',credits:6.5}
 ],
 
+Australia:[
+{id:'a1',name:'Pat Cummins',role:'Bowler',credits:10.5},
+{id:'a2',name:'Steve Smith',role:'Batsman',credits:10},
+{id:'a3',name:'Glenn Maxwell',role:'All-rounder',credits:9.5},
+{id:'a4',name:'Mitchell Starc',role:'Bowler',credits:9.5},
+{id:'a5',name:'Travis Head',role:'Batsman',credits:9},
+{id:'a6',name:'Josh Hazlewood',role:'Bowler',credits:9},
+{id:'a7',name:'Alex Carey',role:'Wicket-keeper',credits:8},
+{id:'a8',name:'Marcus Stoinis',role:'All-rounder',credits:8},
+{id:'a9',name:'Mitchell Marsh',role:'All-rounder',credits:8.5},
+{id:'a10',name:'Adam Zampa',role:'Bowler',credits:8}
+],
+
+England:[
+{id:'e1',name:'Jos Buttler',role:'Wicket-keeper',credits:10},
+{id:'e2',name:'Ben Stokes',role:'All-rounder',credits:10},
+{id:'e3',name:'Joe Root',role:'Batsman',credits:9.5},
+{id:'e4',name:'Jofra Archer',role:'Bowler',credits:9.5},
+{id:'e5',name:'Mark Wood',role:'Bowler',credits:8.5},
+{id:'e6',name:'Harry Brook',role:'Batsman',credits:8.5},
+{id:'e7',name:'Adil Rashid',role:'Bowler',credits:8},
+{id:'e8',name:'Moeen Ali',role:'All-rounder',credits:8},
+{id:'e9',name:'Jonny Bairstow',role:'Batsman',credits:8.5},
+{id:'e10',name:'Sam Curran',role:'All-rounder',credits:8.5}
+],
+
+SriLanka:[
+{id:'sl1',name:'Wanindu Hasaranga',role:'All-rounder',credits:9},
+{id:'sl2',name:'Pathum Nissanka',role:'Batsman',credits:8},
+{id:'sl3',name:'Kusal Mendis',role:'Wicket-keeper',credits:8},
+{id:'sl4',name:'Maheesh Theekshana',role:'Bowler',credits:7.5},
+{id:'sl5',name:'Dasun Shanaka',role:'All-rounder',credits:7.5},
+{id:'sl6',name:'Charith Asalanka',role:'Batsman',credits:7},
+{id:'sl7',name:'Matheesha Pathirana',role:'Bowler',credits:7}
+],
+
+SouthAfrica:[
+{id:'sa1',name:'Quinton de Kock',role:'Wicket-keeper',credits:9.5},
+{id:'sa2',name:'Kagiso Rabada',role:'Bowler',credits:10},
+{id:'sa3',name:'Aiden Markram',role:'Batsman',credits:8.5},
+{id:'sa4',name:'David Miller',role:'Batsman',credits:8.5},
+{id:'sa5',name:'Anrich Nortje',role:'Bowler',credits:8.5},
+{id:'sa6',name:'Heinrich Klaasen',role:'Wicket-keeper',credits:8},
+{id:'sa7',name:'Marco Jansen',role:'All-rounder',credits:7.5}
+],
+
+NewZealand:[
+{id:'nz1',name:'Kane Williamson',role:'Batsman',credits:10},
+{id:'nz2',name:'Trent Boult',role:'Bowler',credits:9.5},
+{id:'nz3',name:'Devon Conway',role:'Batsman',credits:8.5},
+{id:'nz4',name:'Tim Southee',role:'Bowler',credits:8.5},
+{id:'nz5',name:'Daryl Mitchell',role:'All-rounder',credits:8},
+{id:'nz6',name:'Tom Latham',role:'Wicket-keeper',credits:8},
+{id:'nz7',name:'Mitchell Santner',role:'All-rounder',credits:7.5}
+],
+
+WestIndies:[
+{id:'wi1',name:'Nicholas Pooran',role:'Wicket-keeper',credits:9},
+{id:'wi2',name:'Andre Russell',role:'All-rounder',credits:9},
+{id:'wi3',name:'Jason Holder',role:'All-rounder',credits:8},
+{id:'wi4',name:'Alzarri Joseph',role:'Bowler',credits:7.5},
+{id:'wi5',name:'Rovman Powell',role:'All-rounder',credits:7.5},
+{id:'wi6',name:'Shai Hope',role:'Batsman',credits:7.5}
+],
+
+Bangladesh:[
+{id:'b1',name:'Shakib Al Hasan',role:'All-rounder',credits:9},
+{id:'b2',name:'Mustafizur Rahman',role:'Bowler',credits:8},
+{id:'b3',name:'Litton Das',role:'Wicket-keeper',credits:7.5},
+{id:'b4',name:'Taskin Ahmed',role:'Bowler',credits:7.5},
+{id:'b5',name:'Mehidy Hasan',role:'All-rounder',credits:7}
+],
+
+Afghanistan:[
+{id:'af1',name:'Rashid Khan',role:'Bowler',credits:9.5},
+{id:'af2',name:'Mohammad Nabi',role:'All-rounder',credits:8},
+{id:'af3',name:'Rahmanullah Gurbaz',role:'Wicket-keeper',credits:7.5},
+{id:'af4',name:'Naveen-ul-Haq',role:'Bowler',credits:7}
+],
+
+/* ---- Added Missing Teams ---- */
+
 USA:[
-{id:'u1',name:'Monank Patel',team:'USA',role:'Wicket-keeper',credits:8},
-{id:'u2',name:'Ali Khan',team:'USA',role:'Bowler',credits:8},
-{id:'u3',name:'Gous',team:'USA',role:'Batsman',credits:8},
-{id:'u4',name:'Netravalkar',team:'USA',role:'Bowler',credits:8},
-{id:'u5',name:'Harmeet',team:'USA',role:'All-rounder',credits:7.5}
+{id:'u1',name:'Monank Patel',role:'Wicket-keeper',credits:8},
+{id:'u2',name:'Ali Khan',role:'Bowler',credits:8},
+{id:'u3',name:'Andries Gous',role:'Batsman',credits:8},
+{id:'u4',name:'Saurabh Netravalkar',role:'Bowler',credits:8},
+{id:'u5',name:'Harmeet Singh',role:'All-rounder',credits:7.5}
 ],
 
 Netherlands:[
-{id:'n1',name:'Edwards',team:'Netherlands',role:'Wicket-keeper',credits:8},
-{id:'n2',name:'Ackermann',team:'Netherlands',role:'All-rounder',credits:8.5},
-{id:'n3',name:'de Leede',team:'Netherlands',role:'All-rounder',credits:9},
-{id:'n4',name:'O Dowd',team:'Netherlands',role:'Batsman',credits:8},
-{id:'n5',name:'van Beek',team:'Netherlands',role:'Bowler',credits:8}
+{id:'n1',name:'Scott Edwards',role:'Wicket-keeper',credits:8},
+{id:'n2',name:'Colin Ackermann',role:'All-rounder',credits:8.5},
+{id:'n3',name:'Bas de Leede',role:'All-rounder',credits:9},
+{id:'n4',name:'Max O\'Dowd',role:'Batsman',credits:8},
+{id:'n5',name:'Logan van Beek',role:'Bowler',credits:8}
 ],
 
 Nepal:[
-{id:'ne1',name:'Rohit Paudel',team:'Nepal',role:'Batsman',credits:8},
-{id:'ne2',name:'Lamichhane',team:'Nepal',role:'Bowler',credits:9},
-{id:'ne3',name:'Airee',team:'Nepal',role:'All-rounder',credits:8},
-{id:'ne4',name:'Karan KC',team:'Nepal',role:'Bowler',credits:8},
-{id:'ne5',name:'Aasif Sheikh',team:'Nepal',role:'Wicket-keeper',credits:7.5}
+{id:'ne1',name:'Rohit Paudel',role:'Batsman',credits:8},
+{id:'ne2',name:'Sandeep Lamichhane',role:'Bowler',credits:9},
+{id:'ne3',name:'Dipendra Airee',role:'All-rounder',credits:8},
+{id:'ne4',name:'Karan KC',role:'Bowler',credits:8},
+{id:'ne5',name:'Aasif Sheikh',role:'Wicket-keeper',credits:7.5}
 ],
 
 Ireland:[
-{id:'ir1',name:'Stirling',team:'Ireland',role:'Batsman',credits:9},
-{id:'ir2',name:'Tector',team:'Ireland',role:'Batsman',credits:8.5},
-{id:'ir3',name:'Adair',team:'Ireland',role:'All-rounder',credits:8},
-{id:'ir4',name:'Little',team:'Ireland',role:'Bowler',credits:8.5},
-{id:'ir5',name:'Tucker',team:'Ireland',role:'Wicket-keeper',credits:8}
+{id:'ir1',name:'Paul Stirling',role:'Batsman',credits:9},
+{id:'ir2',name:'Harry Tector',role:'Batsman',credits:8.5},
+{id:'ir3',name:'Mark Adair',role:'All-rounder',credits:8},
+{id:'ir4',name:'Josh Little',role:'Bowler',credits:8.5},
+{id:'ir5',name:'Lorcan Tucker',role:'Wicket-keeper',credits:8}
 ]
 
 };
 
-const MATCHES=[
-{id:1,team1:'India',team2:'Pakistan'},
-{id:2,team1:'India',team2:'USA'},
-{id:3,team1:'Pakistan',team2:'Netherlands'},
-{id:4,team1:'England',team2:'Nepal'},
-{id:5,team1:'Sri Lanka',team2:'Ireland'}
+/* ---------------- MATCHES ---------------- */
+
+const MATCHES = [
+{ id: 1, team1: "Netherlands", team2: "Pakistan" },
+{ id: 2, team1: "Bangladesh", team2: "WestIndies" },
+{ id: 3, team1: "India", team2: "USA" },
+{ id: 4, team1: "Afghanistan", team2: "NewZealand" },
+{ id: 5, team1: "England", team2: "Nepal" },
+{ id: 6, team1: "SriLanka", team2: "Ireland" },
+{ id: 7, team1: "England", team2: "WestIndies" },
+{ id: 8, team1: "NewZealand", team2: "SouthAfrica" },
+{ id: 9, team1: "India", team2: "Pakistan" },
+{ id: 10, team1: "Australia", team2: "SriLanka" }
 ];
+
+/* ---------------- APP ---------------- */
 
 function App(){
 
@@ -123,17 +220,13 @@ function App(){
 
   list.forEach(p=>{
     r[p.role]++;
-    t[p.team]=(t[p.team]||0)+1;
+    t[p.team||p.id[0]]=(t[p.team||p.id[0]]||0)+1;
   });
 
   if(r['Wicket-keeper']<1) return 'Need 1 WK';
   if(r['Batsman']<3) return 'Need 3 BAT';
   if(r['Bowler']<3) return 'Need 3 BOWL';
   if(r['All-rounder']<1) return 'Need 1 AR';
-
-  for(let k in t){
-    if(t[k]>7) return 'Max 7 from '+k;
-  }
 
   return null;
  };
@@ -171,15 +264,16 @@ function App(){
  return(
   <div>
 
-   <h1>T20 Fantasy League</h1>
+   <h1>T20 World Cup Fantasy</h1>
 
    <div className="card">
     <h3>Select Match</h3>
     {MATCHES.map(m=>(
-      <div key={m.id}>
+      <div key={m.id} style={{marginBottom:'8px'}}>
        <button className="btn" onClick={()=>{
         setMatch(m);
         setSelected([]);
+        setMsg('');
        }}>
         {m.team1} vs {m.team2}
        </button>
@@ -197,7 +291,7 @@ function App(){
       Credits: {selected.reduce((s,x)=>s+x.credits,0).toFixed(1)}
      </p>
 
-     <p style={{color:'red'}}>{msg}</p>
+     <p className="error">{msg}</p>
 
      {getPlayers().map(p=>{
 
@@ -209,10 +303,10 @@ function App(){
         className={sel?'player selected':'player'}
         onClick={()=>toggle(p)}
        >
-        {p.name} ({p.team}) | {p.role} | {p.credits}
+        {p.name} | {p.role} | {p.credits}
        </div>
-      );
-     })}
+     );
+    })}
 
     </div>
    )}
