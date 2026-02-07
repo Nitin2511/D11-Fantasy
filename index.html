@@ -191,13 +191,26 @@
             border: 2px solid #2d3548;
             transition: all 0.3s;
             cursor: pointer;
+            position: relative;
         }
         
         .player-card:hover { border-color: #10b981; }
         .player-card.selected { border-color: #10b981; background: rgba(16, 185, 129, 0.15); }
-        .player-card h4 { margin-bottom: 8px; font-size: 1.1rem; }
+        .player-card h4 { margin-bottom: 8px; font-size: 1.1rem; padding-right: 60px; }
         .player-card .role { color: #94a3b8; font-size: 13px; margin-bottom: 8px; }
         .player-card .team { color: #64748b; font-size: 12px; }
+        .player-card .credit-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: white;
+            padding: 5px 11px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 700;
+            box-shadow: 0 2px 8px rgba(245, 158, 11, 0.4);
+        }
         
         .selected-team {
             background: #0a0e27;
@@ -382,6 +395,85 @@
         .info-box h3 { color: #3b82f6; margin-bottom: 12px; font-size: 1.1rem; }
         .info-box p { color: #cbd5e1; margin: 8px 0; font-size: 14px; line-height: 1.6; }
         
+        .rules-section {
+            background: linear-gradient(135deg, #1a1f3a 0%, #242b4a 100%);
+            border-radius: 16px;
+            padding: 25px;
+            margin-top: 25px;
+            margin-bottom: 25px;
+            border: 2px solid #2d3548;
+        }
+
+        .rules-section h3 {
+            color: #10b981;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            font-family: 'Rajdhani', sans-serif;
+            letter-spacing: 1px;
+        }
+
+        .rule-item {
+            background: #0a0e27;
+            border-radius: 12px;
+            padding: 18px;
+            margin-bottom: 15px;
+            border-left: 4px solid #10b981;
+        }
+
+        .rule-item h4 {
+            color: #10b981;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+            font-family: 'Rajdhani', sans-serif;
+        }
+
+        .rule-item p {
+            color: #cbd5e1;
+            margin: 6px 0;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .rule-table {
+            width: 100%;
+            margin: 12px 0;
+            border-collapse: collapse;
+        }
+
+        .rule-table th, .rule-table td {
+            padding: 10px;
+            text-align: left;
+            border: 1px solid #2d3548;
+        }
+
+        .rule-table th {
+            background: #1a1f3a;
+            color: #10b981;
+            font-weight: 600;
+        }
+
+        .rule-table td {
+            background: #0a0e27;
+            color: #cbd5e1;
+        }
+
+        .credit-summary {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin: 15px 0;
+            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4);
+            text-align: center;
+        }
+
+        .credit-summary .remaining {
+            font-size: 1.4rem;
+            margin-top: 5px;
+        }
+        
         .points-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -478,327 +570,327 @@
         // Verified squads — ICC Men's T20 World Cup 2026 (20 teams × 15 players)
 const PLAYERS = [
   // Group A — India
-  { id: 1, name: "Suryakumar Yadav", team: "India", role: "Batsman" },
-  { id: 2, name: "Abhishek Sharma", team: "India", role: "Batsman" },
-  { id: 3, name: "Ishan Kishan", team: "India", role: "Wicketkeeper" },
-  { id: 4, name: "Tilak Varma", team: "India", role: "Batsman" },
-  { id: 5, name: "Sanju Samson", team: "India", role: "Wicketkeeper" },
-  { id: 6, name: "Rinku Singh", team: "India", role: "Batsman" },
-  { id: 7, name: "Hardik Pandya", team: "India", role: "All-rounder" },
-  { id: 8, name: "Shivam Dube", team: "India", role: "All-rounder" },
-  { id: 9, name: "Axar Patel", team: "India", role: "All-rounder" },
-  { id: 10, name: "Washington Sundar", team: "India", role: "All-rounder" },
-  { id: 11, name: "Jasprit Bumrah", team: "India", role: "Bowler" },
-  { id: 12, name: "Arshdeep Singh", team: "India", role: "Bowler" },
-  { id: 13, name: "Kuldeep Yadav", team: "India", role: "Bowler" },
-  { id: 14, name: "Varun Chakravarthy", team: "India", role: "Bowler" },
-  { id: 15, name: "Mohammed Siraj", team: "India", role: "Bowler" }, // replacement confirmed by BCCI/ICC. :contentReference[oaicite:2]{index=2}
+  { id: 1, name: "Suryakumar Yadav", team: "India", role: "Batsman", credits: 10.5 },
+  { id: 2, name: "Abhishek Sharma", team: "India", role: "Batsman", credits: 10.5 },
+  { id: 3, name: "Ishan Kishan", team: "India", role: "Wicketkeeper", credits: 10.5 },
+  { id: 4, name: "Tilak Varma", team: "India", role: "Batsman", credits: 10.5 },
+  { id: 5, name: "Sanju Samson", team: "India", role: "Wicketkeeper", credits: 10.5 },
+  { id: 6, name: "Rinku Singh", team: "India", role: "Batsman", credits: 9.5 },
+  { id: 7, name: "Hardik Pandya", team: "India", role: "All-rounder", credits: 9.5 },
+  { id: 8, name: "Shivam Dube", team: "India", role: "All-rounder", credits: 9.5 },
+  { id: 9, name: "Axar Patel", team: "India", role: "All-rounder", credits: 9.5 },
+  { id: 10, name: "Washington Sundar", team: "India", role: "All-rounder", credits: 9.5 },
+  { id: 11, name: "Jasprit Bumrah", team: "India", role: "Bowler", credits: 8.5 },
+  { id: 12, name: "Arshdeep Singh", team: "India", role: "Bowler", credits: 8.5 },
+  { id: 13, name: "Kuldeep Yadav", team: "India", role: "Bowler", credits: 8.5 },
+  { id: 14, name: "Varun Chakravarthy", team: "India", role: "Bowler", credits: 8.5 },
+  { id: 15, name: "Mohammed Siraj", team: "India", role: "Bowler", credits: 8.5 }, // replacement confirmed by BCCI/ICC. :contentReference[oaicite:2]{index=2}
 
   // Group A — Pakistan
-  { id: 101, name: "Babar Azam", team: "Pakistan", role: "Batsman" },
-  { id: 102, name: "Shaheen Shah Afridi", team: "Pakistan", role: "Bowler" },
-  { id: 103, name: "Naseem Shah", team: "Pakistan", role: "Bowler" },
-  { id: 104, name: "Shadab Khan", team: "Pakistan", role: "All-rounder" },
-  { id: 105, name: "Fakhar Zaman", team: "Pakistan", role: "Batsman" },
-  { id: 106, name: "Saim Ayub", team: "Pakistan", role: "Batsman" },
-  { id: 107, name: "Mohammad Nawaz", team: "Pakistan", role: "All-rounder" },
-  { id: 108, name: "Abrar Ahmed", team: "Pakistan", role: "Bowler" },
-  { id: 109, name: "Usman Khan", team: "Pakistan", role: "Wicketkeeper" },
-  { id: 110, name: "Salman Ali Agha", team: "Pakistan", role: "All-rounder" },
-  { id: 111, name: "Sahibzada Farhan", team: "Pakistan", role: "Batsman" },
-  { id: 112, name: "Faheem Ashraf", team: "Pakistan", role: "All-rounder" },
-  { id: 113, name: "Khawaja Nafay", team: "Pakistan", role: "Wicketkeeper" },
-  { id: 114, name: "Usman Tariq", team: "Pakistan", role: "Batsman" },
-  { id: 115, name: "Salman Mirza", team: "Pakistan", role: "All-rounder" },
+  { id: 101, name: "Babar Azam", team: "Pakistan", role: "Batsman", credits: 10.5 },
+  { id: 102, name: "Shaheen Shah Afridi", team: "Pakistan", role: "Bowler", credits: 10.0 },
+  { id: 103, name: "Naseem Shah", team: "Pakistan", role: "Bowler", credits: 10.0 },
+  { id: 104, name: "Shadab Khan", team: "Pakistan", role: "All-rounder", credits: 10.5 },
+  { id: 105, name: "Fakhar Zaman", team: "Pakistan", role: "Batsman", credits: 10.5 },
+  { id: 106, name: "Saim Ayub", team: "Pakistan", role: "Batsman", credits: 9.5 },
+  { id: 107, name: "Mohammad Nawaz", team: "Pakistan", role: "All-rounder", credits: 9.5 },
+  { id: 108, name: "Abrar Ahmed", team: "Pakistan", role: "Bowler", credits: 9.0 },
+  { id: 109, name: "Usman Khan", team: "Pakistan", role: "Wicketkeeper", credits: 9.5 },
+  { id: 110, name: "Salman Ali Agha", team: "Pakistan", role: "All-rounder", credits: 9.5 },
+  { id: 111, name: "Sahibzada Farhan", team: "Pakistan", role: "Batsman", credits: 9.0 },
+  { id: 112, name: "Faheem Ashraf", team: "Pakistan", role: "All-rounder", credits: 9.0 },
+  { id: 113, name: "Khawaja Nafay", team: "Pakistan", role: "Wicketkeeper", credits: 9.0 },
+  { id: 114, name: "Usman Tariq", team: "Pakistan", role: "Batsman", credits: 9.0 },
+  { id: 115, name: "Salman Mirza", team: "Pakistan", role: "All-rounder", credits: 9.0 },
 
   // Group A — Netherlands (verified)
-  { id: 201, name: "Scott Edwards", team: "Netherlands", role: "Wicketkeeper" },
-  { id: 202, name: "Max O'Dowd", team: "Netherlands", role: "Batsman" },
-  { id: 203, name: "Bas de Leede", team: "Netherlands", role: "All-rounder" },
-  { id: 204, name: "Colin Ackermann", team: "Netherlands", role: "All-rounder" },
-  { id: 205, name: "Roelof van der Merwe", team: "Netherlands", role: "All-rounder" },
-  { id: 206, name: "Logan van Beek", team: "Netherlands", role: "Bowler" },
-  { id: 207, name: "Fred Klaassen", team: "Netherlands", role: "Bowler" },
-  { id: 208, name: "Timm van der Gugten", team: "Netherlands", role: "Bowler" },
-  { id: 209, name: "Paul van Meekeren", team: "Netherlands", role: "Bowler" },
-  { id: 210, name: "Noah Croes", team: "Netherlands", role: "All-rounder" },
-  { id: 211, name: "Aryan Dutt", team: "Netherlands", role: "Bowler" },
-  { id: 212, name: "Maxwell van Otterdijk", team: "Netherlands", role: "Batsman" },
-  { id: 213, name: "Saqib Zulfiqar", team: "Netherlands", role: "Batsman" },
-  { id: 214, name: "Michael Levitt", team: "Netherlands", role: "Batsman" },
-  { id: 215, name: "Zach Lion-Cachet", team: "Netherlands", role: "Bowler" },
+  { id: 201, name: "Scott Edwards", team: "Netherlands", role: "Wicketkeeper", credits: 10.5 },
+  { id: 202, name: "Max O'Dowd", team: "Netherlands", role: "Batsman", credits: 10.5 },
+  { id: 203, name: "Bas de Leede", team: "Netherlands", role: "All-rounder", credits: 10.5 },
+  { id: 204, name: "Colin Ackermann", team: "Netherlands", role: "All-rounder", credits: 10.5 },
+  { id: 205, name: "Roelof van der Merwe", team: "Netherlands", role: "All-rounder", credits: 10.5 },
+  { id: 206, name: "Logan van Beek", team: "Netherlands", role: "Bowler", credits: 9.0 },
+  { id: 207, name: "Fred Klaassen", team: "Netherlands", role: "Bowler", credits: 9.0 },
+  { id: 208, name: "Timm van der Gugten", team: "Netherlands", role: "Bowler", credits: 9.0 },
+  { id: 209, name: "Paul van Meekeren", team: "Netherlands", role: "Bowler", credits: 9.0 },
+  { id: 210, name: "Noah Croes", team: "Netherlands", role: "All-rounder", credits: 9.5 },
+  { id: 211, name: "Aryan Dutt", team: "Netherlands", role: "Bowler", credits: 8.5 },
+  { id: 212, name: "Maxwell van Otterdijk", team: "Netherlands", role: "Batsman", credits: 9.0 },
+  { id: 213, name: "Saqib Zulfiqar", team: "Netherlands", role: "Batsman", credits: 9.0 },
+  { id: 214, name: "Michael Levitt", team: "Netherlands", role: "Batsman", credits: 9.0 },
+  { id: 215, name: "Zach Lion-Cachet", team: "Netherlands", role: "Bowler", credits: 8.5 },
 
   // Group B — Sri Lanka (host) — verified; replacement: Pramod Madushan for Eshan Malinga. :contentReference[oaicite:3]{index=3}
-  { id: 301, name: "Dasun Shanaka", team: "Sri Lanka", role: "All-rounder" },
-  { id: 302, name: "Kusal Mendis", team: "Sri Lanka", role: "Batsman" },
-  { id: 303, name: "Pathum Nissanka", team: "Sri Lanka", role: "Batsman" },
-  { id: 304, name: "Wanindu Hasaranga", team: "Sri Lanka", role: "All-rounder" },
-  { id: 305, name: "Matheesha Pathirana", team: "Sri Lanka", role: "Bowler" },
-  { id: 306, name: "Pramod Madushan", team: "Sri Lanka", role: "Bowler" }, // replacement confirmed. :contentReference[oaicite:4]{index=4}
-  { id: 307, name: "Dunith Wellalage", team: "Sri Lanka", role: "All-rounder" },
-  { id: 308, name: "Charith Asalanka", team: "Sri Lanka", role: "All-rounder" },
-  { id: 309, name: "Janith Liyanage", team: "Sri Lanka", role: "All-rounder" },
-  { id: 310, name: "Praveen Jayawickrama", team: "Sri Lanka", role: "Bowler" },
-  { id: 311, name: "Kusal Perera", team: "Sri Lanka", role: "Wicketkeeper" },
-  { id: 312, name: "Lasith Croospulle", team: "Sri Lanka", role: "Batsman" },
-  { id: 313, name: "Dushan Hemantha", team: "Sri Lanka", role: "All-rounder" },
-  { id: 314, name: "Asitha Fernando", team: "Sri Lanka", role: "Bowler" },
-  { id: 315, name: "Sadeera Samarawickrama", team: "Sri Lanka", role: "Wicketkeeper" },
+  { id: 301, name: "Dasun Shanaka", team: "Sri Lanka", role: "All-rounder", credits: 10.5 },
+  { id: 302, name: "Kusal Mendis", team: "Sri Lanka", role: "Batsman", credits: 10.5 },
+  { id: 303, name: "Pathum Nissanka", team: "Sri Lanka", role: "Batsman", credits: 10.5 },
+  { id: 304, name: "Wanindu Hasaranga", team: "Sri Lanka", role: "All-rounder", credits: 10.5 },
+  { id: 305, name: "Matheesha Pathirana", team: "Sri Lanka", role: "Bowler", credits: 10.0 },
+  { id: 306, name: "Pramod Madushan", team: "Sri Lanka", role: "Bowler", credits: 9.0 }, // replacement confirmed. :contentReference[oaicite:4]{index=4}
+  { id: 307, name: "Dunith Wellalage", team: "Sri Lanka", role: "All-rounder", credits: 9.5 },
+  { id: 308, name: "Charith Asalanka", team: "Sri Lanka", role: "All-rounder", credits: 9.5 },
+  { id: 309, name: "Janith Liyanage", team: "Sri Lanka", role: "All-rounder", credits: 9.5 },
+  { id: 310, name: "Praveen Jayawickrama", team: "Sri Lanka", role: "Bowler", credits: 9.0 },
+  { id: 311, name: "Kusal Perera", team: "Sri Lanka", role: "Wicketkeeper", credits: 9.0 },
+  { id: 312, name: "Lasith Croospulle", team: "Sri Lanka", role: "Batsman", credits: 9.0 },
+  { id: 313, name: "Dushan Hemantha", team: "Sri Lanka", role: "All-rounder", credits: 9.0 },
+  { id: 314, name: "Asitha Fernando", team: "Sri Lanka", role: "Bowler", credits: 8.5 },
+  { id: 315, name: "Sadeera Samarawickrama", team: "Sri Lanka", role: "Wicketkeeper", credits: 9.0 },
 
   // Group B — Ireland (verified)
-  { id: 401, name: "Andy Balbirnie", team: "Ireland", role: "Batsman" },
-  { id: 402, name: "George Dockrell", team: "Ireland", role: "All-rounder" },
-  { id: 403, name: "Harry Tector", team: "Ireland", role: "Batsman" },
-  { id: 404, name: "Paul Stirling", team: "Ireland", role: "Batsman" },
-  { id: 405, name: "Lorcan Tucker", team: "Ireland", role: "Wicketkeeper" },
-  { id: 406, name: "Mark Adair", team: "Ireland", role: "Bowler" },
-  { id: 407, name: "Curtis Campher", team: "Ireland", role: "All-rounder" },
-  { id: 408, name: "Ben White", team: "Ireland", role: "Bowler" },
-  { id: 409, name: "Fionn Hand", team: "Ireland", role: "Bowler" },
-  { id: 410, name: "Stephen Doheny", team: "Ireland", role: "Batsman" },
-  { id: 411, name: "Gareth Delany", team: "Ireland", role: "All-rounder" },
-  { id: 412, name: "Josh Little", team: "Ireland", role: "Bowler" },
-  { id: 413, name: "Curtis Campher", team: "Ireland", role: "All-rounder" },
-  { id: 414, name: "Andrew Balbirnie", team: "Ireland", role: "Batsman" },
-  { id: 415, name: "Ben White", team: "Ireland", role: "Bowler" },
+  { id: 401, name: "Andy Balbirnie", team: "Ireland", role: "Batsman", credits: 10.5 },
+  { id: 402, name: "George Dockrell", team: "Ireland", role: "All-rounder", credits: 10.5 },
+  { id: 403, name: "Harry Tector", team: "Ireland", role: "Batsman", credits: 10.5 },
+  { id: 404, name: "Paul Stirling", team: "Ireland", role: "Batsman", credits: 10.5 },
+  { id: 405, name: "Lorcan Tucker", team: "Ireland", role: "Wicketkeeper", credits: 10.5 },
+  { id: 406, name: "Mark Adair", team: "Ireland", role: "Bowler", credits: 9.0 },
+  { id: 407, name: "Curtis Campher", team: "Ireland", role: "All-rounder", credits: 9.5 },
+  { id: 408, name: "Ben White", team: "Ireland", role: "Bowler", credits: 9.0 },
+  { id: 409, name: "Fionn Hand", team: "Ireland", role: "Bowler", credits: 9.0 },
+  { id: 410, name: "Stephen Doheny", team: "Ireland", role: "Batsman", credits: 9.5 },
+  { id: 411, name: "Gareth Delany", team: "Ireland", role: "All-rounder", credits: 9.0 },
+  { id: 412, name: "Josh Little", team: "Ireland", role: "Bowler", credits: 8.5 },
+  { id: 413, name: "Curtis Campher", team: "Ireland", role: "All-rounder", credits: 9.0 },
+  { id: 414, name: "Andrew Balbirnie", team: "Ireland", role: "Batsman", credits: 9.0 },
+  { id: 415, name: "Ben White", team: "Ireland", role: "Bowler", credits: 8.5 },
 
   // Group C — England (verified)
-  { id: 501, name: "Jos Buttler", team: "England", role: "Wicketkeeper" },
-  { id: 502, name: "Harry Brook", team: "England", role: "Batsman" },
-  { id: 503, name: "Ben Stokes", team: "England", role: "All-rounder" },
-  { id: 504, name: "Adil Rashid", team: "England", role: "Bowler" },
-  { id: 505, name: "Sam Curran", team: "England", role: "All-rounder" },
-  { id: 506, name: "Jofra Archer", team: "England", role: "Bowler" },
-  { id: 507, name: "Will Jacks", team: "England", role: "All-rounder" },
-  { id: 508, name: "Tom Banton", team: "England", role: "Batsman" },
-  { id: 509, name: "Phil Salt", team: "England", role: "Batsman" },
-  { id: 510, name: "Jamie Overton", team: "England", role: "Bowler" },
-  { id: 511, name: "Luke Wood", team: "England", role: "Bowler" },
-  { id: 512, name: "Reece Topley", team: "England", role: "Bowler" },
-  { id: 513, name: "Dawid Malan", team: "England", role: "Batsman" },
-  { id: 514, name: "Liam Dawson", team: "England", role: "All-rounder" },
-  { id: 515, name: "Gus Atkinson", team: "England", role: "Bowler" },
+  { id: 501, name: "Jos Buttler", team: "England", role: "Wicketkeeper", credits: 10.5 },
+  { id: 502, name: "Harry Brook", team: "England", role: "Batsman", credits: 10.5 },
+  { id: 503, name: "Ben Stokes", team: "England", role: "All-rounder", credits: 10.5 },
+  { id: 504, name: "Adil Rashid", team: "England", role: "Bowler", credits: 10.0 },
+  { id: 505, name: "Sam Curran", team: "England", role: "All-rounder", credits: 10.5 },
+  { id: 506, name: "Jofra Archer", team: "England", role: "Bowler", credits: 9.0 },
+  { id: 507, name: "Will Jacks", team: "England", role: "All-rounder", credits: 9.5 },
+  { id: 508, name: "Tom Banton", team: "England", role: "Batsman", credits: 9.5 },
+  { id: 509, name: "Phil Salt", team: "England", role: "Batsman", credits: 9.5 },
+  { id: 510, name: "Jamie Overton", team: "England", role: "Bowler", credits: 9.0 },
+  { id: 511, name: "Luke Wood", team: "England", role: "Bowler", credits: 8.5 },
+  { id: 512, name: "Reece Topley", team: "England", role: "Bowler", credits: 8.5 },
+  { id: 513, name: "Dawid Malan", team: "England", role: "Batsman", credits: 9.0 },
+  { id: 514, name: "Liam Dawson", team: "England", role: "All-rounder", credits: 9.0 },
+  { id: 515, name: "Gus Atkinson", team: "England", role: "Bowler", credits: 8.5 },
 
   // Group C — South Africa (verified)
-  { id: 601, name: "Aiden Markram", team: "South Africa", role: "Batsman" },
-  { id: 602, name: "Quinton de Kock", team: "South Africa", role: "Wicketkeeper" },
-  { id: 603, name: "Dewald Brevis", team: "South Africa", role: "Batsman" },
-  { id: 604, name: "David Miller", team: "South Africa", role: "Batsman" },
-  { id: 605, name: "Jonathan Trott", team: "South Africa", role: "Batsman" }, // note: listed where applicable by sources
-  { id: 606, name: "Kagiso Rabada", team: "South Africa", role: "Bowler" },
-  { id: 607, name: "Marco Jansen", team: "South Africa", role: "Bowler" },
-  { id: 608, name: "Lungi Ngidi", team: "South Africa", role: "Bowler" },
-  { id: 609, name: "Keshav Maharaj", team: "South Africa", role: "Bowler" },
-  { id: 610, name: "Gerald Coetzee", team: "South Africa", role: "Bowler" },
-  { id: 611, name: "George Linde", team: "South Africa", role: "All-rounder" },
-  { id: 612, name: "Reeza Hendricks", team: "South Africa", role: "Batsman" },
-  { id: 613, name: "Heinrich Klaasen", team: "South Africa", role: "Wicketkeeper" },
-  { id: 614, name: "Andile Phehlukwayo", team: "South Africa", role: "All-rounder" },
-  { id: 615, name: "Wihan Lubbe", team: "South Africa", role: "All-rounder" },
+  { id: 601, name: "Aiden Markram", team: "South Africa", role: "Batsman", credits: 10.5 },
+  { id: 602, name: "Quinton de Kock", team: "South Africa", role: "Wicketkeeper", credits: 10.5 },
+  { id: 603, name: "Dewald Brevis", team: "South Africa", role: "Batsman", credits: 10.5 },
+  { id: 604, name: "David Miller", team: "South Africa", role: "Batsman", credits: 10.5 },
+  { id: 605, name: "Jonathan Trott", team: "South Africa", role: "Batsman", credits: 10.5 }, // note: listed where applicable by sources
+  { id: 606, name: "Kagiso Rabada", team: "South Africa", role: "Bowler", credits: 9.0 },
+  { id: 607, name: "Marco Jansen", team: "South Africa", role: "Bowler", credits: 9.0 },
+  { id: 608, name: "Lungi Ngidi", team: "South Africa", role: "Bowler", credits: 9.0 },
+  { id: 609, name: "Keshav Maharaj", team: "South Africa", role: "Bowler", credits: 9.0 },
+  { id: 610, name: "Gerald Coetzee", team: "South Africa", role: "Bowler", credits: 9.0 },
+  { id: 611, name: "George Linde", team: "South Africa", role: "All-rounder", credits: 9.0 },
+  { id: 612, name: "Reeza Hendricks", team: "South Africa", role: "Batsman", credits: 9.0 },
+  { id: 613, name: "Heinrich Klaasen", team: "South Africa", role: "Wicketkeeper", credits: 9.0 },
+  { id: 614, name: "Andile Phehlukwayo", team: "South Africa", role: "All-rounder", credits: 9.0 },
+  { id: 615, name: "Wihan Lubbe", team: "South Africa", role: "All-rounder", credits: 9.0 },
 
   // Group C — Zimbabwe (verified)
-  { id: 701, name: "Craig Ervine", team: "Zimbabwe", role: "Batsman" },
-  { id: 702, name: "Sikandar Raza", team: "Zimbabwe", role: "All-rounder" },
-  { id: 703, name: "Brendan Taylor", team: "Zimbabwe", role: "Wicketkeeper" },
-  { id: 704, name: "Tendai Chatara", team: "Zimbabwe", role: "Bowler" },
-  { id: 705, name: "Ryan Burl", team: "Zimbabwe", role: "All-rounder" },
-  { id: 706, name: "Sean Williams", team: "Zimbabwe", role: "All-rounder" },
-  { id: 707, name: "Blessing Muzarabani", team: "Zimbabwe", role: "Bowler" },
-  { id: 708, name: "Donald Tiripano", team: "Zimbabwe", role: "Bowler" },
-  { id: 709, name: "Wesley Madhevere", team: "Zimbabwe", role: "All-rounder" },
-  { id: 710, name: "Milton Shumba", team: "Zimbabwe", role: "Batsman" },
-  { id: 711, name: "Tinashe Kamunhukamwe", team: "Zimbabwe", role: "Batsman" },
-  { id: 712, name: "Brad Evans", team: "Zimbabwe", role: "Bowler" },
-  { id: 713, name: "Richard Ngarava", team: "Zimbabwe", role: "Bowler" },
-  { id: 714, name: "Wesley Nyasha", team: "Zimbabwe", role: "All-rounder" },
-  { id: 715, name: "Victor Nyauchi", team: "Zimbabwe", role: "Bowler" },
+  { id: 701, name: "Craig Ervine", team: "Zimbabwe", role: "Batsman", credits: 10.5 },
+  { id: 702, name: "Sikandar Raza", team: "Zimbabwe", role: "All-rounder", credits: 10.5 },
+  { id: 703, name: "Brendan Taylor", team: "Zimbabwe", role: "Wicketkeeper", credits: 10.5 },
+  { id: 704, name: "Tendai Chatara", team: "Zimbabwe", role: "Bowler", credits: 10.0 },
+  { id: 705, name: "Ryan Burl", team: "Zimbabwe", role: "All-rounder", credits: 10.5 },
+  { id: 706, name: "Sean Williams", team: "Zimbabwe", role: "All-rounder", credits: 9.5 },
+  { id: 707, name: "Blessing Muzarabani", team: "Zimbabwe", role: "Bowler", credits: 9.0 },
+  { id: 708, name: "Donald Tiripano", team: "Zimbabwe", role: "Bowler", credits: 9.0 },
+  { id: 709, name: "Wesley Madhevere", team: "Zimbabwe", role: "All-rounder", credits: 9.5 },
+  { id: 710, name: "Milton Shumba", team: "Zimbabwe", role: "Batsman", credits: 9.5 },
+  { id: 711, name: "Tinashe Kamunhukamwe", team: "Zimbabwe", role: "Batsman", credits: 9.0 },
+  { id: 712, name: "Brad Evans", team: "Zimbabwe", role: "Bowler", credits: 8.5 },
+  { id: 713, name: "Richard Ngarava", team: "Zimbabwe", role: "Bowler", credits: 8.5 },
+  { id: 714, name: "Wesley Nyasha", team: "Zimbabwe", role: "All-rounder", credits: 9.0 },
+  { id: 715, name: "Victor Nyauchi", team: "Zimbabwe", role: "Bowler", credits: 8.5 },
 
   // Group D — New Zealand (verified)
-  { id: 801, name: "Kane Williamson", team: "New Zealand", role: "Batsman" },
-  { id: 802, name: "Devon Conway", team: "New Zealand", role: "Batsman" },
-  { id: 803, name: "Daryl Mitchell", team: "New Zealand", role: "All-rounder" },
-  { id: 804, name: "Trent Boult", team: "New Zealand", role: "Bowler" },
-  { id: 805, name: "Matt Henry", team: "New Zealand", role: "Bowler" },
-  { id: 806, name: "Tim Southee", team: "New Zealand", role: "Bowler" },
-  { id: 807, name: "Glenn Phillips", team: "New Zealand", role: "Wicketkeeper" },
-  { id: 808, name: "Michael Bracewell", team: "New Zealand", role: "All-rounder" },
-  { id: 809, name: "Lockie Ferguson", team: "New Zealand", role: "Bowler" },
-  { id: 810, name: "Finn Allen", team: "New Zealand", role: "Batsman" },
-  { id: 811, name: "Rachin Ravindra", team: "New Zealand", role: "All-rounder" },
-  { id: 812, name: "Mitchell Santner", team: "New Zealand", role: "All-rounder" },
-  { id: 813, name: "Kyle Jamieson", team: "New Zealand", role: "Bowler" },
-  { id: 814, name: "Cole McConchie", team: "New Zealand", role: "All-rounder" },
-  { id: 815, name: "James Neesham", team: "New Zealand", role: "All-rounder" },
+  { id: 801, name: "Kane Williamson", team: "New Zealand", role: "Batsman", credits: 10.5 },
+  { id: 802, name: "Devon Conway", team: "New Zealand", role: "Batsman", credits: 10.5 },
+  { id: 803, name: "Daryl Mitchell", team: "New Zealand", role: "All-rounder", credits: 10.5 },
+  { id: 804, name: "Trent Boult", team: "New Zealand", role: "Bowler", credits: 10.0 },
+  { id: 805, name: "Matt Henry", team: "New Zealand", role: "Bowler", credits: 10.0 },
+  { id: 806, name: "Tim Southee", team: "New Zealand", role: "Bowler", credits: 9.0 },
+  { id: 807, name: "Glenn Phillips", team: "New Zealand", role: "Wicketkeeper", credits: 9.5 },
+  { id: 808, name: "Michael Bracewell", team: "New Zealand", role: "All-rounder", credits: 9.5 },
+  { id: 809, name: "Lockie Ferguson", team: "New Zealand", role: "Bowler", credits: 9.0 },
+  { id: 810, name: "Finn Allen", team: "New Zealand", role: "Batsman", credits: 9.5 },
+  { id: 811, name: "Rachin Ravindra", team: "New Zealand", role: "All-rounder", credits: 9.0 },
+  { id: 812, name: "Mitchell Santner", team: "New Zealand", role: "All-rounder", credits: 9.0 },
+  { id: 813, name: "Kyle Jamieson", team: "New Zealand", role: "Bowler", credits: 8.5 },
+  { id: 814, name: "Cole McConchie", team: "New Zealand", role: "All-rounder", credits: 9.0 },
+  { id: 815, name: "James Neesham", team: "New Zealand", role: "All-rounder", credits: 9.0 },
 
   // Group D — Afghanistan (verified)
-  { id: 901, name: "Rashid Khan", team: "Afghanistan", role: "All-rounder" },
-  { id: 902, name: "Ibrahim Zadran", team: "Afghanistan", role: "Batsman" },
-  { id: 903, name: "Rahmanullah Gurbaz", team: "Afghanistan", role: "Wicketkeeper" },
-  { id: 904, name: "Mohammad Nabi", team: "Afghanistan", role: "All-rounder" },
-  { id: 905, name: "Naveen-ul-Haq", team: "Afghanistan", role: "Bowler" },
-  { id: 906, name: "Noor Ahmad", team: "Afghanistan", role: "Bowler" },
-  { id: 907, name: "Azmatullah Omarzai", team: "Afghanistan", role: "All-rounder" },
-  { id: 908, name: "Fazalhaq Farooqi", team: "Afghanistan", role: "Bowler" },
-  { id: 909, name: "Gulbadin Naib", team: "Afghanistan", role: "All-rounder" },
-  { id: 910, name: "Ikram Alikhil", team: "Afghanistan", role: "Wicketkeeper" },
-  { id: 911, name: "Najibullah Zadran", team: "Afghanistan", role: "Batsman" },
-  { id: 912, name: "Usman Ghani", team: "Afghanistan", role: "Batsman" },
-  { id: 913, name: "Azmatullah Omarzai", team: "Afghanistan", role: "All-rounder" },
-  { id: 914, name: "Aftab Alam", team: "Afghanistan", role: "Bowler" },
-  { id: 915, name: "Hamdullah Qadri", team: "Afghanistan", role: "Bowler" },
+  { id: 901, name: "Rashid Khan", team: "Afghanistan", role: "All-rounder", credits: 10.5 },
+  { id: 902, name: "Ibrahim Zadran", team: "Afghanistan", role: "Batsman", credits: 10.5 },
+  { id: 903, name: "Rahmanullah Gurbaz", team: "Afghanistan", role: "Wicketkeeper", credits: 10.5 },
+  { id: 904, name: "Mohammad Nabi", team: "Afghanistan", role: "All-rounder", credits: 10.5 },
+  { id: 905, name: "Naveen-ul-Haq", team: "Afghanistan", role: "Bowler", credits: 10.0 },
+  { id: 906, name: "Noor Ahmad", team: "Afghanistan", role: "Bowler", credits: 9.0 },
+  { id: 907, name: "Azmatullah Omarzai", team: "Afghanistan", role: "All-rounder", credits: 9.5 },
+  { id: 908, name: "Fazalhaq Farooqi", team: "Afghanistan", role: "Bowler", credits: 9.0 },
+  { id: 909, name: "Gulbadin Naib", team: "Afghanistan", role: "All-rounder", credits: 9.5 },
+  { id: 910, name: "Ikram Alikhil", team: "Afghanistan", role: "Wicketkeeper", credits: 9.5 },
+  { id: 911, name: "Najibullah Zadran", team: "Afghanistan", role: "Batsman", credits: 9.0 },
+  { id: 912, name: "Usman Ghani", team: "Afghanistan", role: "Batsman", credits: 9.0 },
+  { id: 913, name: "Azmatullah Omarzai", team: "Afghanistan", role: "All-rounder", credits: 9.0 },
+  { id: 914, name: "Aftab Alam", team: "Afghanistan", role: "Bowler", credits: 8.5 },
+  { id: 915, name: "Hamdullah Qadri", team: "Afghanistan", role: "Bowler", credits: 8.5 },
 
   // Group D — West Indies (verified)
-  { id: 1001, name: "Nicholas Pooran", team: "West Indies", role: "Wicketkeeper" },
-  { id: 1002, name: "Andre Russell", team: "West Indies", role: "All-rounder" },
-  { id: 1003, name: "Rovman Powell", team: "West Indies", role: "All-rounder" },
-  { id: 1004, name: "Kyle Mayers", team: "West Indies", role: "Batsman" },
-  { id: 1005, name: "Sherfane Rutherford", team: "West Indies", role: "All-rounder" },
-  { id: 1006, name: "Fabian Allen", team: "West Indies", role: "All-rounder" },
-  { id: 1007, name: "Shai Hope", team: "West Indies", role: "Batsman" },
-  { id: 1008, name: "Alzarri Joseph", team: "West Indies", role: "Bowler" },
-  { id: 1009, name: "Oshane Thomas", team: "West Indies", role: "Bowler" },
-  { id: 1010, name: "Jason Holder", team: "West Indies", role: "All-rounder" },
-  { id: 1011, name: "Hayden Walsh Jr.", team: "West Indies", role: "Bowler" },
-  { id: 1012, name: "Brandon King", team: "West Indies", role: "Batsman" },
-  { id: 1013, name: "Johnson Charles", team: "West Indies", role: "Batsman" },
-  { id: 1014, name: "Nkrumah Bonner", team: "West Indies", role: "Batsman" },
-  { id: 1015, name: "Shimron Hetmyer", team: "West Indies", role: "Batsman" },
+  { id: 1001, name: "Nicholas Pooran", team: "West Indies", role: "Wicketkeeper", credits: 10.5 },
+  { id: 1002, name: "Andre Russell", team: "West Indies", role: "All-rounder", credits: 10.5 },
+  { id: 1003, name: "Rovman Powell", team: "West Indies", role: "All-rounder", credits: 10.5 },
+  { id: 1004, name: "Kyle Mayers", team: "West Indies", role: "Batsman", credits: 10.5 },
+  { id: 1005, name: "Sherfane Rutherford", team: "West Indies", role: "All-rounder", credits: 10.5 },
+  { id: 1006, name: "Fabian Allen", team: "West Indies", role: "All-rounder", credits: 9.5 },
+  { id: 1007, name: "Shai Hope", team: "West Indies", role: "Batsman", credits: 9.5 },
+  { id: 1008, name: "Alzarri Joseph", team: "West Indies", role: "Bowler", credits: 9.0 },
+  { id: 1009, name: "Oshane Thomas", team: "West Indies", role: "Bowler", credits: 9.0 },
+  { id: 1010, name: "Jason Holder", team: "West Indies", role: "All-rounder", credits: 9.5 },
+  { id: 1011, name: "Hayden Walsh Jr.", team: "West Indies", role: "Bowler", credits: 8.5 },
+  { id: 1012, name: "Brandon King", team: "West Indies", role: "Batsman", credits: 9.0 },
+  { id: 1013, name: "Johnson Charles", team: "West Indies", role: "Batsman", credits: 9.0 },
+  { id: 1014, name: "Nkrumah Bonner", team: "West Indies", role: "Batsman", credits: 9.0 },
+  { id: 1015, name: "Shimron Hetmyer", team: "West Indies", role: "Batsman", credits: 9.0 },
 
   // Group B — Canada (verified)
-  { id: 1101, name: "Aaron Johnson", team: "Canada", role: "Batsman" },
-  { id: 1102, name: "Navneet Dhaliwal", team: "Canada", role: "Batsman" },
-  { id: 1103, name: "Jesse Briggs", team: "Canada", role: "All-rounder" },
-  { id: 1104, name: "Harsh Thaker", team: "Canada", role: "Bowler" },
-  { id: 1105, name: "Saad Bin Zafar", team: "Canada", role: "All-rounder" },
-  { id: 1106, name: "Asif Mulla", team: "Canada", role: "All-rounder" },
-  { id: 1107, name: "Taranjit Bharaj", team: "Canada", role: "All-rounder" },
-  { id: 1108, name: "Nicholas Kirton", team: "Canada", role: "Batsman" },
-  { id: 1109, name: "Steven Taylor", team: "Canada", role: "Batsman" },
-  { id: 1110, name: "Akeem Dodson", team: "Canada", role: "Wicketkeeper" },
-  { id: 1111, name: "Yasir Mohammad", team: "Canada", role: "Batsman" },
-  { id: 1112, name: "Kamal Singh", team: "Canada", role: "Bowler" },
-  { id: 1113, name: "Ovais Yousof", team: "Canada", role: "Bowler" },
-  { id: 1114, name: "Sikandar Raza Jr.", team: "Canada", role: "All-rounder" },
-  { id: 1115, name: "Sumon Khan", team: "Canada", role: "Bowler" },
+  { id: 1101, name: "Aaron Johnson", team: "Canada", role: "Batsman", credits: 10.5 },
+  { id: 1102, name: "Navneet Dhaliwal", team: "Canada", role: "Batsman", credits: 10.5 },
+  { id: 1103, name: "Jesse Briggs", team: "Canada", role: "All-rounder", credits: 10.5 },
+  { id: 1104, name: "Harsh Thaker", team: "Canada", role: "Bowler", credits: 10.0 },
+  { id: 1105, name: "Saad Bin Zafar", team: "Canada", role: "All-rounder", credits: 10.5 },
+  { id: 1106, name: "Asif Mulla", team: "Canada", role: "All-rounder", credits: 9.5 },
+  { id: 1107, name: "Taranjit Bharaj", team: "Canada", role: "All-rounder", credits: 9.5 },
+  { id: 1108, name: "Nicholas Kirton", team: "Canada", role: "Batsman", credits: 9.5 },
+  { id: 1109, name: "Steven Taylor", team: "Canada", role: "Batsman", credits: 9.5 },
+  { id: 1110, name: "Akeem Dodson", team: "Canada", role: "Wicketkeeper", credits: 9.5 },
+  { id: 1111, name: "Yasir Mohammad", team: "Canada", role: "Batsman", credits: 9.0 },
+  { id: 1112, name: "Kamal Singh", team: "Canada", role: "Bowler", credits: 8.5 },
+  { id: 1113, name: "Ovais Yousof", team: "Canada", role: "Bowler", credits: 8.5 },
+  { id: 1114, name: "Sikandar Raza Jr.", team: "Canada", role: "All-rounder", credits: 9.0 },
+  { id: 1115, name: "Sumon Khan", team: "Canada", role: "Bowler", credits: 8.5 },
 
   // Group C — Australia (verified)
-  { id: 1201, name: "Aaron Finch", team: "Australia", role: "Batsman" },
-  { id: 1202, name: "Steve Smith", team: "Australia", role: "Batsman" },
-  { id: 1203, name: "Pat Cummins", team: "Australia", role: "Bowler" },
-  { id: 1204, name: "Glenn Maxwell", team: "Australia", role: "All-rounder" },
-  { id: 1205, name: "Mitchell Marsh", team: "Australia", role: "All-rounder" },
-  { id: 1206, name: "Josh Hazlewood", team: "Australia", role: "Bowler" },
-  { id: 1207, name: "Adam Zampa", team: "Australia", role: "Bowler" },
-  { id: 1208, name: "Travis Head", team: "Australia", role: "Batsman" },
-  { id: 1209, name: "Josh Inglis", team: "Australia", role: "Wicketkeeper" },
-  { id: 1210, name: "Cameron Green", team: "Australia", role: "All-rounder" },
-  { id: 1211, name: "Jason Behrendorff", team: "Australia", role: "Bowler" },
-  { id: 1212, name: "Sean Abbott", team: "Australia", role: "Bowler" },
-  { id: 1213, name: "Alex Carey", team: "Australia", role: "Wicketkeeper" },
-  { id: 1214, name: "Hilton Cartwright", team: "Australia", role: "All-rounder" },
-  { id: 1215, name: "Ben McDermott", team: "Australia", role: "Batsman" },
+  { id: 1201, name: "Aaron Finch", team: "Australia", role: "Batsman", credits: 10.5 },
+  { id: 1202, name: "Steve Smith", team: "Australia", role: "Batsman", credits: 10.5 },
+  { id: 1203, name: "Pat Cummins", team: "Australia", role: "Bowler", credits: 10.0 },
+  { id: 1204, name: "Glenn Maxwell", team: "Australia", role: "All-rounder", credits: 10.5 },
+  { id: 1205, name: "Mitchell Marsh", team: "Australia", role: "All-rounder", credits: 10.5 },
+  { id: 1206, name: "Josh Hazlewood", team: "Australia", role: "Bowler", credits: 9.0 },
+  { id: 1207, name: "Adam Zampa", team: "Australia", role: "Bowler", credits: 9.0 },
+  { id: 1208, name: "Travis Head", team: "Australia", role: "Batsman", credits: 9.5 },
+  { id: 1209, name: "Josh Inglis", team: "Australia", role: "Wicketkeeper", credits: 9.5 },
+  { id: 1210, name: "Cameron Green", team: "Australia", role: "All-rounder", credits: 9.5 },
+  { id: 1211, name: "Jason Behrendorff", team: "Australia", role: "Bowler", credits: 8.5 },
+  { id: 1212, name: "Sean Abbott", team: "Australia", role: "Bowler", credits: 8.5 },
+  { id: 1213, name: "Alex Carey", team: "Australia", role: "Wicketkeeper", credits: 9.0 },
+  { id: 1214, name: "Hilton Cartwright", team: "Australia", role: "All-rounder", credits: 9.0 },
+  { id: 1215, name: "Ben McDermott", team: "Australia", role: "Batsman", credits: 9.0 },
 
   // Group A — USA (verified)
-  { id: 1301, name: "Monank Patel", team: "United States", role: "Wicketkeeper" },
-  { id: 1302, name: "Andries Gous", team: "United States", role: "Batsman" },
-  { id: 1303, name: "Nosthush Kenjige", team: "United States", role: "Bowler" },
-  { id: 1304, name: "Saurabh Netravalkar", team: "United States", role: "Bowler" },
-  { id: 1305, name: "Ali Khan", team: "United States", role: "Bowler" },
-  { id: 1306, name: "Milind Kumar", team: "United States", role: "Batsman" },
-  { id: 1307, name: "Harmeet Singh", team: "United States", role: "Bowler" },
-  { id: 1308, name: "Shehan Jayasuriya", team: "United States", role: "All-rounder" },
-  { id: 1309, name: "Jessy Singh", team: "United States", role: "Batsman" },
-  { id: 1310, name: "Shayan Jahangir", team: "United States", role: "Batsman" },
-  { id: 1311, name: "Saiteja Mukkamala", team: "United States", role: "All-rounder" },
-  { id: 1312, name: "Sanjay Krishnamurthi", team: "United States", role: "All-rounder" },
-  { id: 1313, name: "Mohammad Mohsin", team: "United States", role: "Bowler" },
-  { id: 1314, name: "Shadley van Schalkwyk", team: "United States", role: "All-rounder" },
-  { id: 1315, name: "Steven Taylor Jr.", team: "United States", role: "Batsman" },
+  { id: 1301, name: "Monank Patel", team: "United States", role: "Wicketkeeper", credits: 10.5 },
+  { id: 1302, name: "Andries Gous", team: "United States", role: "Batsman", credits: 10.5 },
+  { id: 1303, name: "Nosthush Kenjige", team: "United States", role: "Bowler", credits: 10.0 },
+  { id: 1304, name: "Saurabh Netravalkar", team: "United States", role: "Bowler", credits: 10.0 },
+  { id: 1305, name: "Ali Khan", team: "United States", role: "Bowler", credits: 10.0 },
+  { id: 1306, name: "Milind Kumar", team: "United States", role: "Batsman", credits: 9.5 },
+  { id: 1307, name: "Harmeet Singh", team: "United States", role: "Bowler", credits: 9.0 },
+  { id: 1308, name: "Shehan Jayasuriya", team: "United States", role: "All-rounder", credits: 9.5 },
+  { id: 1309, name: "Jessy Singh", team: "United States", role: "Batsman", credits: 9.5 },
+  { id: 1310, name: "Shayan Jahangir", team: "United States", role: "Batsman", credits: 9.5 },
+  { id: 1311, name: "Saiteja Mukkamala", team: "United States", role: "All-rounder", credits: 9.0 },
+  { id: 1312, name: "Sanjay Krishnamurthi", team: "United States", role: "All-rounder", credits: 9.0 },
+  { id: 1313, name: "Mohammad Mohsin", team: "United States", role: "Bowler", credits: 8.5 },
+  { id: 1314, name: "Shadley van Schalkwyk", team: "United States", role: "All-rounder", credits: 9.0 },
+  { id: 1315, name: "Steven Taylor Jr.", team: "United States", role: "Batsman", credits: 9.0 },
 
   // Group B — Nepal (verified)
-  { id: 1401, name: "Dipendra Singh Airee", team: "Nepal", role: "All-rounder" },
-  { id: 1402, name: "Aasif Sheikh", team: "Nepal", role: "Batsman" },
-  { id: 1403, name: "Gyanendra Malla", team: "Nepal", role: "Batsman" },
-  { id: 1404, name: "Sandeep Lamichhane", team: "Nepal", role: "Bowler" },
-  { id: 1405, name: "Kushal Bhurtel", team: "Nepal", role: "Batsman" },
-  { id: 1406, name: "Sompal Kami", team: "Nepal", role: "All-rounder" },
-  { id: 1407, name: "Karan KC", team: "Nepal", role: "Bowler" },
-  { id: 1408, name: "Sharad Vesawkar", team: "Nepal", role: "Batsman" },
-  { id: 1409, name: "Rohit Paudel", team: "Nepal", role: "Batsman" },
-  { id: 1410, name: "Sharad Bhattarai", team: "Nepal", role: "All-rounder" },
-  { id: 1411, name: "Aman Hamble", team: "Nepal", role: "Batsman" },
-  { id: 1412, name: "Anil Mandal", team: "Nepal", role: "Batsman" },
-  { id: 1413, name: "Kamal Singh Airee", team: "Nepal", role: "Bowler" },
-  { id: 1414, name: "Pratis GC", team: "Nepal", role: "All-rounder" },
-  { id: 1415, name: "Binod Bhandari", team: "Nepal", role: "Wicketkeeper" },
+  { id: 1401, name: "Dipendra Singh Airee", team: "Nepal", role: "All-rounder", credits: 10.5 },
+  { id: 1402, name: "Aasif Sheikh", team: "Nepal", role: "Batsman", credits: 10.5 },
+  { id: 1403, name: "Gyanendra Malla", team: "Nepal", role: "Batsman", credits: 10.5 },
+  { id: 1404, name: "Sandeep Lamichhane", team: "Nepal", role: "Bowler", credits: 10.0 },
+  { id: 1405, name: "Kushal Bhurtel", team: "Nepal", role: "Batsman", credits: 10.5 },
+  { id: 1406, name: "Sompal Kami", team: "Nepal", role: "All-rounder", credits: 9.5 },
+  { id: 1407, name: "Karan KC", team: "Nepal", role: "Bowler", credits: 9.0 },
+  { id: 1408, name: "Sharad Vesawkar", team: "Nepal", role: "Batsman", credits: 9.5 },
+  { id: 1409, name: "Rohit Paudel", team: "Nepal", role: "Batsman", credits: 9.5 },
+  { id: 1410, name: "Sharad Bhattarai", team: "Nepal", role: "All-rounder", credits: 9.5 },
+  { id: 1411, name: "Aman Hamble", team: "Nepal", role: "Batsman", credits: 9.0 },
+  { id: 1412, name: "Anil Mandal", team: "Nepal", role: "Batsman", credits: 9.0 },
+  { id: 1413, name: "Kamal Singh Airee", team: "Nepal", role: "Bowler", credits: 8.5 },
+  { id: 1414, name: "Pratis GC", team: "Nepal", role: "All-rounder", credits: 9.0 },
+  { id: 1415, name: "Binod Bhandari", team: "Nepal", role: "Wicketkeeper", credits: 9.0 },
 
   // Group A — Namibia (verified)
-  { id: 1501, name: "Gerhard Erasmus", team: "Namibia", role: "Batsman" },
-  { id: 1502, name: "Zane Green", team: "Namibia", role: "Wicketkeeper" },
-  { id: 1503, name: "JJ Smit", team: "Namibia", role: "All-rounder" },
-  { id: 1504, name: "Bernard Scholtz", team: "Namibia", role: "All-rounder" },
-  { id: 1505, name: "Ben Shikongo", team: "Namibia", role: "Bowler" },
-  { id: 1506, name: "Ruben Trumpelmann", team: "Namibia", role: "Bowler" },
-  { id: 1507, name: "Jan Frylinck", team: "Namibia", role: "All-rounder" },
-  { id: 1508, name: "Malan Kruger", team: "Namibia", role: "Batsman" },
-  { id: 1509, name: "Nicol Loftie-Eaton", team: "Namibia", role: "Batsman" },
-  { id: 1510, name: "Louren Steenkamp", team: "Namibia", role: "Batsman" },
-  { id: 1511, name: "Jack Brassell", team: "Namibia", role: "Bowler" },
-  { id: 1512, name: "Max Heingo", team: "Namibia", role: "All-rounder" },
-  { id: 1513, name: "WP Myburgh", team: "Namibia", role: "All-rounder" },
-  { id: 1514, name: "Dylan Leicher", team: "Namibia", role: "Bowler" },
-  { id: 1515, name: "Jan Balt", team: "Namibia", role: "All-rounder" },
+  { id: 1501, name: "Gerhard Erasmus", team: "Namibia", role: "Batsman", credits: 10.5 },
+  { id: 1502, name: "Zane Green", team: "Namibia", role: "Wicketkeeper", credits: 10.5 },
+  { id: 1503, name: "JJ Smit", team: "Namibia", role: "All-rounder", credits: 10.5 },
+  { id: 1504, name: "Bernard Scholtz", team: "Namibia", role: "All-rounder", credits: 10.5 },
+  { id: 1505, name: "Ben Shikongo", team: "Namibia", role: "Bowler", credits: 10.0 },
+  { id: 1506, name: "Ruben Trumpelmann", team: "Namibia", role: "Bowler", credits: 9.0 },
+  { id: 1507, name: "Jan Frylinck", team: "Namibia", role: "All-rounder", credits: 9.5 },
+  { id: 1508, name: "Malan Kruger", team: "Namibia", role: "Batsman", credits: 9.5 },
+  { id: 1509, name: "Nicol Loftie-Eaton", team: "Namibia", role: "Batsman", credits: 9.5 },
+  { id: 1510, name: "Louren Steenkamp", team: "Namibia", role: "Batsman", credits: 9.5 },
+  { id: 1511, name: "Jack Brassell", team: "Namibia", role: "Bowler", credits: 8.5 },
+  { id: 1512, name: "Max Heingo", team: "Namibia", role: "All-rounder", credits: 9.0 },
+  { id: 1513, name: "WP Myburgh", team: "Namibia", role: "All-rounder", credits: 9.0 },
+  { id: 1514, name: "Dylan Leicher", team: "Namibia", role: "Bowler", credits: 8.5 },
+  { id: 1515, name: "Jan Balt", team: "Namibia", role: "All-rounder", credits: 9.0 },
 
   // Group B — UAE (verified)
-  { id: 1601, name: "Muhammad Waseem", team: "United Arab Emirates", role: "Batsman" },
-  { id: 1602, name: "Rohan Mustafa", team: "United Arab Emirates", role: "All-rounder" },
-  { id: 1603, name: "Vriitya Aravind", team: "United Arab Emirates", role: "Batsman" },
-  { id: 1604, name: "Alishan Sharafu", team: "United Arab Emirates", role: "All-rounder" },
-  { id: 1605, name: "Junaid Siddique", team: "United Arab Emirates", role: "All-rounder" },
-  { id: 1606, name: "Karthik Meiyappan", team: "United Arab Emirates", role: "Bowler" },
-  { id: 1607, name: "Owais Shah Jr.", team: "United Arab Emirates", role: "Batsman" },
-  { id: 1608, name: "Zahoor Khan", team: "United Arab Emirates", role: "Bowler" },
-  { id: 1609, name: "Sanchit Sharma", team: "United Arab Emirates", role: "Bowler" },
-  { id: 1610, name: "Aayan Afzal Khan", team: "United Arab Emirates", role: "All-rounder" },
-  { id: 1611, name: "Fahad Nawaz", team: "United Arab Emirates", role: "Batsman" },
-  { id: 1612, name: "Mehboob Alam", team: "United Arab Emirates", role: "Batsman" },
-  { id: 1613, name: "Shahid Anwar", team: "United Arab Emirates", role: "Bowler" },
-  { id: 1614, name: "Ikram Alikhil", team: "United Arab Emirates", role: "Wicketkeeper" },
-  { id: 1615, name: "Muhammad Farooq", team: "United Arab Emirates", role: "Bowler" },
+  { id: 1601, name: "Muhammad Waseem", team: "United Arab Emirates", role: "Batsman", credits: 10.5 },
+  { id: 1602, name: "Rohan Mustafa", team: "United Arab Emirates", role: "All-rounder", credits: 10.5 },
+  { id: 1603, name: "Vriitya Aravind", team: "United Arab Emirates", role: "Batsman", credits: 10.5 },
+  { id: 1604, name: "Alishan Sharafu", team: "United Arab Emirates", role: "All-rounder", credits: 10.5 },
+  { id: 1605, name: "Junaid Siddique", team: "United Arab Emirates", role: "All-rounder", credits: 10.5 },
+  { id: 1606, name: "Karthik Meiyappan", team: "United Arab Emirates", role: "Bowler", credits: 9.0 },
+  { id: 1607, name: "Owais Shah Jr.", team: "United Arab Emirates", role: "Batsman", credits: 9.5 },
+  { id: 1608, name: "Zahoor Khan", team: "United Arab Emirates", role: "Bowler", credits: 9.0 },
+  { id: 1609, name: "Sanchit Sharma", team: "United Arab Emirates", role: "Bowler", credits: 9.0 },
+  { id: 1610, name: "Aayan Afzal Khan", team: "United Arab Emirates", role: "All-rounder", credits: 9.5 },
+  { id: 1611, name: "Fahad Nawaz", team: "United Arab Emirates", role: "Batsman", credits: 9.0 },
+  { id: 1612, name: "Mehboob Alam", team: "United Arab Emirates", role: "Batsman", credits: 9.0 },
+  { id: 1613, name: "Shahid Anwar", team: "United Arab Emirates", role: "Bowler", credits: 8.5 },
+  { id: 1614, name: "Ikram Alikhil", team: "United Arab Emirates", role: "Wicketkeeper", credits: 9.0 },
+  { id: 1615, name: "Muhammad Farooq", team: "United Arab Emirates", role: "Bowler", credits: 8.5 },
 
   // Group C — Scotland (verified)
-  { id: 1701, name: "George Munsey", team: "Scotland", role: "Batsman" },
-  { id: 1702, name: "Matthew Cross", team: "Scotland", role: "Wicketkeeper" },
-  { id: 1703, name: "Richie Berrington", team: "Scotland", role: "All-rounder" },
-  { id: 1704, name: "Mark Watt", team: "Scotland", role: "Bowler" },
-  { id: 1705, name: "Safyaan Sharif", team: "Scotland", role: "Bowler" },
-  { id: 1706, name: "Josh Davey", team: "Scotland", role: "Bowler" },
-  { id: 1707, name: "Calum MacLeod", team: "Scotland", role: "Batsman" },
-  { id: 1708, name: "Dewald Brevis Jr.", team: "Scotland", role: "All-rounder" },
-  { id: 1709, name: "Michael Leask", team: "Scotland", role: "All-rounder" },
-  { id: 1710, name: "Chris Greaves", team: "Scotland", role: "All-rounder" },
-  { id: 1711, name: "Hamza Tahir", team: "Scotland", role: "Bowler" },
-  { id: 1712, name: "Alasdair Evans", team: "Scotland", role: "Bowler" },
-  { id: 1713, name: "Nicholas Forrester", team: "Scotland", role: "Batsman" },
-  { id: 1714, name: "Ollie Hairs", team: "Scotland", role: "Batsman" },
-  { id: 1715, name: "Tom Sole", team: "Scotland", role: "All-rounder" },
+  { id: 1701, name: "George Munsey", team: "Scotland", role: "Batsman", credits: 10.5 },
+  { id: 1702, name: "Matthew Cross", team: "Scotland", role: "Wicketkeeper", credits: 10.5 },
+  { id: 1703, name: "Richie Berrington", team: "Scotland", role: "All-rounder", credits: 10.5 },
+  { id: 1704, name: "Mark Watt", team: "Scotland", role: "Bowler", credits: 10.0 },
+  { id: 1705, name: "Safyaan Sharif", team: "Scotland", role: "Bowler", credits: 10.0 },
+  { id: 1706, name: "Josh Davey", team: "Scotland", role: "Bowler", credits: 9.0 },
+  { id: 1707, name: "Calum MacLeod", team: "Scotland", role: "Batsman", credits: 9.5 },
+  { id: 1708, name: "Dewald Brevis Jr.", team: "Scotland", role: "All-rounder", credits: 9.5 },
+  { id: 1709, name: "Michael Leask", team: "Scotland", role: "All-rounder", credits: 9.5 },
+  { id: 1710, name: "Chris Greaves", team: "Scotland", role: "All-rounder", credits: 9.5 },
+  { id: 1711, name: "Hamza Tahir", team: "Scotland", role: "Bowler", credits: 8.5 },
+  { id: 1712, name: "Alasdair Evans", team: "Scotland", role: "Bowler", credits: 8.5 },
+  { id: 1713, name: "Nicholas Forrester", team: "Scotland", role: "Batsman", credits: 9.0 },
+  { id: 1714, name: "Ollie Hairs", team: "Scotland", role: "Batsman", credits: 9.0 },
+  { id: 1715, name: "Tom Sole", team: "Scotland", role: "All-rounder", credits: 9.0 },
 
   // Group D — Bangladesh (verified)
-  { id: 1801, name: "Shakib Al Hasan", team: "Bangladesh", role: "All-rounder" },
-  { id: 1802, name: "Mushfiqur Rahim", team: "Bangladesh", role: "Wicketkeeper" },
-  { id: 1803, name: "Mahmudullah", team: "Bangladesh", role: "All-rounder" },
-  { id: 1804, name: "Taskin Ahmed", team: "Bangladesh", role: "Bowler" },
-  { id: 1805, name: "Mustafizur Rahman", team: "Bangladesh", role: "Bowler" },
-  { id: 1806, name: "Najmul Hossain Shanto", team: "Bangladesh", role: "Batsman" },
-  { id: 1807, name: "Towhid Hridoy", team: "Bangladesh", role: "Batsman" },
-  { id: 1808, name: "Liton Das", team: "Bangladesh", role: "Wicketkeeper" },
-  { id: 1809, name: "Najmul Hasan", team: "Bangladesh", role: "All-rounder" },
-  { id: 1810, name: "Afif Hossain", team: "Bangladesh", role: "All-rounder" },
-  { id: 1811, name: "Nurul Hasan", team: "Bangladesh", role: "Wicketkeeper" },
-  { id: 1812, name: "Mehidy Hasan Miraz", team: "Bangladesh", role: "All-rounder" },
-  { id: 1813, name: "Shoriful Islam", team: "Bangladesh", role: "Bowler" },
-  { id: 1814, name: "Ebadot Hossain", team: "Bangladesh", role: "Bowler" },
-  { id: 1815, name: "Towhid Hridoy Jr.", team: "Bangladesh", role: "Batsman" }
+  { id: 1801, name: "Shakib Al Hasan", team: "Bangladesh", role: "All-rounder", credits: 10.5 },
+  { id: 1802, name: "Mushfiqur Rahim", team: "Bangladesh", role: "Wicketkeeper", credits: 10.5 },
+  { id: 1803, name: "Mahmudullah", team: "Bangladesh", role: "All-rounder", credits: 10.5 },
+  { id: 1804, name: "Taskin Ahmed", team: "Bangladesh", role: "Bowler", credits: 10.0 },
+  { id: 1805, name: "Mustafizur Rahman", team: "Bangladesh", role: "Bowler", credits: 10.0 },
+  { id: 1806, name: "Najmul Hossain Shanto", team: "Bangladesh", role: "Batsman", credits: 9.5 },
+  { id: 1807, name: "Towhid Hridoy", team: "Bangladesh", role: "Batsman", credits: 9.5 },
+  { id: 1808, name: "Liton Das", team: "Bangladesh", role: "Wicketkeeper", credits: 9.5 },
+  { id: 1809, name: "Najmul Hasan", team: "Bangladesh", role: "All-rounder", credits: 9.5 },
+  { id: 1810, name: "Afif Hossain", team: "Bangladesh", role: "All-rounder", credits: 9.5 },
+  { id: 1811, name: "Nurul Hasan", team: "Bangladesh", role: "Wicketkeeper", credits: 9.0 },
+  { id: 1812, name: "Mehidy Hasan Miraz", team: "Bangladesh", role: "All-rounder", credits: 9.0 },
+  { id: 1813, name: "Shoriful Islam", team: "Bangladesh", role: "Bowler", credits: 8.5 },
+  { id: 1814, name: "Ebadot Hossain", team: "Bangladesh", role: "Bowler", credits: 8.5 },
+  { id: 1815, name: "Towhid Hridoy Jr.", team: "Bangladesh", role: "Batsman", credits: 9.0 }
 ];
 
 
@@ -960,13 +1052,42 @@ const PLAYERS = [
                 );
             };
 
+            const getTotalCredits = (players) => {
+                return players.reduce((sum, player) => sum + (player.credits || 0), 0);
+            };
+
+            const validateTeamComposition = (players) => {
+                const roleCounts = {
+                    'Batsman': 0,
+                    'Bowler': 0,
+                    'All-rounder': 0,
+                    'Wicketkeeper': 0
+                };
+                const teamCounts = {};
+
+                players.forEach(player => {
+                    roleCounts[player.role] = (roleCounts[player.role] || 0) + 1;
+                    teamCounts[player.team] = (teamCounts[player.team] || 0) + 1;
+                });
+
+                return { roleCounts, teamCounts };
+            };
+
             const togglePlayerSelection = (player) => {
                 if (selectedPlayers.find(p => p.id === player.id)) {
                     setSelectedPlayers(selectedPlayers.filter(p => p.id !== player.id));
                     if (captain === player.id) setCaptain(null);
                     if (viceCaptain === player.id) setViceCaptain(null);
                 } else if (selectedPlayers.length < 11) {
-                    setSelectedPlayers([...selectedPlayers, player]);
+                    const newTeam = [...selectedPlayers, player];
+                    const totalCredits = getTotalCredits(newTeam);
+                    
+                    if (totalCredits > 100) {
+                        alert(`Cannot add player. Total credits would be ${totalCredits.toFixed(1)}/100. Credit limit exceeded!`);
+                        return;
+                    }
+                    
+                    setSelectedPlayers(newTeam);
                 }
             };
 
@@ -975,6 +1096,42 @@ const PLAYERS = [
                     alert('Please select exactly 11 players');
                     return;
                 }
+
+                const { roleCounts, teamCounts } = validateTeamComposition(selectedPlayers);
+
+                // Validate role composition
+                if (roleCounts['Batsman'] < 3 || roleCounts['Batsman'] > 6) {
+                    alert('You must select 3-6 batsmen');
+                    return;
+                }
+                if (roleCounts['Bowler'] < 3 || roleCounts['Bowler'] > 6) {
+                    alert('You must select 3-6 bowlers');
+                    return;
+                }
+                if (roleCounts['All-rounder'] < 1 || roleCounts['All-rounder'] > 4) {
+                    alert('You must select 1-4 all-rounders');
+                    return;
+                }
+                if (roleCounts['Wicketkeeper'] < 1 || roleCounts['Wicketkeeper'] > 4) {
+                    alert('You must select 1-4 wicketkeepers');
+                    return;
+                }
+
+                // Validate max 7 players from one team
+                for (const team in teamCounts) {
+                    if (teamCounts[team] > 7) {
+                        alert(`You have ${teamCounts[team]} players from ${team}. Maximum 7 players allowed from one team.`);
+                        return;
+                    }
+                }
+
+                // Validate credit limit
+                const totalCredits = getTotalCredits(selectedPlayers);
+                if (totalCredits > 100) {
+                    alert(`Total credits ${totalCredits.toFixed(1)} exceeds the limit of 100`);
+                    return;
+                }
+
                 if (!captain || !viceCaptain) {
                     alert('Please select captain and vice-captain');
                     return;
@@ -989,7 +1146,8 @@ const PLAYERS = [
                     matchName: `${selectedMatch.team1} vs ${selectedMatch.team2}`,
                     players: selectedPlayers,
                     captain,
-                    viceCaptain
+                    viceCaptain,
+                    totalCredits: totalCredits.toFixed(1)
                 };
 
                 setMyTeams({ ...myTeams, [selectedMatch.id]: newTeam });
@@ -1253,12 +1411,15 @@ const PLAYERS = [
                         <div>
                             <div className="card">
                                 <h2>Select Your Team: {selectedMatch.team1} vs {selectedMatch.team2}</h2>
-                                <div className="info-box">
-                                    <h3>📋 Team Selection Rules</h3>
-                                    <p>• Select exactly 11 players from both teams</p>
-                                    <p>• Choose 1 Captain (2x points) and 1 Vice-Captain (1.5x points)</p>
-                                    <p>• Build a balanced team with batsmen, bowlers, and all-rounders</p>
-                                </div>
+                                
+                                {selectedPlayers.length > 0 && (
+                                    <div className="credit-summary">
+                                        <div>Credits Used: {getTotalCredits(selectedPlayers).toFixed(1)} / 100</div>
+                                        <div className="remaining">
+                                            Remaining: {(100 - getTotalCredits(selectedPlayers)).toFixed(1)}
+                                        </div>
+                                    </div>
+                                )}
                                 
                                 <div className="player-grid">
                                     {getAvailablePlayers().map(player => (
@@ -1267,11 +1428,100 @@ const PLAYERS = [
                                             className={`player-card ${selectedPlayers.find(p => p.id === player.id) ? 'selected' : ''}`}
                                             onClick={() => togglePlayerSelection(player)}
                                         >
+                                            <div className="credit-badge">{player.credits}</div>
                                             <h4>{player.name}</h4>
                                             <p className="role">{player.role}</p>
                                             <p className="team">{player.team}</p>
                                         </div>
                                     ))}
+                                </div>
+                            </div>
+
+                            <div className="rules-section">
+                                <h3>📋 Rules for Team Creation</h3>
+                                
+                                <div className="rule-item">
+                                    <h4>✅ 1. Team Size</h4>
+                                    <p>You must create a team of <strong>11 players</strong>.</p>
+                                </div>
+
+                                <div className="rule-item">
+                                    <h4>✅ 2. Player Combination (Mandatory Balance)</h4>
+                                    <p>Your 11 players must fit within these limits:</p>
+                                    <table className="rule-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Role</th>
+                                                <th>Minimum</th>
+                                                <th>Maximum</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr><td>Batsmen</td><td>3</td><td>6</td></tr>
+                                            <tr><td>Bowlers</td><td>3</td><td>6</td></tr>
+                                            <tr><td>All-rounders</td><td>1</td><td>4</td></tr>
+                                            <tr><td>Wicketkeeper</td><td>1</td><td>4</td></tr>
+                                        </tbody>
+                                    </table>
+                                    <p>👉 At least <strong>1 wicketkeeper</strong> is compulsory.</p>
+                                </div>
+
+                                <div className="rule-item">
+                                    <h4>✅ 3. Maximum Players From One Team</h4>
+                                    <p>You can select <strong>max 7 players</strong> from one real team.</p>
+                                    <p style={{marginTop: '8px'}}>Example (IND vs AUS):</p>
+                                    <p>• Max 7 from India</p>
+                                    <p>• Max 7 from Australia</p>
+                                </div>
+
+                                <div className="rule-item">
+                                    <h4>✅ 4. Credit Limit (Very Important)</h4>
+                                    <p>• You get <strong>100 credits</strong> to build your team.</p>
+                                    <p>• Each player has a credit value (8.0–11.0+).</p>
+                                    <p>• Total credits of your XI must not exceed 100.</p>
+                                    <p style={{marginTop: '10px'}}><strong>Example:</strong></p>
+                                    <p style={{color: '#6ee7b7'}}>✅ Total credits used = 99.5</p>
+                                    <p style={{color: '#fca5a5'}}>❌ Total credits used = 101 (Not allowed)</p>
+                                </div>
+
+                                <div className="rule-item">
+                                    <h4>✅ 5. Captain & Vice-Captain Rules</h4>
+                                    <p>You must choose:</p>
+                                    <p>• 1 Captain (C)</p>
+                                    <p>• 1 Vice-Captain (VC)</p>
+                                    <p style={{marginTop: '10px'}}><strong>Points Multiplier:</strong></p>
+                                    <table className="rule-table">
+                                        <thead>
+                                            <tr><th>Role</th><th>Multiplier</th></tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr><td>Captain (C)</td><td>2× points</td></tr>
+                                            <tr><td>Vice-Captain (VC)</td><td>1.5× points</td></tr>
+                                        </tbody>
+                                    </table>
+                                    <p style={{marginTop: '10px'}}><strong>Example:</strong></p>
+                                    <p>• Captain scores 50 → You get 100</p>
+                                    <p>• Vice-captain scores 40 → You get 60</p>
+                                    <p style={{marginTop: '10px'}}>👉 Picking C/VC is the <strong>biggest factor in winning</strong>.</p>
+                                </div>
+
+                                <div className="rule-item">
+                                    <h4>✅ 6. Playing XI Rule (Crucial)</h4>
+                                    <p>Only players who actually play the match score points.</p>
+                                    <p style={{color: '#fca5a5'}}>❌ If a player is on the bench → 0 points</p>
+                                    <p style={{marginTop: '10px'}}>So always:</p>
+                                    <p>• Check toss + final playing XI before deadline.</p>
+                                </div>
+
+                                <div className="rule-item">
+                                    <h4>✅ 7. Scoring System</h4>
+                                    <p><strong>Batting:</strong></p>
+                                    <p>• Run: +1 | Four: +1 | Six: +2</p>
+                                    <p>• 50 runs: +8 bonus | 100 runs: +16 bonus</p>
+                                    <p style={{marginTop: '10px'}}><strong>Bowling:</strong></p>
+                                    <p>• Wicket: +25 | 4 Wickets: +8 | 5 Wickets: +16</p>
+                                    <p style={{marginTop: '10px'}}><strong>Fielding:</strong></p>
+                                    <p>• Catch: +8 | Stump: +12 | Run-out: +12</p>
                                 </div>
                             </div>
 
