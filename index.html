@@ -559,6 +559,40 @@
     <script type="text/babel">
         const { useState, useEffect } = React;
 
+        // Pre-defined users - Edit these credentials as needed
+        const PREDEFINED_USERS = [
+            { id: '1', username: 'rahul_sharma', password: 'cricket2026', name: 'Rahul Sharma' },
+            { id: '2', username: 'priya_singh', password: 'fantasy123', name: 'Priya Singh' },
+            { id: '3', username: 'amit_patel', password: 'team2026', name: 'Amit Patel' },
+            { id: '4', username: 'sneha_verma', password: 'worldcup26', name: 'Sneha Verma' },
+            { id: '5', username: 'vikram_reddy', password: 'player2026', name: 'Vikram Reddy' },
+            { id: '6', username: 'anjali_nair', password: 'match2026', name: 'Anjali Nair' },
+            { id: '7', username: 'rohan_gupta', password: 'dream11', name: 'Rohan Gupta' },
+            { id: '8', username: 'neha_kapoor', password: 'ipl2026', name: 'Neha Kapoor' },
+            { id: '9', username: 'arjun_mehta', password: 'fantasy26', name: 'Arjun Mehta' },
+            { id: '10', username: 'pooja_joshi', password: 'cricket26', name: 'Pooja Joshi' },
+            { id: '11', username: 'karthik_rao', password: 'sports2026', name: 'Karthik Rao' },
+            { id: '12', username: 'divya_iyer', password: 'game2026', name: 'Divya Iyer' },
+            { id: '13', username: 'sanjay_kumar', password: 'fantasy2k26', name: 'Sanjay Kumar' },
+            { id: '14', username: 'ritu_shah', password: 'worldt20', name: 'Ritu Shah' },
+            { id: '15', username: 'manish_desai', password: 'cricket123', name: 'Manish Desai' },
+            { id: '16', username: 'kavya_menon', password: 'player123', name: 'Kavya Menon' },
+            { id: '17', username: 'aakash_pandey', password: 'team123', name: 'Aakash Pandey' },
+            { id: '18', username: 'shreya_kulkarni', password: 'match123', name: 'Shreya Kulkarni' },
+            { id: '19', username: 'deepak_agarwal', password: 'fantasy321', name: 'Deepak Agarwal' },
+            { id: '20', username: 'megha_jain', password: 'cricket321', name: 'Megha Jain' },
+            { id: '21', username: 'nikhil_bajaj', password: 'sports321', name: 'Nikhil Bajaj' },
+            { id: '22', username: 'isha_chopra', password: 'game321', name: 'Isha Chopra' },
+            { id: '23', username: 'varun_malhotra', password: 'player321', name: 'Varun Malhotra' },
+            { id: '24', username: 'tanvi_saxena', password: 'team321', name: 'Tanvi Saxena' },
+            { id: '25', username: 'gaurav_bansal', password: 'worldcup123', name: 'Gaurav Bansal' },
+            { id: '26', username: 'aditi_thakur', password: 'fantasy456', name: 'Aditi Thakur' },
+            { id: '27', username: 'harsh_sinha', password: 'cricket456', name: 'Harsh Sinha' },
+            { id: '28', username: 'nidhi_arora', password: 'sports456', name: 'Nidhi Arora' },
+            { id: '29', username: 'abhishek_yadav', password: 'game456', name: 'Abhishek Yadav' },
+            { id: '30', username: 'simran_bhatia', password: 'player456', name: 'Simran Bhatia' }
+        ];
+
         const MATCHES = [
             // Group A Matches
             { id: 1, team1: 'Netherlands', team2: 'Pakistan', date: '2026-02-07', venue: 'Colombo (SSC)' },
@@ -942,14 +976,9 @@ const PLAYERS = [
 
         function App() {
             const [currentUser, setCurrentUser] = useState(null);
-            const [authMode, setAuthMode] = useState('login');
             const [loginUsername, setLoginUsername] = useState('');
             const [loginPassword, setLoginPassword] = useState('');
-            const [signupUsername, setSignupUsername] = useState('');
-            const [signupPassword, setSignupPassword] = useState('');
-            const [signupName, setSignupName] = useState('');
             const [authError, setAuthError] = useState('');
-            const [authSuccess, setAuthSuccess] = useState('');
 
             const [activeTab, setActiveTab] = useState('matches');
             const [selectedMatch, setSelectedMatch] = useState(null);
@@ -964,6 +993,12 @@ const PLAYERS = [
             const [playerPoints, setPlayerPoints] = useState({});
 
             useEffect(() => {
+                // Initialize predefined users in localStorage on first load
+                const storedUsers = localStorage.getItem('users');
+                if (!storedUsers) {
+                    localStorage.setItem('users', JSON.stringify(PREDEFINED_USERS));
+                }
+
                 const savedUser = localStorage.getItem('currentUser');
                 if (savedUser) {
                     setCurrentUser(JSON.parse(savedUser));
@@ -1007,16 +1042,15 @@ const PLAYERS = [
                     const adminUser = {
                         id: 'admin',
                         username: ADMIN_USERNAME,
-                        name: ADMIN_USERNAME,
+                        name: 'Admin',
                         isAdmin: true
                     };
                     setCurrentUser(adminUser);
                     return;
                 }
 
-                // Check regular users
-                const users = JSON.parse(localStorage.getItem('users') || '[]');
-                const user = users.find(u => u.username === loginUsername && u.password === loginPassword);
+                // Check predefined users
+                const user = PREDEFINED_USERS.find(u => u.username === loginUsername && u.password === loginPassword);
                 
                 if (user) {
                     setCurrentUser({
@@ -1026,51 +1060,8 @@ const PLAYERS = [
                         isAdmin: false
                     });
                 } else {
-                    setAuthError('Invalid username or password');
+                    setAuthError('Invalid username or password. Please contact admin for credentials.');
                 }
-            };
-
-            const handleSignup = () => {
-                setAuthError('');
-                setAuthSuccess('');
-
-                if (!signupUsername || !signupPassword || !signupName) {
-                    setAuthError('All fields are required');
-                    return;
-                }
-
-                if (signupUsername.length < 3) {
-                    setAuthError('Username must be at least 3 characters');
-                    return;
-                }
-
-                if (signupPassword.length < 6) {
-                    setAuthError('Password must be at least 6 characters');
-                    return;
-                }
-
-                const users = JSON.parse(localStorage.getItem('users') || '[]');
-                
-                if (users.find(u => u.username === signupUsername)) {
-                    setAuthError('Username already exists');
-                    return;
-                }
-
-                const newUser = {
-                    id: Date.now().toString(),
-                    username: signupUsername,
-                    password: signupPassword,
-                    name: signupName
-                };
-
-                users.push(newUser);
-                localStorage.setItem('users', JSON.stringify(users));
-                
-                setAuthSuccess('Account created! Please login.');
-                setSignupUsername('');
-                setSignupPassword('');
-                setSignupName('');
-                setAuthMode('login');
             };
 
             const handleLogout = () => {
@@ -1303,98 +1294,41 @@ const PLAYERS = [
                         </div>
 
                         <div className="card">
-                            <div className="auth-tabs">
-                                <button 
-                                    className={`auth-tab ${authMode === 'login' ? 'active' : ''}`}
-                                    onClick={() => {
-                                        setAuthMode('login');
-                                        setAuthError('');
-                                        setAuthSuccess('');
-                                    }}
-                                >
-                                    Login
-                                </button>
-                                <button 
-                                    className={`auth-tab ${authMode === 'signup' ? 'active' : ''}`}
-                                    onClick={() => {
-                                        setAuthMode('signup');
-                                        setAuthError('');
-                                        setAuthSuccess('');
-                                    }}
-                                >
-                                    Sign Up
-                                </button>
-                            </div>
+                            <h2 style={{marginBottom: '20px', textAlign: 'center'}}>Login</h2>
 
                             {authError && <div className="error-message">{authError}</div>}
-                            {authSuccess && <div className="success-message">{authSuccess}</div>}
 
-                            {authMode === 'login' ? (
-                                <>
-                                    <div className="input-group">
-                                        <label>Username</label>
-                                        <input 
-                                            type="text" 
-                                            value={loginUsername}
-                                            onChange={(e) => setLoginUsername(e.target.value)}
-                                            placeholder="Enter username"
-                                            onKeyPress={(e) => e.key === 'Enter' && handleLogin()}
-                                        />
-                                    </div>
-                                    <div className="input-group">
-                                        <label>Password</label>
-                                        <input 
-                                            type="password" 
-                                            value={loginPassword}
-                                            onChange={(e) => setLoginPassword(e.target.value)}
-                                            placeholder="Enter password"
-                                            onKeyPress={(e) => e.key === 'Enter' && handleLogin()}
-                                        />
-                                    </div>
-                                    <button className="btn" onClick={handleLogin} style={{width: '100%'}}>
-                                        Login
-                                    </button>
-                                </>
-                            ) : (
-                                <>
-                                    <div className="input-group">
-                                        <label>Full Name</label>
-                                        <input 
-                                            type="text" 
-                                            value={signupName}
-                                            onChange={(e) => setSignupName(e.target.value)}
-                                            placeholder="Enter your name"
-                                        />
-                                    </div>
-                                    <div className="input-group">
-                                        <label>Username</label>
-                                        <input 
-                                            type="text" 
-                                            value={signupUsername}
-                                            onChange={(e) => setSignupUsername(e.target.value)}
-                                            placeholder="Choose a username"
-                                        />
-                                    </div>
-                                    <div className="input-group">
-                                        <label>Password</label>
-                                        <input 
-                                            type="password" 
-                                            value={signupPassword}
-                                            onChange={(e) => setSignupPassword(e.target.value)}
-                                            placeholder="Choose a password (min 6 characters)"
-                                        />
-                                    </div>
-                                    <button className="btn" onClick={handleSignup} style={{width: '100%'}}>
-                                        Create Account
-                                    </button>
-                                </>
-                            )}
+                            <div className="input-group">
+                                <label>Username</label>
+                                <input 
+                                    type="text" 
+                                    value={loginUsername}
+                                    onChange={(e) => setLoginUsername(e.target.value)}
+                                    placeholder="Enter username"
+                                    onKeyPress={(e) => e.key === 'Enter' && handleLogin()}
+                                />
+                            </div>
+                            <div className="input-group">
+                                <label>Password</label>
+                                <input 
+                                    type="password" 
+                                    value={loginPassword}
+                                    onChange={(e) => setLoginPassword(e.target.value)}
+                                    placeholder="Enter password"
+                                    onKeyPress={(e) => e.key === 'Enter' && handleLogin()}
+                                />
+                            </div>
+                            <button className="btn" onClick={handleLogin} style={{width: '100%'}}>
+                                Login
+                            </button>
                         </div>
 
                         <div className="info-box" style={{marginTop: '20px'}}>
-                            <h3>ℹ️ How to Get Started</h3>
-                            <p><strong>New User?</strong> Click "Sign Up" to create your account</p>
-                            <p><strong>Admin?</strong> Login with admin credentials</p>
+                            <h3>ℹ️ Account Information</h3>
+                            <p><strong>Pre-registered Users:</strong> Use credentials provided by admin</p>
+                            <p><strong>Admin Login:</strong> username: <code>admin</code> / password: <code>admin123</code></p>
+                            <p><strong>Sample User:</strong> username: <code>rahul_sharma</code> / password: <code>cricket2026</code></p>
+                            <p style={{marginTop: '10px', color: '#f59e0b'}}>⚠️ Note: Accounts work only on this device due to localStorage. Contact admin if you need credentials.</p>
                         </div>
                     </div>
                 );
