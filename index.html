@@ -29,10 +29,8 @@
             border-radius: 25px;
             margin-bottom: 40px;
             box-shadow: 0 30px 60px rgba(16, 185, 129, 0.4);
-            animation: slideDown 0.6s ease-out;
+            position: relative;
         }
-        
-        @keyframes slideDown { from { transform: translateY(-30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         
         .header h1 {
             font-family: 'Rajdhani', sans-serif;
@@ -44,9 +42,31 @@
         
         .header p { font-size: 1.2rem; margin-top: 10px; opacity: 0.9; }
         
+        .user-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(0,0,0,0.3);
+            padding: 10px 20px;
+            border-radius: 12px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .admin-badge {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+        
         .tabs {
             display: flex;
-            gap: 12px;
+            gap: 10px;
             margin-bottom: 35px;
             background: #1a1f3a;
             padding: 12px;
@@ -56,8 +76,8 @@
         
         .tab {
             flex: 1;
-            min-width: 120px;
-            padding: 15px 20px;
+            min-width: 100px;
+            padding: 15px 18px;
             background: transparent;
             border: none;
             color: #8892b0;
@@ -65,7 +85,7 @@
             cursor: pointer;
             border-radius: 12px;
             transition: all 0.3s;
-            font-size: 15px;
+            font-size: 14px;
             font-family: 'Rajdhani', sans-serif;
             white-space: nowrap;
         }
@@ -83,10 +103,7 @@
             padding: 30px;
             margin-bottom: 25px;
             box-shadow: 0 10px 40px rgba(0,0,0,0.5);
-            animation: fadeIn 0.5s ease-out;
         }
-        
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         
         .card h2 {
             font-family: 'Rajdhani', sans-serif;
@@ -129,211 +146,318 @@
         }
         .btn:hover:not(:disabled) { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(16, 185, 129, 0.6); }
         .btn:disabled { opacity: 0.5; cursor: not-allowed; }
-        .btn-secondary { background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); }
-        .btn-danger { background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); }
+        
+        .btn-secondary {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+        }
+        .btn-secondary:hover:not(:disabled) { box-shadow: 0 10px 30px rgba(59, 130, 246, 0.6); }
+        
+        .btn-danger {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        }
+        .btn-danger:hover:not(:disabled) { box-shadow: 0 10px 30px rgba(239, 68, 68, 0.6); }
+        
+        .btn-small { padding: 10px 25px; font-size: 14px; }
+        
+        .match-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 20px;
+        }
         
         .match-card {
             background: #0a0e27;
-            padding: 25px;
-            border-radius: 15px;
-            margin-bottom: 20px;
+            border-radius: 16px;
+            padding: 22px;
             border: 2px solid #2d3548;
-            cursor: pointer;
             transition: all 0.3s;
+            cursor: pointer;
         }
-        .match-card:hover { border-color: #10b981; transform: translateY(-2px); box-shadow: 0 8px 25px rgba(16, 185, 129, 0.2); }
-        .match-card.team-created { border-color: #10b981; background: rgba(16, 185, 129, 0.05); }
+        .match-card:hover { border-color: #10b981; transform: translateY(-5px); }
+        .match-card h3 { color: #10b981; margin-bottom: 12px; font-size: 1.3rem; }
+        .match-card p { color: #94a3b8; margin: 6px 0; font-size: 14px; }
         
-        .match-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-        .match-teams { font-size: 1.5rem; font-weight: 700; font-family: 'Rajdhani', sans-serif; }
-        .match-badge { padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 700; }
-        .badge-created { background: rgba(16, 185, 129, 0.2); color: #10b981; }
-        .badge-upcoming { background: rgba(59, 130, 246, 0.2); color: #3b82f6; }
-        .match-info { color: #94a3b8; font-size: 14px; margin-top: 8px; }
-        
-        .player-list {
+        .player-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 18px;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
             margin-top: 25px;
         }
         
         .player-card {
             background: #0a0e27;
-            padding: 20px;
-            border-radius: 15px;
-            border: 2px solid #2d3548;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        .player-card:hover { border-color: #10b981; transform: translateY(-4px); box-shadow: 0 8px 20px rgba(16, 185, 129, 0.2); }
-        .player-card.selected { border-color: #10b981; background: rgba(16, 185, 129, 0.1); }
-        .player-card.captain { border-color: #fbbf24; background: rgba(251, 191, 36, 0.15); }
-        .player-card.vice-captain { border-color: #a78bfa; background: rgba(167, 139, 250, 0.15); }
-        
-        .player-name { font-weight: 700; font-size: 18px; margin-bottom: 8px; font-family: 'Rajdhani', sans-serif; }
-        .player-role { color: #94a3b8; font-size: 14px; margin-bottom: 8px; }
-        .player-credits { color: #10b981; font-weight: 700; font-size: 16px; }
-        
-        .team-summary {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-            gap: 20px;
-            padding: 25px;
-            background: #0a0e27;
-            border-radius: 15px;
-            margin-bottom: 25px;
-        }
-        .stat { text-align: center; }
-        .stat-value { font-size: 2.5rem; font-weight: 700; color: #10b981; font-family: 'Rajdhani', sans-serif; }
-        .stat-label { color: #94a3b8; font-size: 13px; margin-top: 5px; }
-        
-        .captain-buttons { display: flex; gap: 8px; margin-top: 12px; }
-        .captain-btn {
-            flex: 1;
-            padding: 8px 12px;
-            font-size: 12px;
-            border: 2px solid #2d3548;
-            background: transparent;
-            color: #cbd5e1;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.2s;
-        }
-        .captain-btn:hover { border-color: #10b981; }
-        .captain-btn.active-captain { background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%); border-color: #fbbf24; color: #000; }
-        .captain-btn.active-vc { background: linear-gradient(135deg, #a78bfa 0%, #8b5cf6 100%); border-color: #a78bfa; color: white; }
-        
-        .filter-buttons { display: flex; gap: 12px; margin-bottom: 25px; flex-wrap: wrap; }
-        .filter-btn {
-            padding: 10px 20px;
-            background: #0a0e27;
-            border: 2px solid #2d3548;
-            border-radius: 10px;
-            color: #cbd5e1;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s;
-        }
-        .filter-btn:hover { border-color: #10b981; }
-        .filter-btn.active { border-color: #10b981; background: rgba(16, 185, 129, 0.15); color: #10b981; }
-        
-        .leaderboard-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        .leaderboard-table th {
-            background: #0a0e27;
+            border-radius: 14px;
             padding: 18px;
-            text-align: left;
+            border: 2px solid #2d3548;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        
+        .player-card:hover { border-color: #10b981; }
+        .player-card.selected { border-color: #10b981; background: rgba(16, 185, 129, 0.15); }
+        .player-card h4 { margin-bottom: 8px; font-size: 1.1rem; }
+        .player-card .role { color: #94a3b8; font-size: 13px; margin-bottom: 8px; }
+        .player-card .team { color: #64748b; font-size: 12px; }
+        
+        .selected-team {
+            background: #0a0e27;
+            border-radius: 14px;
+            padding: 22px;
+            margin-top: 25px;
+        }
+        
+        .selected-team h3 { color: #10b981; margin-bottom: 18px; font-size: 1.4rem; }
+        .selected-team .count { color: #94a3b8; margin-bottom: 15px; }
+        
+        .selected-players {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 12px;
+        }
+        
+        .selected-player {
+            background: #1a1f3a;
+            padding: 14px;
+            border-radius: 10px;
+            border: 2px solid #2d3548;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .selected-player .name { font-weight: 600; font-size: 15px; }
+        .selected-player .role { color: #94a3b8; font-size: 12px; }
+        
+        .remove-btn {
+            background: #ef4444;
+            border: none;
+            color: white;
+            padding: 6px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+        }
+        
+        .captain-selection {
+            background: #0a0e27;
+            border-radius: 14px;
+            padding: 22px;
+            margin-top: 25px;
+        }
+        
+        .captain-selection h3 { color: #10b981; margin-bottom: 18px; }
+        
+        .captain-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 12px;
+        }
+        
+        .captain-option {
+            background: #1a1f3a;
+            padding: 14px;
+            border-radius: 10px;
+            border: 2px solid #2d3548;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .captain-option:hover { border-color: #10b981; }
+        .captain-option.selected { border-color: #f59e0b; background: rgba(245, 158, 11, 0.15); }
+        
+        .my-teams-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 20px;
+        }
+        
+        .team-card {
+            background: #0a0e27;
+            border-radius: 14px;
+            padding: 22px;
+            border: 2px solid #2d3548;
+        }
+        
+        .team-card h4 { color: #10b981; margin-bottom: 16px; font-size: 1.2rem; }
+        
+        .team-players-grid {
+            display: grid;
+            gap: 10px;
+        }
+        
+        .team-player {
+            background: #1a1f3a;
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 14px;
+            border: 1px solid #2d3548;
+        }
+        
+        .team-player.captain {
+            border-color: #f59e0b;
+            background: rgba(245, 158, 11, 0.15);
+        }
+        
+        .team-player.vc {
+            border-color: #3b82f6;
+            background: rgba(59, 130, 246, 0.15);
+        }
+        
+        .contest-code {
+            background: #0a0e27;
+            padding: 20px;
+            border-radius: 14px;
+            margin-top: 15px;
+        }
+        
+        .contest-code-value {
+            font-size: 2rem;
             font-weight: 700;
             color: #10b981;
+            letter-spacing: 4px;
             font-family: 'Rajdhani', sans-serif;
-            font-size: 16px;
+            text-align: center;
+            padding: 15px;
+            background: #1a1f3a;
+            border-radius: 10px;
+            margin-top: 8px;
         }
-        .leaderboard-table td { padding: 18px; border-bottom: 1px solid #2d3548; }
+        
+        .leaderboard-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        .leaderboard-table th, .leaderboard-table td {
+            padding: 18px;
+            text-align: left;
+            border-bottom: 1px solid #2d3548;
+        }
+        
+        .leaderboard-table th {
+            background: #0a0e27;
+            color: #10b981;
+            font-weight: 700;
+            font-size: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
         .leaderboard-table tr:hover { background: rgba(16, 185, 129, 0.05); }
         
         .rank-badge {
             display: inline-block;
-            width: 40px;
-            height: 40px;
-            line-height: 40px;
+            width: 35px;
+            height: 35px;
+            line-height: 35px;
             text-align: center;
             border-radius: 50%;
             font-weight: 700;
-            font-family: 'Rajdhani', sans-serif;
-            font-size: 18px;
-        }
-        .rank-1 { background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%); box-shadow: 0 4px 15px rgba(251, 191, 36, 0.4); }
-        .rank-2 { background: linear-gradient(135deg, #cbd5e1 0%, #94a3b8 100%); box-shadow: 0 4px 15px rgba(203, 213, 225, 0.4); color: #000; }
-        .rank-3 { background: linear-gradient(135deg, #fb923c 0%, #f97316 100%); box-shadow: 0 4px 15px rgba(251, 146, 60, 0.4); }
-        
-        .contest-code { background: #0a0e27; padding: 25px; border-radius: 15px; text-align: center; margin: 25px 0; border: 3px dashed #10b981; }
-        .contest-code-value {
-            font-size: 3rem;
-            font-weight: 700;
-            letter-spacing: 8px;
-            color: #10b981;
-            font-family: 'Rajdhani', sans-serif;
-            margin: 15px 0;
+            background: #2d3548;
         }
         
-        .success-message {
-            background: rgba(34, 197, 94, 0.15);
-            border: 2px solid #22c55e;
-            padding: 18px;
-            border-radius: 12px;
-            color: #22c55e;
-            margin-bottom: 25px;
-            font-weight: 600;
-            animation: slideIn 0.3s ease-out;
+        .rank-badge.rank-1 {
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+            box-shadow: 0 4px 15px rgba(251, 191, 36, 0.5);
         }
-        .error-message {
-            background: rgba(239, 68, 68, 0.15);
-            border: 2px solid #ef4444;
-            padding: 18px;
-            border-radius: 12px;
-            color: #ef4444;
-            margin-bottom: 25px;
-            font-weight: 600;
-            animation: slideIn 0.3s ease-out;
+        
+        .rank-badge.rank-2 {
+            background: linear-gradient(135deg, #cbd5e1 0%, #94a3b8 100%);
         }
-        @keyframes slideIn { from { transform: translateX(-20px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        
+        .rank-badge.rank-3 {
+            background: linear-gradient(135deg, #fb923c 0%, #f97316 100%);
+        }
         
         .info-box {
             background: rgba(59, 130, 246, 0.1);
-            border: 2px solid #3b82f6;
-            padding: 20px;
-            border-radius: 12px;
-            color: #93c5fd;
+            border-left: 4px solid #3b82f6;
+            padding: 18px;
+            border-radius: 10px;
             margin-bottom: 25px;
         }
-        .info-box h3 { color: #60a5fa; margin-bottom: 10px; font-family: 'Rajdhani', sans-serif; }
+        
+        .info-box h3 { color: #3b82f6; margin-bottom: 12px; font-size: 1.1rem; }
+        .info-box p { color: #cbd5e1; margin: 8px 0; font-size: 14px; line-height: 1.6; }
         
         .points-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
             gap: 15px;
             margin-top: 20px;
         }
-        .points-input-item { background: #0a0e27; padding: 15px; border-radius: 10px; border: 2px solid #2d3548; }
-        .points-input-item label { display: block; font-size: 14px; color: #cbd5e1; margin-bottom: 8px; font-weight: 600; }
+        
+        .points-input-item label {
+            display: block;
+            margin-bottom: 6px;
+            color: #cbd5e1;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
         .points-input-item input {
             width: 100%;
-            padding: 10px;
-            background: #1a1f3a;
-            border: 1px solid #2d3548;
-            border-radius: 8px;
+            padding: 12px;
+            background: #0a0e27;
+            border: 2px solid #2d3548;
+            border-radius: 10px;
             color: white;
             font-size: 16px;
         }
         
-        .my-teams-grid { display: grid; gap: 20px; }
-        .team-card { background: #0a0e27; padding: 20px; border-radius: 12px; border: 2px solid #2d3548; }
-        .team-card h4 { font-family: 'Rajdhani', sans-serif; font-size: 1.4rem; margin-bottom: 15px; color: #10b981; }
-        .team-players-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-            gap: 10px;
-            margin-top: 15px;
+        .auth-container {
+            max-width: 450px;
+            margin: 100px auto;
         }
-        .team-player { font-size: 14px; color: #cbd5e1; padding: 8px; background: #1a1f3a; border-radius: 6px; }
-        .team-player.captain { background: rgba(251, 191, 36, 0.2); border: 1px solid #fbbf24; }
-        .team-player.vc { background: rgba(167, 139, 250, 0.2); border: 1px solid #a78bfa; }
         
+        .auth-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .auth-tab {
+            flex: 1;
+            padding: 12px;
+            background: #1a1f3a;
+            border: none;
+            color: #8892b0;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 12px;
+            transition: all 0.3s;
+        }
+        
+        .auth-tab.active {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+        }
+        
+        .error-message {
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid #ef4444;
+            color: #fca5a5;
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+        
+        .success-message {
+            background: rgba(16, 185, 129, 0.2);
+            border: 1px solid #10b981;
+            color: #6ee7b7;
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+
         @media (max-width: 768px) {
-            .header h1 { font-size: 2.5rem; }
-            .tabs { flex-wrap: nowrap; overflow-x: auto; }
-            .tab { min-width: 100px; padding: 12px 15px; font-size: 14px; }
-            .match-teams { font-size: 1.2rem; }
-            .player-list { grid-template-columns: 1fr; }
-            .contest-code-value { font-size: 2rem; letter-spacing: 5px; }
+            .header h1 { font-size: 2rem; }
+            .match-grid, .player-grid, .my-teams-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -343,685 +467,716 @@
     <script type="text/babel">
         const { useState, useEffect } = React;
 
-        // PLAYER DATABASE
-        const PLAYERS = {
-            'India': [
-                { id: 'ind1', name: "Rohit Sharma", role: "Batsman", credits: 11, country: "India" },
-                { id: 'ind2', name: "Virat Kohli", role: "Batsman", credits: 11, country: "India" },
-                { id: 'ind3', name: "Jasprit Bumrah", role: "Bowler", credits: 10.5, country: "India" },
-                { id: 'ind4', name: "Hardik Pandya", role: "All-rounder", credits: 10, country: "India" },
-                { id: 'ind5', name: "Ravindra Jadeja", role: "All-rounder", credits: 9.5, country: "India" },
-                { id: 'ind6', name: "Rishabh Pant", role: "Wicket-keeper", credits: 9.5, country: "India" },
-                { id: 'ind7', name: "Shubman Gill", role: "Batsman", credits: 9, country: "India" },
-                { id: 'ind8', name: "Mohammed Siraj", role: "Bowler", credits: 8.5, country: "India" },
-                { id: 'ind9', name: "Kuldeep Yadav", role: "Bowler", credits: 8, country: "India" },
-                { id: 'ind10', name: "Yashasvi Jaiswal", role: "Batsman", credits: 8.5, country: "India" },
-                { id: 'ind11', name: "Axar Patel", role: "All-rounder", credits: 8, country: "India" },
-            ],
-            'Pakistan': [
-                { id: 'pak1', name: "Babar Azam", role: "Batsman", credits: 10.5, country: "Pakistan" },
-                { id: 'pak2', name: "Mohammad Rizwan", role: "Wicket-keeper", credits: 9.5, country: "Pakistan" },
-                { id: 'pak3', name: "Shaheen Afridi", role: "Bowler", credits: 10, country: "Pakistan" },
-                { id: 'pak4', name: "Shadab Khan", role: "All-rounder", credits: 8.5, country: "Pakistan" },
-                { id: 'pak5', name: "Haris Rauf", role: "Bowler", credits: 8.5, country: "Pakistan" },
-                { id: 'pak6', name: "Fakhar Zaman", role: "Batsman", credits: 8, country: "Pakistan" },
-                { id: 'pak7', name: "Naseem Shah", role: "Bowler", credits: 8, country: "Pakistan" },
-                { id: 'pak8', name: "Iftikhar Ahmed", role: "All-rounder", credits: 7.5, country: "Pakistan" },
-                { id: 'pak9', name: "Mohammad Nawaz", role: "All-rounder", credits: 7, country: "Pakistan" },
-                { id: 'pak10', name: "Usama Mir", role: "Bowler", credits: 6.5, country: "Pakistan" },
-            ],
-            'Australia': [
-                { id: 'aus1', name: "Pat Cummins", role: "Bowler", credits: 10.5, country: "Australia" },
-                { id: 'aus2', name: "Steve Smith", role: "Batsman", credits: 10, country: "Australia" },
-                { id: 'aus3', name: "Glenn Maxwell", role: "All-rounder", credits: 9.5, country: "Australia" },
-                { id: 'aus4', name: "Mitchell Starc", role: "Bowler", credits: 9.5, country: "Australia" },
-                { id: 'aus5', name: "Travis Head", role: "Batsman", credits: 9, country: "Australia" },
-                { id: 'aus6', name: "Josh Hazlewood", role: "Bowler", credits: 9, country: "Australia" },
-                { id: 'aus7', name: "Alex Carey", role: "Wicket-keeper", credits: 8, country: "Australia" },
-                { id: 'aus8', name: "Marcus Stoinis", role: "All-rounder", credits: 8, country: "Australia" },
-                { id: 'aus9', name: "Mitchell Marsh", role: "All-rounder", credits: 8.5, country: "Australia" },
-                { id: 'aus10', name: "Adam Zampa", role: "Bowler", credits: 8, country: "Australia" },
-            ],
-            'England': [
-                { id: 'eng1', name: "Jos Buttler", role: "Wicket-keeper", credits: 10, country: "England" },
-                { id: 'eng2', name: "Ben Stokes", role: "All-rounder", credits: 10, country: "England" },
-                { id: 'eng3', name: "Joe Root", role: "Batsman", credits: 9.5, country: "England" },
-                { id: 'eng4', name: "Jofra Archer", role: "Bowler", credits: 9.5, country: "England" },
-                { id: 'eng5', name: "Mark Wood", role: "Bowler", credits: 8.5, country: "England" },
-                { id: 'eng6', name: "Harry Brook", role: "Batsman", credits: 8.5, country: "England" },
-                { id: 'eng7', name: "Adil Rashid", role: "Bowler", credits: 8, country: "England" },
-                { id: 'eng8', name: "Moeen Ali", role: "All-rounder", credits: 8, country: "England" },
-                { id: 'eng9', name: "Jonny Bairstow", role: "Batsman", credits: 8.5, country: "England" },
-                { id: 'eng10', name: "Sam Curran", role: "All-rounder", credits: 8.5, country: "England" },
-            ],
-            'Sri Lanka': [
-                { id: 'sl1', name: "Wanindu Hasaranga", role: "All-rounder", credits: 9, country: "Sri Lanka" },
-                { id: 'sl2', name: "Pathum Nissanka", role: "Batsman", credits: 8, country: "Sri Lanka" },
-                { id: 'sl3', name: "Kusal Mendis", role: "Wicket-keeper", credits: 8, country: "Sri Lanka" },
-                { id: 'sl4', name: "Maheesh Theekshana", role: "Bowler", credits: 7.5, country: "Sri Lanka" },
-                { id: 'sl5', name: "Dasun Shanaka", role: "All-rounder", credits: 7.5, country: "Sri Lanka" },
-                { id: 'sl6', name: "Charith Asalanka", role: "Batsman", credits: 7, country: "Sri Lanka" },
-                { id: 'sl7', name: "Matheesha Pathirana", role: "Bowler", credits: 7, country: "Sri Lanka" },
-                { id: 'sl8', name: "Dhananjaya de Silva", role: "All-rounder", credits: 7.5, country: "Sri Lanka" },
-            ],
-            'South Africa': [
-                { id: 'sa1', name: "Quinton de Kock", role: "Wicket-keeper", credits: 9.5, country: "South Africa" },
-                { id: 'sa2', name: "Kagiso Rabada", role: "Bowler", credits: 10, country: "South Africa" },
-                { id: 'sa3', name: "Aiden Markram", role: "Batsman", credits: 8.5, country: "South Africa" },
-                { id: 'sa4', name: "David Miller", role: "Batsman", credits: 8.5, country: "South Africa" },
-                { id: 'sa5', name: "Anrich Nortje", role: "Bowler", credits: 8.5, country: "South Africa" },
-                { id: 'sa6', name: "Heinrich Klaasen", role: "Wicket-keeper", credits: 8, country: "South Africa" },
-                { id: 'sa7', name: "Marco Jansen", role: "All-rounder", credits: 7.5, country: "South Africa" },
-                { id: 'sa8', name: "Tabraiz Shamsi", role: "Bowler", credits: 7.5, country: "South Africa" },
-            ],
-            'New Zealand': [
-                { id: 'nz1', name: "Kane Williamson", role: "Batsman", credits: 10, country: "New Zealand" },
-                { id: 'nz2', name: "Trent Boult", role: "Bowler", credits: 9.5, country: "New Zealand" },
-                { id: 'nz3', name: "Devon Conway", role: "Batsman", credits: 8.5, country: "New Zealand" },
-                { id: 'nz4', name: "Tim Southee", role: "Bowler", credits: 8.5, country: "New Zealand" },
-                { id: 'nz5', name: "Daryl Mitchell", role: "All-rounder", credits: 8, country: "New Zealand" },
-                { id: 'nz6', name: "Tom Latham", role: "Wicket-keeper", credits: 8, country: "New Zealand" },
-                { id: 'nz7', name: "Mitchell Santner", role: "All-rounder", credits: 7.5, country: "New Zealand" },
-                { id: 'nz8', name: "Lockie Ferguson", role: "Bowler", credits: 7.5, country: "New Zealand" },
-            ],
-            'West Indies': [
-                { id: 'wi1', name: "Nicholas Pooran", role: "Wicket-keeper", credits: 9, country: "West Indies" },
-                { id: 'wi2', name: "Andre Russell", role: "All-rounder", credits: 9, country: "West Indies" },
-                { id: 'wi3', name: "Jason Holder", role: "All-rounder", credits: 8, country: "West Indies" },
-                { id: 'wi4', name: "Alzarri Joseph", role: "Bowler", credits: 7.5, country: "West Indies" },
-                { id: 'wi5', name: "Rovman Powell", role: "All-rounder", credits: 7.5, country: "West Indies" },
-                { id: 'wi6', name: "Shai Hope", role: "Batsman", credits: 7.5, country: "West Indies" },
-                { id: 'wi7', name: "Akeal Hosein", role: "Bowler", credits: 7, country: "West Indies" },
-            ],
-            'Bangladesh': [
-                { id: 'ban1', name: "Shakib Al Hasan", role: "All-rounder", credits: 9, country: "Bangladesh" },
-                { id: 'ban2', name: "Mustafizur Rahman", role: "Bowler", credits: 8, country: "Bangladesh" },
-                { id: 'ban3', name: "Litton Das", role: "Wicket-keeper", credits: 7.5, country: "Bangladesh" },
-                { id: 'ban4', name: "Taskin Ahmed", role: "Bowler", credits: 7.5, country: "Bangladesh" },
-                { id: 'ban5', name: "Mehidy Hasan", role: "All-rounder", credits: 7, country: "Bangladesh" },
-                { id: 'ban6', name: "Najmul Hossain", role: "Batsman", credits: 7, country: "Bangladesh" },
-            ],
-            'Afghanistan': [
-                { id: 'afg1', name: "Rashid Khan", role: "Bowler", credits: 9.5, country: "Afghanistan" },
-                { id: 'afg2', name: "Mohammad Nabi", role: "All-rounder", credits: 8, country: "Afghanistan" },
-                { id: 'afg3', name: "Rahmanullah Gurbaz", role: "Wicket-keeper", credits: 7.5, country: "Afghanistan" },
-                { id: 'afg4', name: "Naveen-ul-Haq", role: "Bowler", credits: 7, country: "Afghanistan" },
-                { id: 'afg5', name: "Fazalhaq Farooqi", role: "Bowler", credits: 7, country: "Afghanistan" },
-            ],
-            'Netherlands': [
-                { id: 'ned1', name: "Scott Edwards", role: "Wicket-keeper", credits: 7.5, country: "Netherlands" },
-                { id: 'ned2', name: "Max O'Dowd", role: "Batsman", credits: 7, country: "Netherlands" },
-                { id: 'ned3', name: "Logan van Beek", role: "All-rounder", credits: 7, country: "Netherlands" },
-                { id: 'ned4', name: "Paul van Meekeren", role: "Bowler", credits: 6.5, country: "Netherlands" },
-            ],
-            'Ireland': [
-                { id: 'ire1', name: "Paul Stirling", role: "Batsman", credits: 7.5, country: "Ireland" },
-                { id: 'ire2', name: "Andy Balbirnie", role: "Batsman", credits: 7, country: "Ireland" },
-                { id: 'ire3', name: "Lorcan Tucker", role: "Wicket-keeper", credits: 6.5, country: "Ireland" },
-                { id: 'ire4', name: "Mark Adair", role: "All-rounder", credits: 7, country: "Ireland" },
-            ],
-            'USA': [
-                { id: 'usa1', name: "Aaron Jones", role: "Batsman", credits: 7, country: "USA" },
-                { id: 'usa2', name: "Monank Patel", role: "Wicket-keeper", credits: 6.5, country: "USA" },
-                { id: 'usa3', name: "Corey Anderson", role: "All-rounder", credits: 7, country: "USA" },
-                { id: 'usa4', name: "Ali Khan", role: "Bowler", credits: 6.5, country: "USA" },
-            ],
-        };
-
         const MATCHES = [
-            { id: 1, date: "Feb 7, 11:00 AM", team1: "Netherlands", team2: "Pakistan", venue: "Colombo (SSC)" },
-            { id: 2, date: "Feb 7, 3:00 PM", team1: "Bangladesh", team2: "West Indies", venue: "Eden Gardens" },
-            { id: 3, date: "Feb 7, 7:00 PM", team1: "India", team2: "USA", venue: "Wankhede" },
-            { id: 4, date: "Feb 8, 11:00 AM", team1: "Afghanistan", team2: "New Zealand", venue: "Chennai" },
-            { id: 5, date: "Feb 8, 7:00 PM", team1: "Sri Lanka", team2: "Ireland", venue: "Colombo (RPS)" },
-            { id: 6, date: "Feb 11, 7:00 PM", team1: "England", team2: "West Indies", venue: "Wankhede" },
-            { id: 7, date: "Feb 14, 7:00 PM", team1: "New Zealand", team2: "South Africa", venue: "Ahmedabad" },
-            { id: 8, date: "Feb 15, 7:00 PM", team1: "India", team2: "Pakistan", venue: "Colombo (RPS)" },
-            { id: 9, date: "Feb 16, 7:00 PM", team1: "Australia", team2: "Sri Lanka", venue: "Pallekele" },
-            { id: 10, date: "Feb 18, 7:00 PM", team1: "England", team2: "Bangladesh", venue: "Eden Gardens" },
+            { id: 1, team1: 'India', team2: 'Pakistan', date: '2026-06-01', venue: 'New York' },
+            { id: 2, team1: 'Australia', team2: 'England', date: '2026-06-02', venue: 'Barbados' },
+            { id: 3, team1: 'South Africa', team2: 'West Indies', date: '2026-06-03', venue: 'Trinidad' },
+            { id: 4, team1: 'New Zealand', team2: 'Sri Lanka', date: '2026-06-04', venue: 'Dallas' },
+            { id: 5, team1: 'Bangladesh', team2: 'Afghanistan', date: '2026-06-05', venue: 'New York' },
         ];
 
+        const PLAYERS = [
+            { id: 1, name: 'Virat Kohli', team: 'India', role: 'Batsman' },
+            { id: 2, name: 'Rohit Sharma', team: 'India', role: 'Batsman' },
+            { id: 3, name: 'Jasprit Bumrah', team: 'India', role: 'Bowler' },
+            { id: 4, name: 'Hardik Pandya', team: 'India', role: 'All-rounder' },
+            { id: 5, name: 'Babar Azam', team: 'Pakistan', role: 'Batsman' },
+            { id: 6, name: 'Shaheen Afridi', team: 'Pakistan', role: 'Bowler' },
+            { id: 7, name: 'Steve Smith', team: 'Australia', role: 'Batsman' },
+            { id: 8, name: 'Pat Cummins', team: 'Australia', role: 'Bowler' },
+            { id: 9, name: 'Glenn Maxwell', team: 'Australia', role: 'All-rounder' },
+            { id: 10, name: 'Jos Buttler', team: 'England', role: 'Batsman' },
+            { id: 11, name: 'Ben Stokes', team: 'England', role: 'All-rounder' },
+            { id: 12, name: 'Jofra Archer', team: 'England', role: 'Bowler' },
+            { id: 13, name: 'Quinton de Kock', team: 'South Africa', role: 'Batsman' },
+            { id: 14, name: 'Kagiso Rabada', team: 'South Africa', role: 'Bowler' },
+            { id: 15, name: 'Chris Gayle', team: 'West Indies', role: 'Batsman' },
+            { id: 16, name: 'Andre Russell', team: 'West Indies', role: 'All-rounder' },
+            { id: 17, name: 'Kane Williamson', team: 'New Zealand', role: 'Batsman' },
+            { id: 18, name: 'Trent Boult', team: 'New Zealand', role: 'Bowler' },
+            { id: 19, name: 'Wanindu Hasaranga', team: 'Sri Lanka', role: 'All-rounder' },
+            { id: 20, name: 'Shakib Al Hasan', team: 'Bangladesh', role: 'All-rounder' },
+        ];
+
+        // Admin credentials
+        const ADMIN_USERNAME = 'Nitin';
+        const ADMIN_PASSWORD = 'RishiNitin123';
+
         function App() {
-            const [activeTab, setActiveTab] = useState('login');
-            const [user, setUser] = useState(null);
-            const [userName, setUserName] = useState('');
-            const [isAdmin, setIsAdmin] = useState(false);
-            const [contest, setContest] = useState(null);
-            const [contestName, setContestName] = useState('');
-            const [joinContestCode, setJoinContestCode] = useState('');
+            const [currentUser, setCurrentUser] = useState(null);
+            const [authMode, setAuthMode] = useState('login');
+            const [loginUsername, setLoginUsername] = useState('');
+            const [loginPassword, setLoginPassword] = useState('');
+            const [signupUsername, setSignupUsername] = useState('');
+            const [signupPassword, setSignupPassword] = useState('');
+            const [signupName, setSignupName] = useState('');
+            const [authError, setAuthError] = useState('');
+            const [authSuccess, setAuthSuccess] = useState('');
+
+            const [activeTab, setActiveTab] = useState('matches');
             const [selectedMatch, setSelectedMatch] = useState(null);
             const [selectedPlayers, setSelectedPlayers] = useState([]);
             const [captain, setCaptain] = useState(null);
             const [viceCaptain, setViceCaptain] = useState(null);
-            const [filterRole, setFilterRole] = useState('All');
             const [myTeams, setMyTeams] = useState({});
+            const [contest, setContest] = useState(null);
+            const [contestName, setContestName] = useState('');
+            const [joinContestCode, setJoinContestCode] = useState('');
             const [updateMatchId, setUpdateMatchId] = useState(null);
             const [playerPoints, setPlayerPoints] = useState({});
-            const [message, setMessage] = useState({ type: '', text: '' });
 
             useEffect(() => {
-                const savedUser = localStorage.getItem('fcUser');
-                const savedContest = localStorage.getItem('fcContest');
-                const savedTeams = localStorage.getItem('fcTeams_' + (savedUser ? JSON.parse(savedUser).id : ''));
-                const savedPoints = localStorage.getItem('fcPoints');
-                
+                const savedUser = localStorage.getItem('currentUser');
                 if (savedUser) {
-                    const u = JSON.parse(savedUser);
-                    setUser(u);
-                    setActiveTab('matches');
+                    setCurrentUser(JSON.parse(savedUser));
                 }
-                if (savedContest) setContest(JSON.parse(savedContest));
+
+                const savedTeams = localStorage.getItem('myTeams');
                 if (savedTeams) setMyTeams(JSON.parse(savedTeams));
+
+                const savedContest = localStorage.getItem('contest');
+                if (savedContest) setContest(JSON.parse(savedContest));
+
+                const savedPoints = localStorage.getItem('playerPoints');
                 if (savedPoints) setPlayerPoints(JSON.parse(savedPoints));
             }, []);
 
-            const showMessage = (type, text) => {
-                setMessage({ type, text });
-                setTimeout(() => setMessage({ type: '', text: '' }), 4000);
-            };
+            useEffect(() => {
+                if (currentUser) {
+                    localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                }
+            }, [currentUser]);
 
-            const saveToLocalStorage = (key, value) => {
-                localStorage.setItem(key, JSON.stringify(value));
-            };
+            useEffect(() => {
+                localStorage.setItem('myTeams', JSON.stringify(myTeams));
+            }, [myTeams]);
+
+            useEffect(() => {
+                if (contest) {
+                    localStorage.setItem('contest', JSON.stringify(contest));
+                }
+            }, [contest]);
+
+            useEffect(() => {
+                localStorage.setItem('playerPoints', JSON.stringify(playerPoints));
+            }, [playerPoints]);
 
             const handleLogin = () => {
-                if (!userName.trim()) {
-                    showMessage('error', 'Please enter your name');
+                setAuthError('');
+                
+                // Check admin credentials
+                if (loginUsername === ADMIN_USERNAME && loginPassword === ADMIN_PASSWORD) {
+                    const adminUser = {
+                        id: 'admin',
+                        username: ADMIN_USERNAME,
+                        name: ADMIN_USERNAME,
+                        isAdmin: true
+                    };
+                    setCurrentUser(adminUser);
                     return;
                 }
-                const newUser = { id: Date.now(), name: userName };
-                setUser(newUser);
-                saveToLocalStorage('fcUser', newUser);
-                setActiveTab('matches');
-                showMessage('success', `Welcome ${userName}!`);
+
+                // Check regular users
+                const users = JSON.parse(localStorage.getItem('users') || '[]');
+                const user = users.find(u => u.username === loginUsername && u.password === loginPassword);
+                
+                if (user) {
+                    setCurrentUser({
+                        id: user.id,
+                        username: user.username,
+                        name: user.name,
+                        isAdmin: false
+                    });
+                } else {
+                    setAuthError('Invalid username or password');
+                }
+            };
+
+            const handleSignup = () => {
+                setAuthError('');
+                setAuthSuccess('');
+
+                if (!signupUsername || !signupPassword || !signupName) {
+                    setAuthError('All fields are required');
+                    return;
+                }
+
+                if (signupUsername.length < 3) {
+                    setAuthError('Username must be at least 3 characters');
+                    return;
+                }
+
+                if (signupPassword.length < 6) {
+                    setAuthError('Password must be at least 6 characters');
+                    return;
+                }
+
+                const users = JSON.parse(localStorage.getItem('users') || '[]');
+                
+                if (users.find(u => u.username === signupUsername)) {
+                    setAuthError('Username already exists');
+                    return;
+                }
+
+                const newUser = {
+                    id: Date.now().toString(),
+                    username: signupUsername,
+                    password: signupPassword,
+                    name: signupName
+                };
+
+                users.push(newUser);
+                localStorage.setItem('users', JSON.stringify(users));
+                
+                setAuthSuccess('Account created! Please login.');
+                setSignupUsername('');
+                setSignupPassword('');
+                setSignupName('');
+                setAuthMode('login');
             };
 
             const handleLogout = () => {
-                setUser(null);
-                setIsAdmin(false);
-                setActiveTab('login');
-                localStorage.removeItem('fcUser');
+                setCurrentUser(null);
+                localStorage.removeItem('currentUser');
+                setActiveTab('matches');
             };
 
-            const createContest = () => {
-                if (!contestName.trim()) {
-                    showMessage('error', 'Enter contest name');
-                    return;
-                }
-                
-                const code = Math.random().toString(36).substring(2, 8).toUpperCase();
-                const newContest = {
-                    id: Date.now(),
-                    name: contestName,
-                    code: code,
-                    adminId: user.id,
-                    participants: {},
-                    matches: MATCHES
-                };
-                
-                newContest.participants[user.id] = {
-                    name: user.name,
-                    totalPoints: 0,
-                    matchPoints: {},
-                    teams: {}
-                };
-                
-                setContest(newContest);
-                setIsAdmin(true);
-                saveToLocalStorage('fcContest', newContest);
-                showMessage('success', 'Contest created! Share the code with your friends.');
-            };
-
-            const joinContest = () => {
-                if (!contest) {
-                    showMessage('error', 'No contest found. Admin must create one first.');
-                    return;
-                }
-                
-                if (!joinContestCode.trim()) {
-                    showMessage('error', 'Enter contest code');
-                    return;
-                }
-                
-                if (contest.code !== joinContestCode.toUpperCase()) {
-                    showMessage('error', 'Invalid contest code');
-                    return;
-                }
-                
-                if (contest.participants[user.id]) {
-                    showMessage('error', 'You already joined this contest');
-                    return;
-                }
-                
-                const updatedContest = { ...contest };
-                updatedContest.participants[user.id] = {
-                    name: user.name,
-                    totalPoints: 0,
-                    matchPoints: {},
-                    teams: {}
-                };
-                
-                setContest(updatedContest);
-                saveToLocalStorage('fcContest', updatedContest);
-                showMessage('success', `Joined ${contest.name}!`);
-                setJoinContestCode('');
-            };
-
-            const selectMatchForTeam = (match) => {
+            const selectMatch = (match) => {
                 setSelectedMatch(match);
                 setSelectedPlayers([]);
                 setCaptain(null);
                 setViceCaptain(null);
-                setFilterRole('All');
-                setActiveTab('createTeam');
+                setActiveTab('teamSelection');
             };
 
             const getAvailablePlayers = () => {
                 if (!selectedMatch) return [];
-                const team1Players = PLAYERS[selectedMatch.team1] || [];
-                const team2Players = PLAYERS[selectedMatch.team2] || [];
-                return [...team1Players, ...team2Players];
+                return PLAYERS.filter(p => 
+                    p.team === selectedMatch.team1 || p.team === selectedMatch.team2
+                );
             };
 
-            const handlePlayerSelect = (player) => {
-                const isSelected = selectedPlayers.find(p => p.id === player.id);
-                
-                if (isSelected) {
+            const togglePlayerSelection = (player) => {
+                if (selectedPlayers.find(p => p.id === player.id)) {
                     setSelectedPlayers(selectedPlayers.filter(p => p.id !== player.id));
                     if (captain === player.id) setCaptain(null);
                     if (viceCaptain === player.id) setViceCaptain(null);
-                } else {
-                    if (selectedPlayers.length >= 11) {
-                        showMessage('error', 'Maximum 11 players allowed');
-                        return;
-                    }
-                    
-                    const totalCredits = [...selectedPlayers, player].reduce((sum, p) => sum + p.credits, 0);
-                    if (totalCredits > 100) {
-                        showMessage('error', 'Exceeds 100 credits budget');
-                        return;
-                    }
-                    
+                } else if (selectedPlayers.length < 11) {
                     setSelectedPlayers([...selectedPlayers, player]);
                 }
             };
 
             const saveTeam = () => {
-                if (!contest) {
-                    showMessage('error', 'Join a contest first');
-                    return;
-                }
-                
                 if (selectedPlayers.length !== 11) {
-                    showMessage('error', 'Select exactly 11 players');
+                    alert('Please select exactly 11 players');
                     return;
                 }
-                
                 if (!captain || !viceCaptain) {
-                    showMessage('error', 'Select Captain and Vice-Captain');
+                    alert('Please select captain and vice-captain');
                     return;
                 }
-                
                 if (captain === viceCaptain) {
-                    showMessage('error', 'Captain and VC must be different');
+                    alert('Captain and vice-captain must be different');
                     return;
                 }
-                
-                const team = {
+
+                const newTeam = {
                     matchId: selectedMatch.id,
                     matchName: `${selectedMatch.team1} vs ${selectedMatch.team2}`,
                     players: selectedPlayers,
                     captain,
-                    viceCaptain,
-                    points: 0,
-                    createdAt: Date.now()
+                    viceCaptain
                 };
-                
-                const newTeams = { ...myTeams, [selectedMatch.id]: team };
-                setMyTeams(newTeams);
-                saveToLocalStorage('fcTeams_' + user.id, newTeams);
-                
-                const updatedContest = { ...contest };
-                if (!updatedContest.participants[user.id].teams) {
-                    updatedContest.participants[user.id].teams = {};
-                }
-                updatedContest.participants[user.id].teams[selectedMatch.id] = team;
-                setContest(updatedContest);
-                saveToLocalStorage('fcContest', updatedContest);
-                
-                showMessage('success', 'Team saved successfully!');
+
+                setMyTeams({ ...myTeams, [selectedMatch.id]: newTeam });
+                alert('Team saved successfully!');
                 setActiveTab('myTeams');
             };
 
-            const updatePlayerPointsValue = (playerId, points) => {
+            const createContest = () => {
+                if (!contestName) {
+                    alert('Please enter contest name');
+                    return;
+                }
+
+                const code = Math.random().toString(36).substring(2, 8).toUpperCase();
+                const newContest = {
+                    name: contestName,
+                    code,
+                    matches: MATCHES,
+                    participants: {}
+                };
+
+                setContest(newContest);
+                setContestName('');
+            };
+
+            const joinContest = () => {
+                if (!joinContestCode) {
+                    alert('Please enter contest code');
+                    return;
+                }
+
+                if (contest && contest.code === joinContestCode.toUpperCase()) {
+                    const updatedContest = { ...contest };
+                    updatedContest.participants[currentUser.id] = {
+                        userId: currentUser.id,
+                        name: currentUser.name,
+                        totalPoints: 0,
+                        matchPoints: {}
+                    };
+                    setContest(updatedContest);
+                    setJoinContestCode('');
+                    alert('Joined contest successfully!');
+                } else {
+                    alert('Invalid contest code');
+                }
+            };
+
+            const updatePlayerPointsValue = (playerId, value) => {
                 const key = `${updateMatchId}-${playerId}`;
-                const updated = { ...playerPoints, [key]: parseInt(points) || 0 };
-                setPlayerPoints(updated);
-                saveToLocalStorage('fcPoints', updated);
+                setPlayerPoints({ ...playerPoints, [key]: parseInt(value) || 0 });
             };
 
             const calculateAndUpdateLeaderboard = () => {
-                if (!updateMatchId) {
-                    showMessage('error', 'Select a match first');
+                if (!contest || !updateMatchId) {
+                    alert('Please select a match');
                     return;
                 }
-                
-                if (!contest) {
-                    showMessage('error', 'No contest found');
-                    return;
-                }
-                
+
                 const updatedContest = { ...contest };
-                
-                Object.keys(updatedContest.participants).forEach(userId => {
-                    const participant = updatedContest.participants[userId];
-                    const team = participant.teams?.[updateMatchId];
+
+                Object.values(updatedContest.participants).forEach(participant => {
+                    const team = myTeams[updateMatchId];
                     
-                    if (team) {
-                        let totalPoints = 0;
+                    if (team && team.players) {
+                        let matchPoints = 0;
                         
                         team.players.forEach(player => {
                             const key = `${updateMatchId}-${player.id}`;
-                            const pts = playerPoints[key] || 0;
+                            const points = playerPoints[key] || 0;
                             
                             if (player.id === team.captain) {
-                                totalPoints += pts * 2;
+                                matchPoints += points * 2;
                             } else if (player.id === team.viceCaptain) {
-                                totalPoints += pts * 1.5;
+                                matchPoints += points * 1.5;
                             } else {
-                                totalPoints += pts;
+                                matchPoints += points;
                             }
                         });
-                        
-                        participant.matchPoints[updateMatchId] = Math.round(totalPoints);
+
+                        participant.matchPoints[updateMatchId] = matchPoints;
                         participant.totalPoints = Object.values(participant.matchPoints).reduce((a, b) => a + b, 0);
                     }
                 });
-                
+
                 setContest(updatedContest);
-                saveToLocalStorage('fcContest', updatedContest);
-                showMessage('success', 'Leaderboard updated successfully!');
+                alert('Leaderboard updated successfully!');
             };
 
-            const filteredPlayers = filterRole === 'All'
-                ? getAvailablePlayers()
-                : getAvailablePlayers().filter(p => p.role === filterRole);
-            
-            const usedCredits = selectedPlayers.reduce((sum, p) => sum + p.credits, 0);
-            
             const getLeaderboard = () => {
                 if (!contest) return [];
-                return Object.entries(contest.participants)
-                    .map(([userId, data]) => ({ userId, ...data }))
-                    .sort((a, b) => b.totalPoints - a.totalPoints);
+                return Object.values(contest.participants).sort((a, b) => b.totalPoints - a.totalPoints);
             };
 
+            // Authentication screen
+            if (!currentUser) {
+                return (
+                    <div className="auth-container">
+                        <div className="header">
+                            <h1>🏏 T20 Fantasy</h1>
+                            <p>Login or Create Account</p>
+                        </div>
+
+                        <div className="card">
+                            <div className="auth-tabs">
+                                <button 
+                                    className={`auth-tab ${authMode === 'login' ? 'active' : ''}`}
+                                    onClick={() => {
+                                        setAuthMode('login');
+                                        setAuthError('');
+                                        setAuthSuccess('');
+                                    }}
+                                >
+                                    Login
+                                </button>
+                                <button 
+                                    className={`auth-tab ${authMode === 'signup' ? 'active' : ''}`}
+                                    onClick={() => {
+                                        setAuthMode('signup');
+                                        setAuthError('');
+                                        setAuthSuccess('');
+                                    }}
+                                >
+                                    Sign Up
+                                </button>
+                            </div>
+
+                            {authError && <div className="error-message">{authError}</div>}
+                            {authSuccess && <div className="success-message">{authSuccess}</div>}
+
+                            {authMode === 'login' ? (
+                                <>
+                                    <div className="input-group">
+                                        <label>Username</label>
+                                        <input 
+                                            type="text" 
+                                            value={loginUsername}
+                                            onChange={(e) => setLoginUsername(e.target.value)}
+                                            placeholder="Enter username"
+                                            onKeyPress={(e) => e.key === 'Enter' && handleLogin()}
+                                        />
+                                    </div>
+                                    <div className="input-group">
+                                        <label>Password</label>
+                                        <input 
+                                            type="password" 
+                                            value={loginPassword}
+                                            onChange={(e) => setLoginPassword(e.target.value)}
+                                            placeholder="Enter password"
+                                            onKeyPress={(e) => e.key === 'Enter' && handleLogin()}
+                                        />
+                                    </div>
+                                    <button className="btn" onClick={handleLogin} style={{width: '100%'}}>
+                                        Login
+                                    </button>
+                                </>
+                            ) : (
+                                <>
+                                    <div className="input-group">
+                                        <label>Full Name</label>
+                                        <input 
+                                            type="text" 
+                                            value={signupName}
+                                            onChange={(e) => setSignupName(e.target.value)}
+                                            placeholder="Enter your name"
+                                        />
+                                    </div>
+                                    <div className="input-group">
+                                        <label>Username</label>
+                                        <input 
+                                            type="text" 
+                                            value={signupUsername}
+                                            onChange={(e) => setSignupUsername(e.target.value)}
+                                            placeholder="Choose a username"
+                                        />
+                                    </div>
+                                    <div className="input-group">
+                                        <label>Password</label>
+                                        <input 
+                                            type="password" 
+                                            value={signupPassword}
+                                            onChange={(e) => setSignupPassword(e.target.value)}
+                                            placeholder="Choose a password (min 6 characters)"
+                                        />
+                                    </div>
+                                    <button className="btn" onClick={handleSignup} style={{width: '100%'}}>
+                                        Create Account
+                                    </button>
+                                </>
+                            )}
+                        </div>
+
+                        <div className="info-box" style={{marginTop: '20px'}}>
+                            <h3>ℹ️ How to Get Started</h3>
+                            <p><strong>New User?</strong> Click "Sign Up" to create your account</p>
+                            <p><strong>Admin?</strong> Login with admin credentials</p>
+                        </div>
+                    </div>
+                );
+            }
+
+            // Main app for logged in users
             return (
                 <div>
                     <div className="header">
                         <h1>🏏 T20 WORLD CUP FANTASY</h1>
-                        <p>{user ? `${user.name}${isAdmin ? ' (Admin)' : ''}` : 'Match-by-Match Fantasy Contest'}</p>
+                        <p>Build Your Dream Team & Compete!</p>
+                        <div className="user-badge">
+                            {currentUser.isAdmin && <span className="admin-badge">ADMIN</span>}
+                            <span>{currentUser.name}</span>
+                        </div>
                     </div>
 
-                    {message.text && (
-                        <div className={message.type === 'success' ? 'success-message' : 'error-message'}>
-                            {message.text}
+                    <div className="tabs">
+                        <button className={`tab ${activeTab === 'matches' ? 'active' : ''}`} onClick={() => setActiveTab('matches')}>
+                            Matches
+                        </button>
+                        {selectedMatch && (
+                            <button className={`tab ${activeTab === 'teamSelection' ? 'active' : ''}`} onClick={() => setActiveTab('teamSelection')}>
+                                Team Selection
+                            </button>
+                        )}
+                        <button className={`tab ${activeTab === 'myTeams' ? 'active' : ''}`} onClick={() => setActiveTab('myTeams')}>
+                            My Teams
+                        </button>
+                        <button className={`tab ${activeTab === 'contest' ? 'active' : ''}`} onClick={() => setActiveTab('contest')}>
+                            Contest
+                        </button>
+                        <button className={`tab ${activeTab === 'leaderboard' ? 'active' : ''}`} onClick={() => setActiveTab('leaderboard')}>
+                            Leaderboard
+                        </button>
+                        {currentUser.isAdmin && (
+                            <button className={`tab ${activeTab === 'adminPanel' ? 'active' : ''}`} onClick={() => setActiveTab('adminPanel')}>
+                                Admin Panel
+                            </button>
+                        )}
+                    </div>
+
+                    {/* MATCHES TAB */}
+                    {activeTab === 'matches' && (
+                        <div className="card">
+                            <h2>Upcoming Matches</h2>
+                            <div className="match-grid">
+                                {MATCHES.map(match => (
+                                    <div key={match.id} className="match-card" onClick={() => selectMatch(match)}>
+                                        <h3>🏆 {match.team1} vs {match.team2}</h3>
+                                        <p>📅 {match.date}</p>
+                                        <p>📍 {match.venue}</p>
+                                        {myTeams[match.id] && (
+                                            <p style={{marginTop: '12px', color: '#10b981', fontWeight: '600'}}>
+                                                ✅ Team Created
+                                            </p>
+                                        )}
+                                    </div>
+                                ))}
+                            </div>
                         </div>
                     )}
 
-                    {!user ? (
-                        <div className="card">
-                            <h2>Welcome! Login to Continue</h2>
-                            <div className="input-group">
-                                <label>Your Name</label>
-                                <input
-                                    type="text"
-                                    value={userName}
-                                    onChange={(e) => setUserName(e.target.value)}
-                                    placeholder="Enter your name"
-                                    onKeyPress={(e) => e.key === 'Enter' && handleLogin()}
-                                />
-                            </div>
-                            <button className="btn" onClick={handleLogin}>Login</button>
-                        </div>
-                    ) : (
-                        <>
-                            <div className="tabs">
-                                <button className={`tab ${activeTab === 'matches' ? 'active' : ''}`} onClick={() => setActiveTab('matches')}>MATCHES</button>
-                                <button className={`tab ${activeTab === 'createTeam' ? 'active' : ''}`} onClick={() => setActiveTab('createTeam')}>CREATE TEAM</button>
-                                <button className={`tab ${activeTab === 'myTeams' ? 'active' : ''}`} onClick={() => setActiveTab('myTeams')}>MY TEAMS</button>
-                                <button className={`tab ${activeTab === 'contest' ? 'active' : ''}`} onClick={() => setActiveTab('contest')}>CONTEST</button>
-                                <button className={`tab ${activeTab === 'leaderboard' ? 'active' : ''}`} onClick={() => setActiveTab('leaderboard')}>LEADERBOARD</button>
-                                {isAdmin && <button className={`tab ${activeTab === 'admin' ? 'active' : ''}`} onClick={() => setActiveTab('admin')}>ADMIN</button>}
+                    {/* TEAM SELECTION TAB */}
+                    {activeTab === 'teamSelection' && selectedMatch && (
+                        <div>
+                            <div className="card">
+                                <h2>Select Your Team: {selectedMatch.team1} vs {selectedMatch.team2}</h2>
+                                <div className="info-box">
+                                    <h3>📋 Team Selection Rules</h3>
+                                    <p>• Select exactly 11 players from both teams</p>
+                                    <p>• Choose 1 Captain (2x points) and 1 Vice-Captain (1.5x points)</p>
+                                    <p>• Build a balanced team with batsmen, bowlers, and all-rounders</p>
+                                </div>
+                                
+                                <div className="player-grid">
+                                    {getAvailablePlayers().map(player => (
+                                        <div
+                                            key={player.id}
+                                            className={`player-card ${selectedPlayers.find(p => p.id === player.id) ? 'selected' : ''}`}
+                                            onClick={() => togglePlayerSelection(player)}
+                                        >
+                                            <h4>{player.name}</h4>
+                                            <p className="role">{player.role}</p>
+                                            <p className="team">{player.team}</p>
+                                        </div>
+                                    ))}
+                                </div>
                             </div>
 
-                            {activeTab === 'matches' && (
-                                <div className="card">
-                                    <h2>World Cup Matches</h2>
-                                    <p style={{color: '#94a3b8', marginBottom: '20px'}}>Click on a match to create your team</p>
-                                    <div style={{display: 'grid', gap: '15px'}}>
-                                        {MATCHES.map(match => (
-                                            <div key={match.id} className={`match-card ${myTeams[match.id] ? 'team-created' : ''}`} onClick={() => selectMatchForTeam(match)}>
-                                                <div className="match-header">
-                                                    <div className="match-teams">{match.team1} vs {match.team2}</div>
-                                                    <span className={`match-badge ${myTeams[match.id] ? 'badge-created' : 'badge-upcoming'}`}>
-                                                        {myTeams[match.id] ? '✓ TEAM CREATED' : 'UPCOMING'}
-                                                    </span>
+                            {selectedPlayers.length > 0 && (
+                                <div className="selected-team">
+                                    <h3>Your Selected Team</h3>
+                                    <p className="count">Selected: {selectedPlayers.length}/11 players</p>
+                                    <div className="selected-players">
+                                        {selectedPlayers.map(player => (
+                                            <div key={player.id} className="selected-player">
+                                                <div>
+                                                    <div className="name">{player.name}</div>
+                                                    <div className="role">{player.role}</div>
                                                 </div>
-                                                <div className="match-info">📅 {match.date} • 📍 {match.venue}</div>
+                                                <button className="remove-btn" onClick={() => togglePlayerSelection(player)}>×</button>
                                             </div>
                                         ))}
                                     </div>
                                 </div>
                             )}
 
-                            {activeTab === 'createTeam' && (
-                                <div>
-                                    {!selectedMatch ? (
-                                        <div className="card">
-                                            <h2>No Match Selected</h2>
-                                            <p style={{color: '#94a3b8'}}>Go to MATCHES tab and select a match</p>
-                                            <button className="btn" onClick={() => setActiveTab('matches')} style={{marginTop: '20px'}}>View Matches</button>
-                                        </div>
-                                    ) : (
-                                        <>
-                                            <div className="card">
-                                                <h2>{selectedMatch.team1} vs {selectedMatch.team2}</h2>
-                                                <p style={{color: '#94a3b8'}}>📅 {selectedMatch.date} • 📍 {selectedMatch.venue}</p>
+                            {selectedPlayers.length === 11 && (
+                                <div className="captain-selection">
+                                    <h3>Select Captain & Vice-Captain</h3>
+                                    <div className="captain-options">
+                                        {selectedPlayers.map(player => (
+                                            <div
+                                                key={player.id}
+                                                className={`captain-option ${captain === player.id || viceCaptain === player.id ? 'selected' : ''}`}
+                                                onClick={() => {
+                                                    if (!captain) {
+                                                        setCaptain(player.id);
+                                                    } else if (!viceCaptain && captain !== player.id) {
+                                                        setViceCaptain(player.id);
+                                                    } else {
+                                                        setCaptain(null);
+                                                        setViceCaptain(null);
+                                                    }
+                                                }}
+                                            >
+                                                {player.name}
+                                                {captain === player.id && <div style={{color: '#f59e0b', fontWeight: '700', marginTop: '5px'}}>Captain (C)</div>}
+                                                {viceCaptain === player.id && <div style={{color: '#3b82f6', fontWeight: '700', marginTop: '5px'}}>Vice-Captain (VC)</div>}
                                             </div>
-
-                                            <div className="team-summary">
-                                                <div className="stat"><div className="stat-value">{selectedPlayers.length}/11</div><div className="stat-label">Players</div></div>
-                                                <div className="stat"><div className="stat-value">{usedCredits.toFixed(1)}/100</div><div className="stat-label">Credits</div></div>
-                                                <div className="stat"><div className="stat-value">{captain ? '✓' : '✗'}</div><div className="stat-label">Captain</div></div>
-                                                <div className="stat"><div className="stat-value">{viceCaptain ? '✓' : '✗'}</div><div className="stat-label">Vice-Captain</div></div>
-                                            </div>
-
-                                            <div className="card">
-                                                <h2>Select Your Playing 11</h2>
-                                                
-                                                <div className="filter-buttons">
-                                                    {['All', 'Batsman', 'Bowler', 'All-rounder', 'Wicket-keeper'].map(role => (
-                                                        <button key={role} className={`filter-btn ${filterRole === role ? 'active' : ''}`} onClick={() => setFilterRole(role)}>{role}</button>
-                                                    ))}
-                                                </div>
-
-                                                <div className="player-list">
-                                                    {filteredPlayers.map(player => {
-                                                        const isSelected = selectedPlayers.find(p => p.id === player.id);
-                                                        const isCaptain = captain === player.id;
-                                                        const isVC = viceCaptain === player.id;
-                                                        
-                                                        return (
-                                                            <div key={player.id} className={`player-card ${isSelected ? 'selected' : ''} ${isCaptain ? 'captain' : ''} ${isVC ? 'vice-captain' : ''}`} onClick={() => handlePlayerSelect(player)}>
-                                                                <div className="player-name">{player.name}</div>
-                                                                <div className="player-role">{player.role} • {player.country}</div>
-                                                                <div className="player-credits">{player.credits} Cr</div>
-                                                                
-                                                                {isSelected && (
-                                                                    <div className="captain-buttons" onClick={(e) => e.stopPropagation()}>
-                                                                        <button className={`captain-btn ${isCaptain ? 'active-captain' : ''}`} onClick={() => setCaptain(player.id)}>
-                                                                            {isCaptain ? '⭐ C (2x)' : 'Captain'}
-                                                                        </button>
-                                                                        <button className={`captain-btn ${isVC ? 'active-vc' : ''}`} onClick={() => setViceCaptain(player.id)}>
-                                                                            {isVC ? '💫 VC (1.5x)' : 'VC'}
-                                                                        </button>
-                                                                    </div>
-                                                                )}
-                                                            </div>
-                                                        );
-                                                    })}
-                                                </div>
-
-                                                <button className="btn" onClick={saveTeam} disabled={selectedPlayers.length !== 11 || !captain || !viceCaptain} style={{marginTop: '25px', width: '100%'}}>
-                                                    Save Team for This Match
-                                                </button>
-                                            </div>
-                                        </>
-                                    )}
-                                </div>
-                            )}
-
-                            {activeTab === 'myTeams' && (
-                                <div className="card">
-                                    <h2>My Teams</h2>
-                                    {Object.keys(myTeams).length === 0 ? (
-                                        <div>
-                                            <p style={{color: '#94a3b8', marginBottom: '20px'}}>You haven't created any teams yet.</p>
-                                            <button className="btn" onClick={() => setActiveTab('matches')}>View Matches</button>
-                                        </div>
-                                    ) : (
-                                        <div className="my-teams-grid">
-                                            {Object.values(myTeams).map(team => (
-                                                <div key={team.matchId} className="team-card">
-                                                    <h4>🏏 {team.matchName}</h4>
-                                                    <div className="team-players-grid">
-                                                        {team.players.map(p => (
-                                                            <div key={p.id} className={`team-player ${p.id === team.captain ? 'captain' : p.id === team.viceCaptain ? 'vc' : ''}`}>
-                                                                {p.name} {p.id === team.captain ? '(C)' : p.id === team.viceCaptain ? '(VC)' : ''}
-                                                            </div>
-                                                        ))}
-                                                    </div>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    )}
-                                </div>
-                            )}
-
-                            {activeTab === 'contest' && (
-                                <div>
-                                    {!contest ? (
-                                        <div className="card">
-                                            <h2>Create Contest (Admin Only)</h2>
-                                            <div className="info-box">
-                                                <h3>👨‍💼 Admin Instructions</h3>
-                                                <p>Create the main contest for the entire World Cup. Share the contest code with all participants.</p>
-                                            </div>
-                                            <div className="input-group">
-                                                <label>Contest Name</label>
-                                                <input type="text" value={contestName} onChange={(e) => setContestName(e.target.value)} placeholder="e.g., World Cup 2026 Contest" />
-                                            </div>
-                                            <button className="btn" onClick={createContest}>Create Contest</button>
-                                        </div>
-                                    ) : (
-                                        <div>
-                                            <div className="card">
-                                                <h2>{contest.name}</h2>
-                                                <div className="contest-code">
-                                                    <p style={{fontSize: '14px', marginBottom: '10px', color: '#94a3b8'}}>Contest Code</p>
-                                                    <div className="contest-code-value">{contest.code}</div>
-                                                    <p style={{fontSize: '14px', marginTop: '10px', color: '#94a3b8'}}>Share this code with your friends</p>
-                                                </div>
-                                                <div style={{marginTop: '20px', padding: '15px', background: '#0a0e27', borderRadius: '10px'}}>
-                                                    <p style={{color: '#cbd5e1'}}>👥 Participants: <strong>{Object.keys(contest.participants).length}</strong></p>
-                                                    <p style={{color: '#cbd5e1', marginTop: '8px'}}>🏏 Matches: <strong>{contest.matches.length}</strong></p>
-                                                </div>
-                                            </div>
-
-                                            {!contest.participants[user.id] && (
-                                                <div className="card">
-                                                    <h2>Join Contest</h2>
-                                                    <div className="input-group">
-                                                        <label>Enter Contest Code</label>
-                                                        <input type="text" value={joinContestCode} onChange={(e) => setJoinContestCode(e.target.value)} placeholder="Enter 6-character code" />
-                                                    </div>
-                                                    <button className="btn btn-secondary" onClick={joinContest}>Join Contest</button>
-                                                </div>
-                                            )}
-                                        </div>
-                                    )}
-                                </div>
-                            )}
-
-                            {activeTab === 'leaderboard' && (
-                                <div className="card">
-                                    <h2>Contest Leaderboard</h2>
-                                    {!contest ? (
-                                        <p style={{color: '#94a3b8'}}>No contest found.</p>
-                                    ) : (
-                                        <table className="leaderboard-table">
-                                            <thead>
-                                                <tr><th>Rank</th><th>Player</th><th>Total Points</th></tr>
-                                            </thead>
-                                            <tbody>
-                                                {getLeaderboard().map((p, i) => (
-                                                    <tr key={p.userId}>
-                                                        <td><span className={`rank-badge ${i === 0 ? 'rank-1' : i === 1 ? 'rank-2' : i === 2 ? 'rank-3' : ''}`}>{i + 1}</span></td>
-                                                        <td style={{fontWeight: p.userId === user.id ? '700' : '400'}}>{p.name} {p.userId === user.id ? '(You)' : ''}</td>
-                                                        <td><strong style={{fontSize: '1.2rem', color: '#10b981'}}>{p.totalPoints}</strong></td>
-                                                    </tr>
-                                                ))}
-                                            </tbody>
-                                        </table>
-                                    )}
-                                </div>
-                            )}
-
-                            {activeTab === 'admin' && isAdmin && (
-                                <div className="card">
-                                    <h2>Admin Panel - Update Match Points</h2>
-                                    
-                                    <div className="info-box" style={{marginBottom: '25px'}}>
-                                        <h3>📊 How to Update Points</h3>
-                                        <p>1. Select completed match</p>
-                                        <p>2. Enter points for each player</p>
-                                        <p>3. Click "Calculate & Update Leaderboard"</p>
+                                        ))}
                                     </div>
-
-                                    <div className="input-group">
-                                        <label>Select Match</label>
-                                        <select onChange={(e) => setUpdateMatchId(e.target.value)} value={updateMatchId || ''}>
-                                            <option value="">Choose a match...</option>
-                                            {MATCHES.map(m => (
-                                                <option key={m.id} value={m.id}>{m.team1} vs {m.team2} - {m.date}</option>
-                                            ))}
-                                        </select>
-                                    </div>
-
-                                    {updateMatchId && (
-                                        <>
-                                            <div className="points-grid">
-                                                {getAvailablePlayers().map(player => (
-                                                    <div key={player.id} className="points-input-item">
-                                                        <label>{player.name} ({player.country})</label>
-                                                        <input type="number" value={playerPoints[`${updateMatchId}-${player.id}`] || 0} onChange={(e) => updatePlayerPointsValue(player.id, e.target.value)} placeholder="0" />
-                                                    </div>
-                                                ))}
-                                            </div>
-                                            <button className="btn" onClick={calculateAndUpdateLeaderboard} style={{marginTop: '25px', width: '100%'}}>
-                                                Calculate & Update Leaderboard
-                                            </button>
-                                        </>
-                                    )}
+                                    <button 
+                                        className="btn" 
+                                        onClick={saveTeam}
+                                        disabled={!captain || !viceCaptain}
+                                        style={{marginTop: '20px', width: '100%'}}
+                                    >
+                                        Save Team
+                                    </button>
                                 </div>
                             )}
-
-                            <div style={{textAlign: 'center', marginTop: '30px'}}>
-                                <button className="btn btn-danger" onClick={handleLogout}>Logout</button>
-                            </div>
-                        </>
+                        </div>
                     )}
+
+                    {/* MY TEAMS TAB */}
+                    {activeTab === 'myTeams' && (
+                        <div className="card">
+                            <h2>My Teams</h2>
+                            {Object.keys(myTeams).length === 0 ? (
+                                <div>
+                                    <p style={{color: '#94a3b8', marginBottom: '20px'}}>No teams created yet.</p>
+                                    <button className="btn" onClick={() => setActiveTab('matches')}>View Matches</button>
+                                </div>
+                            ) : (
+                                <div className="my-teams-grid">
+                                    {Object.values(myTeams).map(team => (
+                                        <div key={team.matchId} className="team-card">
+                                            <h4>🏏 {team.matchName}</h4>
+                                            <div className="team-players-grid">
+                                                {team.players.map(p => (
+                                                    <div key={p.id} className={`team-player ${p.id === team.captain ? 'captain' : p.id === team.viceCaptain ? 'vc' : ''}`}>
+                                                        {p.name} {p.id === team.captain ? '(C)' : p.id === team.viceCaptain ? '(VC)' : ''}
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                    )}
+
+                    {/* CONTEST TAB */}
+                    {activeTab === 'contest' && (
+                        <div>
+                            {!contest ? (
+                                currentUser.isAdmin ? (
+                                    <div className="card">
+                                        <h2>Create Contest (Admin Only)</h2>
+                                        <div className="info-box">
+                                            <h3>👨‍💼 Admin Instructions</h3>
+                                            <p>Create the main contest for the World Cup. You'll get a code to share with participants.</p>
+                                        </div>
+                                        <div className="input-group">
+                                            <label>Contest Name</label>
+                                            <input type="text" value={contestName} onChange={(e) => setContestName(e.target.value)} placeholder="e.g., World Cup 2026 Contest" />
+                                        </div>
+                                        <button className="btn" onClick={createContest}>Create Contest</button>
+                                    </div>
+                                ) : (
+                                    <div className="card">
+                                        <h2>No Contest Available</h2>
+                                        <p style={{color: '#94a3b8'}}>Please wait for the admin to create a contest.</p>
+                                    </div>
+                                )
+                            ) : (
+                                <div>
+                                    <div className="card">
+                                        <h2>{contest.name}</h2>
+                                        <div className="contest-code">
+                                            <p style={{fontSize: '14px', marginBottom: '8px', color: '#94a3b8'}}>Contest Code</p>
+                                            <div className="contest-code-value">{contest.code}</div>
+                                            <p style={{fontSize: '13px', marginTop: '8px', color: '#94a3b8'}}>Share this code with participants</p>
+                                        </div>
+                                        <div style={{marginTop: '15px', padding: '12px', background: '#0a0e27', borderRadius: '10px'}}>
+                                            <p style={{color: '#cbd5e1'}}>👥 Participants: <strong>{Object.keys(contest.participants).length}</strong></p>
+                                            <p style={{color: '#cbd5e1', marginTop: '6px'}}>🏏 Matches: <strong>{contest.matches.length}</strong></p>
+                                        </div>
+                                    </div>
+
+                                    {!contest.participants[currentUser.id] && !currentUser.isAdmin && (
+                                        <div className="card">
+                                            <h2>Join Contest</h2>
+                                            <div className="input-group">
+                                                <label>Enter Contest Code</label>
+                                                <input type="text" value={joinContestCode} onChange={(e) => setJoinContestCode(e.target.value)} placeholder="Enter code" />
+                                            </div>
+                                            <button className="btn btn-secondary" onClick={joinContest}>Join Contest</button>
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+                        </div>
+                    )}
+
+                    {/* LEADERBOARD TAB */}
+                    {activeTab === 'leaderboard' && (
+                        <div className="card">
+                            <h2>Contest Leaderboard</h2>
+                            {!contest ? (
+                                <p style={{color: '#94a3b8'}}>No contest found.</p>
+                            ) : (
+                                <table className="leaderboard-table">
+                                    <thead>
+                                        <tr><th>Rank</th><th>Player</th><th>Points</th></tr>
+                                    </thead>
+                                    <tbody>
+                                        {getLeaderboard().map((p, i) => (
+                                            <tr key={p.userId}>
+                                                <td><span className={`rank-badge ${i === 0 ? 'rank-1' : i === 1 ? 'rank-2' : i === 2 ? 'rank-3' : ''}`}>{i + 1}</span></td>
+                                                <td style={{fontWeight: p.userId === currentUser.id ? '700' : '400'}}>{p.name} {p.userId === currentUser.id ? '(You)' : ''}</td>
+                                                <td><strong style={{fontSize: '1.1rem', color: '#10b981'}}>{p.totalPoints}</strong></td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            )}
+                        </div>
+                    )}
+
+                    {/* ADMIN PANEL TAB (Admin only) */}
+                    {activeTab === 'adminPanel' && currentUser.isAdmin && (
+                        <div className="card">
+                            <h2>Admin Panel - Update Match Points</h2>
+                            
+                            <div className="info-box" style={{marginBottom: '20px'}}>
+                                <h3>📊 Instructions</h3>
+                                <p>1. Select completed match</p>
+                                <p>2. Enter points for each player</p>
+                                <p>3. Click "Calculate & Update Leaderboard"</p>
+                                <p>4. All participants' points will update automatically with C/VC multipliers</p>
+                            </div>
+
+                            <div className="input-group">
+                                <label>Select Match</label>
+                                <select onChange={(e) => setUpdateMatchId(e.target.value)} value={updateMatchId || ''}>
+                                    <option value="">Choose match...</option>
+                                    {MATCHES.map(m => (
+                                        <option key={m.id} value={m.id}>{m.team1} vs {m.team2} - {m.date}</option>
+                                    ))}
+                                </select>
+                            </div>
+
+                            {updateMatchId && (
+                                <>
+                                    <div className="points-grid">
+                                        {getAvailablePlayers().map(player => (
+                                            <div key={player.id} className="points-input-item">
+                                                <label>{player.name}</label>
+                                                <input type="number" value={playerPoints[`${updateMatchId}-${player.id}`] || 0} onChange={(e) => updatePlayerPointsValue(player.id, e.target.value)} placeholder="0" />
+                                            </div>
+                                        ))}
+                                    </div>
+                                    <button className="btn" onClick={calculateAndUpdateLeaderboard} style={{marginTop: '20px', width: '100%'}}>
+                                        Calculate & Update Leaderboard
+                                    </button>
+                                </>
+                            )}
+                        </div>
+                    )}
+
+                    <div style={{textAlign: 'center', marginTop: '25px'}}>
+                        <button className="btn btn-danger btn-small" onClick={handleLogout}>Logout</button>
+                    </div>
                 </div>
             );
         }
