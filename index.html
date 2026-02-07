@@ -2,15 +2,18 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Dream11 Style Fantasy (Fixed)</title>
+<title>T20 Fantasy - Ready</title>
+
 <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
 <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
 <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
 <style>
-body{font-family:Arial;background:#0a0e27;color:white;padding:20px}
-.player{border:1px solid #444;padding:10px;margin:5px;cursor:pointer}
+body{font-family:Arial;background:#0a0e27;color:white;margin:0;padding:20px}
+.card{background:#111827;padding:20px;border-radius:12px;margin-bottom:15px}
+.player{border:1px solid #444;padding:10px;margin:6px;cursor:pointer;border-radius:8px}
 .selected{background:#065f46}
+.btn{padding:10px 20px;background:#10b981;border:none;color:white;cursor:pointer}
 </style>
 </head>
 
@@ -19,55 +22,99 @@ body{font-family:Arial;background:#0a0e27;color:white;padding:20px}
 
 <script type="text/babel">
 
-const RULES = {
-  MAX_PLAYERS:11,
-  MAX_CREDITS:100,
-  MAX_PER_TEAM:7,
-  MIN_WK:1,
-  MIN_BAT:3,
-  MIN_BOWL:3,
-  MIN_AR:1
+const {useState}=React;
+
+const RULES={
+ MAX_PLAYERS:11,
+ MAX_CREDITS:100,
+ MAX_PER_TEAM:7,
+ MIN_WK:1,
+ MIN_BAT:3,
+ MIN_BOWL:3,
+ MIN_AR:1
 };
 
 const PLAYERS={
 
-  India:[
-    {id:'i1',name:'Suryakumar Yadav',team:'India',role:'Batsman',credits:10.5},
-    {id:'i2',name:'Hardik Pandya',team:'India',role:'All-rounder',credits:10},
-    {id:'i3',name:'Jasprit Bumrah',team:'India',role:'Bowler',credits:11},
-    {id:'i4',name:'Sanju Samson',team:'India',role:'Wicket-keeper',credits:9.5},
-    {id:'i5',name:'Rinku Singh',team:'India',role:'Batsman',credits:9},
-    {id:'i6',name:'Axar Patel',team:'India',role:'All-rounder',credits:9.5},
-    {id:'i7',name:'Kuldeep Yadav',team:'India',role:'Bowler',credits:9}
-  ],
+India:[
+{id:'i1',name:'Rohit Sharma',team:'India',role:'Batsman',credits:11},
+{id:'i2',name:'Virat Kohli',team:'India',role:'Batsman',credits:11},
+{id:'i3',name:'Jasprit Bumrah',team:'India',role:'Bowler',credits:10.5},
+{id:'i4',name:'Hardik Pandya',team:'India',role:'All-rounder',credits:10},
+{id:'i5',name:'Ravindra Jadeja',team:'India',role:'All-rounder',credits:9.5},
+{id:'i6',name:'Rishabh Pant',team:'India',role:'Wicket-keeper',credits:9.5},
+{id:'i7',name:'Shubman Gill',team:'India',role:'Batsman',credits:9},
+{id:'i8',name:'Siraj',team:'India',role:'Bowler',credits:8.5},
+{id:'i9',name:'Kuldeep',team:'India',role:'Bowler',credits:8},
+{id:'i10',name:'Jaiswal',team:'India',role:'Batsman',credits:8.5},
+{id:'i11',name:'Axar',team:'India',role:'All-rounder',credits:8}
+],
 
-  Pakistan:[
-    {id:'p1',name:'Babar Azam',team:'Pakistan',role:'Batsman',credits:11},
-    {id:'p2',name:'Mohammad Rizwan',team:'Pakistan',role:'Wicket-keeper',credits:10},
-    {id:'p3',name:'Shaheen Afridi',team:'Pakistan',role:'Bowler',credits:11},
-    {id:'p4',name:'Shadab Khan',team:'Pakistan',role:'All-rounder',credits:9.5},
-    {id:'p5',name:'Naseem Shah',team:'Pakistan',role:'Bowler',credits:9},
-    {id:'p6',name:'Fakhar Zaman',team:'Pakistan',role:'Batsman',credits:9},
-    {id:'p7',name:'Haris Rauf',team:'Pakistan',role:'Bowler',credits:9}
-  ]
+Pakistan:[
+{id:'p1',name:'Babar Azam',team:'Pakistan',role:'Batsman',credits:10.5},
+{id:'p2',name:'Rizwan',team:'Pakistan',role:'Wicket-keeper',credits:9.5},
+{id:'p3',name:'Shaheen',team:'Pakistan',role:'Bowler',credits:10},
+{id:'p4',name:'Shadab',team:'Pakistan',role:'All-rounder',credits:8.5},
+{id:'p5',name:'Haris Rauf',team:'Pakistan',role:'Bowler',credits:8.5},
+{id:'p6',name:'Fakhar',team:'Pakistan',role:'Batsman',credits:8},
+{id:'p7',name:'Naseem',team:'Pakistan',role:'Bowler',credits:8},
+{id:'p8',name:'Iftikhar',team:'Pakistan',role:'All-rounder',credits:7.5},
+{id:'p9',name:'Nawaz',team:'Pakistan',role:'All-rounder',credits:7},
+{id:'p10',name:'Usama Mir',team:'Pakistan',role:'Bowler',credits:6.5}
+],
+
+USA:[
+{id:'u1',name:'Monank Patel',team:'USA',role:'Wicket-keeper',credits:8},
+{id:'u2',name:'Ali Khan',team:'USA',role:'Bowler',credits:8},
+{id:'u3',name:'Gous',team:'USA',role:'Batsman',credits:8},
+{id:'u4',name:'Netravalkar',team:'USA',role:'Bowler',credits:8},
+{id:'u5',name:'Harmeet',team:'USA',role:'All-rounder',credits:7.5}
+],
+
+Netherlands:[
+{id:'n1',name:'Edwards',team:'Netherlands',role:'Wicket-keeper',credits:8},
+{id:'n2',name:'Ackermann',team:'Netherlands',role:'All-rounder',credits:8.5},
+{id:'n3',name:'de Leede',team:'Netherlands',role:'All-rounder',credits:9},
+{id:'n4',name:'O Dowd',team:'Netherlands',role:'Batsman',credits:8},
+{id:'n5',name:'van Beek',team:'Netherlands',role:'Bowler',credits:8}
+],
+
+Nepal:[
+{id:'ne1',name:'Rohit Paudel',team:'Nepal',role:'Batsman',credits:8},
+{id:'ne2',name:'Lamichhane',team:'Nepal',role:'Bowler',credits:9},
+{id:'ne3',name:'Airee',team:'Nepal',role:'All-rounder',credits:8},
+{id:'ne4',name:'Karan KC',team:'Nepal',role:'Bowler',credits:8},
+{id:'ne5',name:'Aasif Sheikh',team:'Nepal',role:'Wicket-keeper',credits:7.5}
+],
+
+Ireland:[
+{id:'ir1',name:'Stirling',team:'Ireland',role:'Batsman',credits:9},
+{id:'ir2',name:'Tector',team:'Ireland',role:'Batsman',credits:8.5},
+{id:'ir3',name:'Adair',team:'Ireland',role:'All-rounder',credits:8},
+{id:'ir4',name:'Little',team:'Ireland',role:'Bowler',credits:8.5},
+{id:'ir5',name:'Tucker',team:'Ireland',role:'Wicket-keeper',credits:8}
+]
+
 };
 
 const MATCHES=[
- {id:1,team1:'India',team2:'Pakistan'}
+{id:1,team1:'India',team2:'Pakistan'},
+{id:2,team1:'India',team2:'USA'},
+{id:3,team1:'Pakistan',team2:'Netherlands'},
+{id:4,team1:'England',team2:'Nepal'},
+{id:5,team1:'Sri Lanka',team2:'Ireland'}
 ];
-
-const {useState}=React;
 
 function App(){
 
- const [match]=useState(MATCHES[0]);
+ const [match,setMatch]=useState(null);
  const [selected,setSelected]=useState([]);
  const [msg,setMsg]=useState('');
 
- const players=[
-  ...PLAYERS[match.team1],
-  ...PLAYERS[match.team2]
- ];
+ const getPlayers=()=>{
+  if(!match) return [];
+  return [...(PLAYERS[match.team1]||[]),(PLAYERS[match.team2]||[])].flat();
+ };
 
  const validate=(list)=>{
 
@@ -76,17 +123,16 @@ function App(){
 
   list.forEach(p=>{
     r[p.role]++;
-    const team=p.team;
-    t[team]=(t[team]||0)+1;
+    t[p.team]=(t[p.team]||0)+1;
   });
 
-  if(r['Wicket-keeper']<RULES.MIN_WK) return 'Need 1 Wicket-keeper';
-  if(r['Batsman']<RULES.MIN_BAT) return 'Need 3 Batsmen';
-  if(r['Bowler']<RULES.MIN_BOWL) return 'Need 3 Bowlers';
-  if(r['All-rounder']<RULES.MIN_AR) return 'Need 1 All-rounder';
+  if(r['Wicket-keeper']<1) return 'Need 1 WK';
+  if(r['Batsman']<3) return 'Need 3 BAT';
+  if(r['Bowler']<3) return 'Need 3 BOWL';
+  if(r['All-rounder']<1) return 'Need 1 AR';
 
   for(let k in t){
-    if(t[k]>RULES.MAX_PER_TEAM) return 'Max 7 from '+k;
+    if(t[k]>7) return 'Max 7 from '+k;
   }
 
   return null;
@@ -99,7 +145,7 @@ function App(){
     return;
   }
 
-  if(selected.length>=RULES.MAX_PLAYERS){
+  if(selected.length>=11){
     setMsg('11 players max');
     return;
   }
@@ -107,8 +153,8 @@ function App(){
   const newList=[...selected,p];
 
   const credits=newList.reduce((s,x)=>s+x.credits,0);
-  if(credits>RULES.MAX_CREDITS){
-    setMsg('Credits exceed 100');
+  if(credits>100){
+    setMsg('Credits >100');
     return;
   }
 
@@ -122,31 +168,54 @@ function App(){
   setSelected(newList);
  };
 
- return (
+ return(
   <div>
 
-   <h1>{match.team1} vs {match.team2}</h1>
+   <h1>T20 Fantasy League</h1>
 
-   <h3>
-    {selected.length}/11 Players |
-    Credits: {selected.reduce((s,x)=>s+x.credits,0).toFixed(1)}
-   </h3>
-
-   <p style={{color:'red'}}>{msg}</p>
-
-   {players.map(p=>{
-     const sel=selected.find(x=>x.id===p.id);
-
-     return (
-      <div
-       key={p.id}
-       className={sel?'player selected':'player'}
-       onClick={()=>toggle(p)}
-      >
-       {p.name} ({p.team}) | {p.role} | {p.credits}
+   <div className="card">
+    <h3>Select Match</h3>
+    {MATCHES.map(m=>(
+      <div key={m.id}>
+       <button className="btn" onClick={()=>{
+        setMatch(m);
+        setSelected([]);
+       }}>
+        {m.team1} vs {m.team2}
+       </button>
       </div>
-     );
-   })}
+    ))}
+   </div>
+
+   {match && (
+    <div className="card">
+
+     <h3>{match.team1} vs {match.team2}</h3>
+
+     <p>
+      {selected.length}/11 |
+      Credits: {selected.reduce((s,x)=>s+x.credits,0).toFixed(1)}
+     </p>
+
+     <p style={{color:'red'}}>{msg}</p>
+
+     {getPlayers().map(p=>{
+
+      const sel=selected.find(x=>x.id===p.id);
+
+      return(
+       <div
+        key={p.id}
+        className={sel?'player selected':'player'}
+        onClick={()=>toggle(p)}
+       >
+        {p.name} ({p.team}) | {p.role} | {p.credits}
+       </div>
+      );
+     })}
+
+    </div>
+   )}
 
   </div>
  );
