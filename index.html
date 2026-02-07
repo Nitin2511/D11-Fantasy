@@ -1174,6 +1174,50 @@
                         </div>
                     )}
 
+                    {/* USERS TAB (Admin only) */}
+                    {activeTab === 'users' && currentUser.isAdmin && (
+                        <div className="card">
+                            <h2>Registered Users</h2>
+                            <div className="info-box">
+                                <h3>👥 User Management</h3>
+                                <p>View all users who have registered for the fantasy contest.</p>
+                            </div>
+                            
+                            {getAllUsers().length === 0 ? (
+                                <p style={{color: '#94a3b8', marginTop: '20px'}}>No users registered yet.</p>
+                            ) : (
+                                <table className="users-table">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Name</th>
+                                            <th>Username</th>
+                                            <th>User ID</th>
+                                            <th>Joined</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {getAllUsers().map((user, index) => (
+                                            <tr key={user.id}>
+                                                <td>{index + 1}</td>
+                                                <td style={{fontWeight: '600'}}>{user.name}</td>
+                                                <td>{user.username}</td>
+                                                <td style={{fontSize: '13px', color: '#94a3b8'}}>{user.id}</td>
+                                                <td>{new Date(parseInt(user.id)).toLocaleDateString()}</td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            )}
+                            
+                            <div style={{marginTop: '20px', padding: '15px', background: '#0a0e27', borderRadius: '10px'}}>
+                                <p style={{color: '#cbd5e1', fontSize: '14px'}}>
+                                    <strong>Total Registered Users:</strong> {getAllUsers().length}
+                                </p>
+                            </div>
+                        </div>
+                    )}
+
                     <div style={{textAlign: 'center', marginTop: '25px'}}>
                         <button className="btn btn-danger btn-small" onClick={handleLogout}>Logout</button>
                     </div>
