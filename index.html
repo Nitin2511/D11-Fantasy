@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>T20 World Cup 2026 Fantasy Contest</title>
+    <title>T20 World Cup 2026 Fantasy League</title>
     
     <!-- React -->
     <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
@@ -12,63 +12,41 @@
     
     <!-- Firebase v9 (Modular SDK) -->
     <script type="module">
-        // Import Firebase modules
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut, updateProfile } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
-        import { getFirestore, collection, query, where, getDocs, doc, setDoc, getDoc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+        import { getFirestore, collection, query, where, getDocs, doc, setDoc, getDoc, addDoc, updateDoc, deleteDoc, orderBy, onSnapshot } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
 
-        // ========================================
-        // 🔥 FIREBASE CONFIGURATION
-        // ========================================
-        // REPLACE THIS WITH YOUR FIREBASE CONFIG!
-        // Get it from: Firebase Console → Project Settings → Your apps → Config
-        // ========================================
-        
-   // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyDacks7Qnk42D2898leU_kgG8DZsYTFxCw",
-  authDomain: "t20-fantasy-contest.firebaseapp.com",
-  projectId: "t20-fantasy-contest",
-  storageBucket: "t20-fantasy-contest.firebasestorage.app",
-  messagingSenderId: "180217303236",
-  appId: "1:180217303236:web:a6b078a7a7d0fa070c3991",
-  measurementId: "G-LYY944KN99"
-};
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDacks7Qnk42D2898leU_kgG8DZsYTFxCw",
+            authDomain: "t20-fantasy-contest.firebaseapp.com",
+            projectId: "t20-fantasy-contest",
+            storageBucket: "t20-fantasy-contest.firebasestorage.app",
+            messagingSenderId: "180217303236",
+            appId: "1:180217303236:web:a6b078a7a7d0fa070c3991",
+            measurementId: "G-LYY944KN99"
+        };
 
         // Initialize Firebase
-        let app, auth, db;
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
         
-        try {
-            app = initializeApp(firebaseConfig);
-            auth = getAuth(app);
-            db = getFirestore(app);
-            console.log("✅ Firebase initialized successfully!");
-            
-            // Make auth and db globally available
-            window.firebaseAuth = auth;
-            window.firebaseDb = db;
-            window.firebaseModules = {
-                signInWithEmailAndPassword,
-                createUserWithEmailAndPassword,
-                onAuthStateChanged,
-                signOut,
-                updateProfile,
-                collection,
-                query,
-                where,
-                getDocs,
-                doc,
-                setDoc,
-                getDoc
-            };
-            
-        } catch (error) {
-            console.error("❌ Firebase initialization error:", error);
-            alert("Firebase Configuration Error!\n\nPlease update firebaseConfig with your actual credentials.\n\nError: " + error.message);
-        }
+        // Make globally available
+        window.firebaseAuth = auth;
+        window.firebaseDb = db;
+        window.firebaseModules = {
+            collection, query, where, getDocs, doc, setDoc, getDoc, addDoc, 
+            updateDoc, deleteDoc, orderBy, onSnapshot,
+            signInWithEmailAndPassword, createUserWithEmailAndPassword,
+            signOut, onAuthStateChanged
+        };
+        window.firebaseReady = true;
+        
+        console.log("✅ Firebase initialized successfully!");
     </script>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Exo+2:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <style>
         * {
@@ -78,69 +56,186 @@ const firebaseConfig = {
         }
         
         body {
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 50%, #0a0e27 100%);
-            color: #fff;
+            font-family: 'Exo 2', sans-serif;
+            background: #0a0e1a;
+            color: #e0e6ed;
             min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(16, 185, 129, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
+                linear-gradient(180deg, #0a0e1a 0%, #0f1729 100%);
+            pointer-events: none;
+            z-index: 0;
         }
         
         #root {
-            max-width: 1400px;
+            position: relative;
+            z-index: 1;
+            max-width: 1600px;
             margin: 0 auto;
             padding: 20px;
         }
-        
+
+        /* Header Styles */
         .header {
-            text-align: center;
-            padding: 50px 20px;
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-            border-radius: 25px;
-            margin-bottom: 40px;
-            box-shadow: 0 30px 60px rgba(16, 185, 129, 0.4);
+            background: linear-gradient(135deg, #10b981 0%, #059669 50%, #047857 100%);
+            padding: 40px 30px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 60px rgba(16, 185, 129, 0.3);
             position: relative;
+            overflow: hidden;
         }
-        
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
         .header h1 {
-            font-family: 'Rajdhani', sans-serif;
-            font-size: 3.5rem;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3rem;
+            font-weight: 900;
+            text-align: center;
+            letter-spacing: 3px;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.4);
+            position: relative;
+            z-index: 1;
+        }
+
+        .user-badge {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(255,255,255,0.2);
+            padding: 10px 20px;
+            border-radius: 25px;
+            backdrop-filter: blur(10px);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .admin-badge {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.75rem;
             font-weight: 700;
-            letter-spacing: 4px;
-            text-shadow: 4px 4px 8px rgba(0,0,0,0.5);
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .logout-btn {
             position: absolute;
             top: 20px;
             right: 20px;
-            padding: 10px 20px;
+            padding: 12px 24px;
             background: rgba(255,255,255,0.2);
             border: 2px solid white;
             color: white;
-            border-radius: 10px;
+            border-radius: 12px;
             cursor: pointer;
-            font-weight: 600;
-            font-family: 'Rajdhani', sans-serif;
+            font-weight: 700;
+            font-family: 'Orbitron', sans-serif;
+            transition: all 0.3s;
+            backdrop-filter: blur(10px);
         }
 
         .logout-btn:hover {
             background: rgba(255,255,255,0.3);
-        }
-        
-        .login-container {
-            max-width: 500px;
-            margin: 80px auto;
-            background: linear-gradient(135deg, #1a1f3a 0%, #242b4a 100%);
-            padding: 40px;
-            border-radius: 20px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
         }
 
-        .login-container h2 {
-            font-family: 'Rajdhani', sans-serif;
-            font-size: 2.2rem;
+        /* Tab Navigation */
+        .tabs {
+            display: flex;
+            gap: 15px;
             margin-bottom: 30px;
+            background: rgba(31, 41, 55, 0.5);
+            padding: 15px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+            flex-wrap: wrap;
+        }
+        
+        .tab {
+            flex: 1;
+            min-width: 150px;
+            padding: 18px;
+            background: transparent;
+            border: 2px solid transparent;
+            color: #9ca3af;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 15px;
+            transition: all 0.3s;
+            font-size: 16px;
+            font-family: 'Orbitron', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .tab:hover {
             color: #10b981;
-            text-align: center;
+            border-color: rgba(16, 185, 129, 0.3);
+        }
+
+        .tab.active {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            border-color: #10b981;
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
+        }
+
+        /* Card Styles */
+        .card {
+            background: rgba(31, 41, 55, 0.6);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 25px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+        
+        .card h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            margin-bottom: 25px;
+            color: #10b981;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        /* Form Styles */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
         }
 
         .form-group {
@@ -152,228 +247,244 @@ const firebaseConfig = {
             margin-bottom: 8px;
             color: #cbd5e1;
             font-weight: 600;
+            font-size: 0.95rem;
         }
 
-        .form-group input {
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
             width: 100%;
             padding: 15px;
-            background: #0a0e27;
-            border: 2px solid #2d3548;
+            background: rgba(15, 23, 42, 0.8);
+            border: 2px solid rgba(148, 163, 184, 0.2);
             border-radius: 12px;
             color: white;
-            font-size: 16px;
+            font-size: 15px;
+            transition: all 0.3s;
         }
 
-        .form-group input:focus {
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
             outline: none;
             border-color: #10b981;
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
         }
 
-        .error-message {
-            background: rgba(239, 68, 68, 0.2);
-            border: 1px solid #ef4444;
-            color: #fca5a5;
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            font-size: 14px;
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
         }
 
-        .success-message {
-            background: rgba(16, 185, 129, 0.2);
-            border: 1px solid #10b981;
-            color: #6ee7b7;
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            font-size: 14px;
-        }
-
-        .info-box {
-            background: rgba(59, 130, 246, 0.15);
-            border: 1px solid #3b82f6;
-            color: #93c5fd;
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            font-size: 0.9rem;
-            line-height: 1.6;
-        }
-
-        .info-box strong {
-            display: block;
-            margin-bottom: 8px;
-            color: #60a5fa;
-            font-size: 1rem;
-        }
-
-        .warning-box {
-            background: rgba(251, 191, 36, 0.15);
-            border: 2px solid #f59e0b;
-            color: #fcd34d;
-            padding: 20px;
-            border-radius: 12px;
-            margin-bottom: 20px;
-            font-size: 0.95rem;
-            line-height: 1.7;
-        }
-
-        .warning-box strong {
-            display: block;
-            margin-bottom: 10px;
-            font-size: 1.1rem;
-            color: #fbbf24;
-        }
-
-        .warning-box ol {
-            margin-left: 20px;
-            margin-top: 10px;
-        }
-
-        .warning-box li {
-            margin-bottom: 8px;
-        }
-
-        .warning-box code {
-            background: rgba(0,0,0,0.4);
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-family: 'Courier New', monospace;
-            font-size: 0.9em;
-        }
-
-        .warning-box a {
-            color: #60a5fa;
-            text-decoration: underline;
-        }
-        
-        .tabs {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 35px;
-            background: #1a1f3a;
-            padding: 12px;
-            border-radius: 20px;
-            flex-wrap: wrap;
-        }
-        
-        .tab {
-            flex: 1;
-            min-width: 140px;
-            padding: 18px;
-            background: transparent;
-            border: none;
-            color: #8892b0;
-            font-weight: 600;
-            cursor: pointer;
-            border-radius: 12px;
-            transition: all 0.3s;
-            font-size: 16px;
-            font-family: 'Rajdhani', sans-serif;
-        }
-        
-        .tab.active {
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-            color: white;
-            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.5);
-        }
-        
-        .card {
-            background: linear-gradient(135deg, #1a1f3a 0%, #242b4a 100%);
-            border-radius: 20px;
-            padding: 30px;
-            margin-bottom: 25px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
-        }
-        
-        .card h2 {
-            font-family: 'Rajdhani', sans-serif;
-            font-size: 2rem;
-            margin-bottom: 25px;
-            color: #10b981;
-        }
-
+        /* Button Styles */
         .btn {
-            padding: 15px 35px;
+            padding: 16px 32px;
             background: linear-gradient(135deg, #10b981 0%, #059669 100%);
             border: none;
             border-radius: 12px;
             color: white;
             font-weight: 700;
             cursor: pointer;
-            font-size: 17px;
+            font-size: 16px;
             transition: all 0.3s;
-            font-family: 'Rajdhani', sans-serif;
-            width: 100%;
+            font-family: 'Orbitron', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
         
-        .btn:hover {
+        .btn:hover:not(:disabled) {
             transform: translateY(-3px);
-            box-shadow: 0 10px 30px rgba(16, 185, 129, 0.6);
+            box-shadow: 0 12px 30px rgba(16, 185, 129, 0.5);
         }
         
         .btn:disabled {
             opacity: 0.5;
             cursor: not-allowed;
-            transform: none;
         }
 
-        .match-card {
-            background: #0a0e27;
+        .btn-secondary {
+            background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        }
+
+        .btn-small {
+            padding: 10px 20px;
+            font-size: 14px;
+        }
+
+        /* Contest List */
+        .contest-list {
+            display: grid;
+            gap: 20px;
+        }
+
+        .contest-item {
+            background: rgba(15, 23, 42, 0.6);
             padding: 25px;
             border-radius: 15px;
-            margin-bottom: 20px;
-            border: 2px solid #2d3548;
-            cursor: pointer;
+            border: 2px solid rgba(16, 185, 129, 0.2);
             transition: all 0.3s;
         }
 
-        .match-card:hover {
+        .contest-item:hover {
             border-color: #10b981;
-            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.2);
         }
 
-        .match-card.selected {
-            border-color: #10b981;
-            background: rgba(16, 185, 129, 0.1);
+        .contest-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 15px;
         }
 
-        .match-header {
+        .contest-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            color: #10b981;
+            font-weight: 700;
+        }
+
+        .contest-status {
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .status-active {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+        }
+
+        .status-upcoming {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: white;
+        }
+
+        .status-completed {
+            background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
+            color: white;
+        }
+
+        .contest-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 15px 0;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #cbd5e1;
+        }
+
+        .info-icon {
+            font-size: 1.2rem;
+        }
+
+        .contest-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        /* Match List */
+        .match-list {
+            display: grid;
+            gap: 20px;
+        }
+
+        .match-item {
+            background: rgba(15, 23, 42, 0.6);
+            padding: 20px;
+            border-radius: 15px;
+            border: 2px solid rgba(59, 130, 246, 0.2);
+        }
+
+        .match-teams {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 15px;
-        }
-
-        .match-teams {
-            font-size: 1.4rem;
-            font-weight: 700;
-            font-family: 'Rajdhani', sans-serif;
-        }
-
-        .match-date {
-            color: #8892b0;
-            font-size: 0.9rem;
-        }
-
-        .player-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            flex-wrap: wrap;
             gap: 15px;
-            margin-top: 20px;
+        }
+
+        .team {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #fff;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .vs {
+            color: #10b981;
+            font-weight: 800;
+            font-size: 1.1rem;
+        }
+
+        .match-details {
+            display: flex;
+            gap: 25px;
+            color: #94a3b8;
+            font-size: 0.95rem;
+            flex-wrap: wrap;
+        }
+
+        /* Player Selection */
+        .player-filters {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 10px 20px;
+            background: rgba(31, 41, 55, 0.6);
+            border: 2px solid rgba(148, 163, 184, 0.2);
+            color: #cbd5e1;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .filter-btn.active {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            border-color: #10b981;
+            color: white;
+        }
+
+        .players-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
         }
 
         .player-card {
-            background: #0a0e27;
+            background: rgba(15, 23, 42, 0.8);
             padding: 20px;
-            border-radius: 12px;
-            border: 2px solid #2d3548;
+            border-radius: 15px;
+            border: 2px solid rgba(148, 163, 184, 0.2);
             transition: all 0.3s;
             cursor: pointer;
         }
 
         .player-card:hover {
             border-color: #10b981;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(16, 185, 129, 0.3);
         }
 
         .player-card.selected {
@@ -381,112 +492,311 @@ const firebaseConfig = {
             background: rgba(16, 185, 129, 0.1);
         }
 
-        .player-name {
-            font-weight: 600;
-            font-size: 1.1rem;
-            margin-bottom: 8px;
+        .player-card.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
         }
 
-        .player-role {
-            color: #8892b0;
-            font-size: 0.9rem;
-            margin-bottom: 10px;
+        .player-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .player-name {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: #fff;
         }
 
         .player-credits {
-            color: #10b981;
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 8px;
             font-weight: 700;
-            font-size: 1.1rem;
+            font-size: 0.9rem;
         }
 
+        .player-info {
+            display: flex;
+            gap: 15px;
+            color: #94a3b8;
+            font-size: 0.9rem;
+        }
+
+        .player-role {
+            background: rgba(59, 130, 246, 0.2);
+            color: #60a5fa;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        /* Team Summary */
         .team-summary {
-            background: #0a0e27;
-            padding: 20px;
-            border-radius: 12px;
-            margin-bottom: 20px;
+            position: sticky;
+            top: 20px;
+            background: rgba(15, 23, 42, 0.9);
+            padding: 25px;
+            border-radius: 15px;
             border: 2px solid #10b981;
+            backdrop-filter: blur(10px);
         }
 
-        .summary-item {
+        .summary-header {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.3rem;
+            color: #10b981;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .summary-stats {
+            display: grid;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .stat-item {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 10px;
-            font-size: 1.1rem;
+            padding: 10px;
+            background: rgba(31, 41, 55, 0.5);
+            border-radius: 10px;
         }
 
-        .captain-selector {
+        .stat-label {
+            color: #94a3b8;
+        }
+
+        .stat-value {
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .stat-value.warning {
+            color: #f59e0b;
+        }
+
+        .stat-value.danger {
+            color: #ef4444;
+        }
+
+        .selected-players-list {
+            margin-top: 20px;
+        }
+
+        .selected-player {
             display: flex;
-            gap: 10px;
-            margin-top: 10px;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background: rgba(31, 41, 55, 0.5);
+            border-radius: 10px;
+            margin-bottom: 8px;
+        }
+
+        .captain-controls {
+            display: flex;
+            gap: 8px;
         }
 
         .captain-btn {
-            flex: 1;
-            padding: 8px;
-            background: #1a1f3a;
-            border: 1px solid #2d3548;
-            color: #8892b0;
+            padding: 5px 12px;
+            border: none;
             border-radius: 8px;
             cursor: pointer;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
+            font-weight: 600;
             transition: all 0.3s;
         }
 
-        .captain-btn:hover {
-            border-color: #10b981;
-        }
-
-        .captain-btn.active-captain {
+        .captain-btn.active {
             background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-            border-color: #f59e0b;
             color: white;
+        }
+
+        .captain-btn:not(.active) {
+            background: rgba(148, 163, 184, 0.2);
+            color: #94a3b8;
+        }
+
+        /* Leaderboard */
+        .leaderboard-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 10px;
+        }
+
+        .leaderboard-table thead th {
+            background: rgba(16, 185, 129, 0.2);
+            padding: 15px;
+            text-align: left;
             font-weight: 700;
-        }
-
-        .captain-btn.active-vc {
-            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
-            border-color: #8b5cf6;
-            color: white;
-            font-weight: 700;
-        }
-
-        .my-teams-list {
-            display: grid;
-            gap: 20px;
-        }
-
-        .team-item {
-            background: #0a0e27;
-            padding: 25px;
-            border-radius: 15px;
-            border: 2px solid #2d3548;
-        }
-
-        .team-item h4 {
-            font-size: 1.3rem;
-            margin-bottom: 10px;
             color: #10b981;
-            font-family: 'Rajdhani', sans-serif;
+            font-family: 'Orbitron', sans-serif;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
         }
 
-        .team-players {
-            margin-top: 15px;
+        .leaderboard-table thead th:first-child {
+            border-radius: 10px 0 0 10px;
         }
 
-        .team-player-name {
-            padding: 10px;
-            background: #1a1f3a;
-            border-radius: 8px;
-            margin-bottom: 8px;
-            display: flex;
-            justify-content: space-between;
+        .leaderboard-table thead th:last-child {
+            border-radius: 0 10px 10px 0;
         }
 
+        .leaderboard-table tbody tr {
+            background: rgba(15, 23, 42, 0.6);
+            transition: all 0.3s;
+        }
+
+        .leaderboard-table tbody tr:hover {
+            background: rgba(16, 185, 129, 0.1);
+            transform: scale(1.01);
+        }
+
+        .leaderboard-table tbody td {
+            padding: 15px;
+        }
+
+        .leaderboard-table tbody tr td:first-child {
+            border-radius: 10px 0 0 10px;
+        }
+
+        .leaderboard-table tbody tr td:last-child {
+            border-radius: 0 10px 10px 0;
+        }
+
+        .rank-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-weight: 700;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .rank-1 {
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+            color: white;
+        }
+
+        .rank-2 {
+            background: linear-gradient(135deg, #94a3b8 0%, #64748b 100%);
+            color: white;
+        }
+
+        .rank-3 {
+            background: linear-gradient(135deg, #f87171 0%, #dc2626 100%);
+            color: white;
+        }
+
+        .rank-other {
+            background: rgba(148, 163, 184, 0.2);
+            color: #94a3b8;
+        }
+
+        /* Login Page */
+        .login-container {
+            max-width: 500px;
+            margin: 100px auto;
+            background: rgba(31, 41, 55, 0.8);
+            padding: 40px;
+            border-radius: 20px;
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+        }
+
+        .login-container h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            margin-bottom: 30px;
+            color: #10b981;
+            text-align: center;
+        }
+
+        .info-box {
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            color: #93c5fd;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+        }
+
+        .error-message {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #fca5a5;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .success-message {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: #6ee7b7;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        /* Loading Spinner */
         .loading {
             text-align: center;
-            padding: 50px;
+            padding: 40px;
+            color: #10b981;
             font-size: 1.2rem;
-            color: #8892b0;
+        }
+
+        .spinner {
+            border: 4px solid rgba(16, 185, 129, 0.1);
+            border-left-color: #10b981;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .user-badge, .logout-btn {
+                position: static;
+                margin: 10px auto;
+                display: inline-block;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .players-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .team-summary {
+                position: static;
+            }
         }
     </style>
 </head>
@@ -496,376 +806,132 @@ const firebaseConfig = {
     <script type="text/babel">
         const { useState, useEffect } = React;
 
-        // Wait for Firebase to be ready
-        function waitForFirebase() {
-            return new Promise((resolve) => {
-                const checkFirebase = setInterval(() => {
-                    if (window.firebaseAuth && window.firebaseDb && window.firebaseModules) {
-                        clearInterval(checkFirebase);
-                        resolve();
-                    }
-                }, 100);
-            });
-        }
+        // Real T20 World Cup 2026 Data
+        const WORLD_CUP_TEAMS = {
+            'IND': 'India',
+            'PAK': 'Pakistan',
+            'AUS': 'Australia',
+            'ENG': 'England',
+            'NZ': 'New Zealand',
+            'SA': 'South Africa',
+            'SL': 'Sri Lanka',
+            'WI': 'West Indies',
+            'AFG': 'Afghanistan',
+            'BAN': 'Bangladesh',
+            'IRE': 'Ireland',
+            'SCOT': 'Scotland',
+            'NED': 'Netherlands',
+            'NEP': 'Nepal',
+            'NAM': 'Namibia',
+            'OMA': 'Oman',
+            'ZIM': 'Zimbabwe',
+            'CAN': 'Canada',
+            'USA': 'United States',
+            'UAE': 'United Arab Emirates',
+            'ITA': 'Italy'
+        };
 
-        // ===== MAIN APP =====
+        const SAMPLE_PLAYERS = {
+            'IND': [
+                { name: 'Suryakumar Yadav', role: 'Batsman', credits: 10.0, team: 'IND' },
+                { name: 'Hardik Pandya', role: 'All-Rounder', credits: 9.5, team: 'IND' },
+                { name: 'Jasprit Bumrah', role: 'Bowler', credits: 10.0, team: 'IND' },
+                { name: 'Ishan Kishan', role: 'Wicket-Keeper', credits: 8.5, team: 'IND' },
+                { name: 'Axar Patel', role: 'All-Rounder', credits: 8.0, team: 'IND' },
+                { name: 'Arshdeep Singh', role: 'Bowler', credits: 8.5, team: 'IND' },
+                { name: 'Tilak Varma', role: 'Batsman', credits: 8.0, team: 'IND' },
+                { name: 'Kuldeep Yadav', role: 'Bowler', credits: 8.5, team: 'IND' },
+                { name: 'Rinku Singh', role: 'Batsman', credits: 8.0, team: 'IND' },
+                { name: 'Abhishek Sharma', role: 'Batsman', credits: 7.5, team: 'IND' }
+            ],
+            'PAK': [
+                { name: 'Babar Azam', role: 'Batsman', credits: 10.0, team: 'PAK' },
+                { name: 'Shaheen Shah Afridi', role: 'Bowler', credits: 9.5, team: 'PAK' },
+                { name: 'Shadab Khan', role: 'All-Rounder', credits: 8.5, team: 'PAK' },
+                { name: 'Naseem Shah', role: 'Bowler', credits: 8.5, team: 'PAK' },
+                { name: 'Fakhar Zaman', role: 'Batsman', credits: 8.5, team: 'PAK' },
+                { name: 'Usman Khan', role: 'Wicket-Keeper', credits: 8.0, team: 'PAK' },
+                { name: 'Saim Ayub', role: 'Batsman', credits: 7.5, team: 'PAK' },
+                { name: 'Salman Agha', role: 'All-Rounder', credits: 8.0, team: 'PAK' }
+            ],
+            'ENG': [
+                { name: 'Harry Brook', role: 'Batsman', credits: 9.5, team: 'ENG' },
+                { name: 'Jos Buttler', role: 'Wicket-Keeper', credits: 9.5, team: 'ENG' },
+                { name: 'Jofra Archer', role: 'Bowler', credits: 9.0, team: 'ENG' },
+                { name: 'Sam Curran', role: 'All-Rounder', credits: 9.0, team: 'ENG' },
+                { name: 'Adil Rashid', role: 'Bowler', credits: 8.5, team: 'ENG' },
+                { name: 'Phil Salt', role: 'Batsman', credits: 8.5, team: 'ENG' }
+            ],
+            'AUS': [
+                { name: 'Mitchell Marsh', role: 'All-Rounder', credits: 9.5, team: 'AUS' },
+                { name: 'Travis Head', role: 'Batsman', credits: 9.0, team: 'AUS' },
+                { name: 'Glenn Maxwell', role: 'All-Rounder', credits: 9.0, team: 'AUS' },
+                { name: 'Josh Inglis', role: 'Wicket-Keeper', credits: 8.5, team: 'AUS' },
+                { name: 'Adam Zampa', role: 'Bowler', credits: 8.5, team: 'AUS' }
+            ]
+        };
+
         function App() {
             const [user, setUser] = useState(null);
             const [loading, setLoading] = useState(true);
 
             useEffect(() => {
-                waitForFirebase().then(() => {
-                    const { onAuthStateChanged } = window.firebaseModules;
-                    const unsubscribe = onAuthStateChanged(window.firebaseAuth, (currentUser) => {
-                        setUser(currentUser);
-                        setLoading(false);
-                    });
+                if (!window.firebaseAuth) return;
 
-                    return () => unsubscribe();
-                });
+                const unsubscribe = window.firebaseModules.onAuthStateChanged(
+                    window.firebaseAuth,
+                    async (authUser) => {
+                        if (authUser) {
+                            // Fetch user data from Firestore
+                            const { doc, getDoc } = window.firebaseModules;
+                            const userDoc = await getDoc(doc(window.firebaseDb, 'users', authUser.uid));
+                            
+                            if (userDoc.exists()) {
+                                setUser({
+                                    uid: authUser.uid,
+                                    email: authUser.email,
+                                    ...userDoc.data()
+                                });
+                            } else {
+                                setUser({
+                                    uid: authUser.uid,
+                                    email: authUser.email,
+                                    username: authUser.displayName || 'User',
+                                    isAdmin: false
+                                });
+                            }
+                        } else {
+                            setUser(null);
+                        }
+                        setLoading(false);
+                    }
+                );
+
+                return () => unsubscribe();
             }, []);
 
-            const handleLogout = async () => {
-                const { signOut } = window.firebaseModules;
-                try {
-                    await signOut(window.firebaseAuth);
-                } catch (error) {
-                    console.error('Logout error:', error);
-                }
-            };
-
             if (loading) {
-                return <div className="loading">⏳ Loading...</div>;
+                return (
+                    <div className="loading">
+                        <div className="spinner"></div>
+                        <p>Loading Fantasy Cricket...</p>
+                    </div>
+                );
             }
 
             if (!user) {
                 return <LoginForm />;
             }
 
-            return (
-                <div>
-                    <div className="header">
-                        <h1>🏏 T20 FANTASY CRICKET 🏆</h1>
-                        <button className="logout-btn" onClick={handleLogout}>
-                            Logout
-                        </button>
-                    </div>
-                    <FantasyGame user={user} />
-                </div>
-            );
+            return user.isAdmin ? <AdminDashboard user={user} /> : <UserDashboard user={user} />;
         }
 
-        // ===== FANTASY GAME =====
-        function FantasyGame({ user }) {
-            const [activeTab, setActiveTab] = useState('matches');
-            const [selectedMatch, setSelectedMatch] = useState(null);
-            const [selectedPlayers, setSelectedPlayers] = useState([]);
-            const [captain, setCaptain] = useState(null);
-            const [viceCaptain, setViceCaptain] = useState(null);
-            const [myTeams, setMyTeams] = useState({});
-
-            // T20 World Cup 2026 Sample Data
-            const matches = [
-                {
-                    id: 'match1',
-                    team1: 'India',
-                    team2: 'Pakistan',
-                    date: '2026-06-01',
-                    venue: 'MCG, Melbourne'
-                },
-                {
-                    id: 'match2',
-                    team1: 'Australia',
-                    team2: 'England',
-                    date: '2026-06-02',
-                    venue: 'SCG, Sydney'
-                }
-            ];
-
-            const players = {
-                match1: [
-                    { id: 'p1', name: 'Virat Kohli', team: 'India', role: 'Batsman', credits: 11.0 },
-                    { id: 'p2', name: 'Rohit Sharma', team: 'India', role: 'Batsman', credits: 10.5 },
-                    { id: 'p3', name: 'Jasprit Bumrah', team: 'India', role: 'Bowler', credits: 10.0 },
-                    { id: 'p4', name: 'Hardik Pandya', team: 'India', role: 'All-rounder', credits: 9.5 },
-                    { id: 'p5', name: 'Rishabh Pant', team: 'India', role: 'Wicket-keeper', credits: 9.0 },
-                    { id: 'p6', name: 'Ravindra Jadeja', team: 'India', role: 'All-rounder', credits: 9.0 },
-                    { id: 'p7', name: 'Babar Azam', team: 'Pakistan', role: 'Batsman', credits: 10.5 },
-                    { id: 'p8', name: 'Mohammad Rizwan', team: 'Pakistan', role: 'Wicket-keeper', credits: 9.5 },
-                    { id: 'p9', name: 'Shaheen Afridi', team: 'Pakistan', role: 'Bowler', credits: 9.5 },
-                    { id: 'p10', name: 'Shadab Khan', team: 'Pakistan', role: 'All-rounder', credits: 8.5 },
-                    { id: 'p11', name: 'Fakhar Zaman', team: 'Pakistan', role: 'Batsman', credits: 8.5 },
-                    { id: 'p12', name: 'Haris Rauf', team: 'Pakistan', role: 'Bowler', credits: 8.0 },
-                    { id: 'p13', name: 'KL Rahul', team: 'India', role: 'Batsman', credits: 9.0 },
-                    { id: 'p14', name: 'Mohammed Shami', team: 'India', role: 'Bowler', credits: 8.5 },
-                    { id: 'p15', name: 'Hasan Ali', team: 'Pakistan', role: 'Bowler', credits: 7.5 }
-                ],
-                match2: [
-                    { id: 'p16', name: 'Steve Smith', team: 'Australia', role: 'Batsman', credits: 10.0 },
-                    { id: 'p17', name: 'David Warner', team: 'Australia', role: 'Batsman', credits: 9.5 },
-                    { id: 'p18', name: 'Pat Cummins', team: 'Australia', role: 'Bowler', credits: 10.0 },
-                    { id: 'p19', name: 'Glenn Maxwell', team: 'Australia', role: 'All-rounder', credits: 9.5 },
-                    { id: 'p20', name: 'Jos Buttler', team: 'England', role: 'Wicket-keeper', credits: 10.0 },
-                    { id: 'p21', name: 'Ben Stokes', team: 'England', role: 'All-rounder', credits: 10.5 },
-                    { id: 'p22', name: 'Jofra Archer', team: 'England', role: 'Bowler', credits: 9.0 },
-                    { id: 'p23', name: 'Joe Root', team: 'England', role: 'Batsman', credits: 9.0 },
-                    { id: 'p24', name: 'Alex Carey', team: 'Australia', role: 'Wicket-keeper', credits: 8.5 },
-                    { id: 'p25', name: 'Mitchell Starc', team: 'Australia', role: 'Bowler', credits: 9.5 },
-                    { id: 'p26', name: 'Jonny Bairstow', team: 'England', role: 'Batsman', credits: 8.5 },
-                    { id: 'p27', name: 'Mark Wood', team: 'England', role: 'Bowler', credits: 8.0 },
-                    { id: 'p28', name: 'Travis Head', team: 'Australia', role: 'Batsman', credits: 8.5 },
-                    { id: 'p29', name: 'Moeen Ali', team: 'England', role: 'All-rounder', credits: 8.0 },
-                    { id: 'p30', name: 'Josh Hazlewood', team: 'Australia', role: 'Bowler', credits: 8.5 }
-                ]
-            };
-
-            const togglePlayer = (player) => {
-                const isSelected = selectedPlayers.find(p => p.id === player.id);
-                
-                if (isSelected) {
-                    setSelectedPlayers(selectedPlayers.filter(p => p.id !== player.id));
-                    if (captain === player.id) setCaptain(null);
-                    if (viceCaptain === player.id) setViceCaptain(null);
-                } else {
-                    if (selectedPlayers.length < 11) {
-                        setSelectedPlayers([...selectedPlayers, player]);
-                    } else {
-                        alert('Maximum 11 players allowed!');
-                    }
-                }
-            };
-
-            const getTotalCredits = () => {
-                return selectedPlayers.reduce((sum, player) => sum + player.credits, 0);
-            };
-
-            const saveTeam = async () => {
-                if (selectedPlayers.length !== 11) {
-                    alert('Please select exactly 11 players!');
-                    return;
-                }
-                
-                if (!captain || !viceCaptain) {
-                    alert('Please select Captain and Vice-Captain!');
-                    return;
-                }
-
-                if (captain === viceCaptain) {
-                    alert('Captain and Vice-Captain must be different!');
-                    return;
-                }
-
-                const totalCredits = getTotalCredits();
-                if (totalCredits > 100) {
-                    alert(`Team exceeds 100 credits! Current: ${totalCredits.toFixed(1)}`);
-                    return;
-                }
-
-                try {
-                    const { doc, setDoc } = window.firebaseModules;
-                    const teamData = {
-                        matchId: selectedMatch.id,
-                        matchName: `${selectedMatch.team1} vs ${selectedMatch.team2}`,
-                        matchDate: selectedMatch.date,
-                        players: selectedPlayers,
-                        captain: captain,
-                        viceCaptain: viceCaptain,
-                        totalCredits: totalCredits,
-                        userId: user.uid,
-                        createdAt: new Date().toISOString()
-                    };
-
-                    await setDoc(doc(window.firebaseDb, 'teams', `${user.uid}_${selectedMatch.id}`), teamData);
-                    
-                    setMyTeams({
-                        ...myTeams,
-                        [selectedMatch.id]: { ...teamData, id: selectedMatch.id }
-                    });
-
-                    alert('✅ Team saved successfully!');
-                    setActiveTab('myTeams');
-                } catch (error) {
-                    console.error('Error saving team:', error);
-                    alert('Error saving team: ' + error.message);
-                }
-            };
-
-            return (
-                <div>
-                    <div className="tabs">
-                        <button
-                            className={`tab ${activeTab === 'matches' ? 'active' : ''}`}
-                            onClick={() => setActiveTab('matches')}
-                        >
-                            📅 MATCHES
-                        </button>
-                        <button
-                            className={`tab ${activeTab === 'myTeams' ? 'active' : ''}`}
-                            onClick={() => setActiveTab('myTeams')}
-                        >
-                            👥 MY TEAMS
-                        </button>
-                        <button
-                            className={`tab ${activeTab === 'leaderboard' ? 'active' : ''}`}
-                            onClick={() => setActiveTab('leaderboard')}
-                        >
-                            🏆 LEADERBOARD
-                        </button>
-                    </div>
-
-                    {activeTab === 'matches' && (
-                        <div className="card">
-                            <h2>Upcoming Matches</h2>
-                            {matches.map(match => (
-                                <div
-                                    key={match.id}
-                                    className={`match-card ${selectedMatch?.id === match.id ? 'selected' : ''}`}
-                                    onClick={() => {
-                                        setSelectedMatch(match);
-                                        setSelectedPlayers([]);
-                                        setCaptain(null);
-                                        setViceCaptain(null);
-                                    }}
-                                >
-                                    <div className="match-header">
-                                        <div className="match-teams">
-                                            {match.team1} 🆚 {match.team2}
-                                        </div>
-                                    </div>
-                                    <div className="match-date">
-                                        📅 {match.date} | 📍 {match.venue}
-                                    </div>
-                                </div>
-                            ))}
-
-                            {selectedMatch && (
-                                <div style={{ marginTop: '30px' }}>
-                                    <h2>Create Your Team</h2>
-                                    
-                                    <div className="team-summary">
-                                        <div className="summary-item">
-                                            <span>Players Selected:</span>
-                                            <strong>{selectedPlayers.length}/11</strong>
-                                        </div>
-                                        <div className="summary-item">
-                                            <span>Credits Used:</span>
-                                            <strong style={{ color: getTotalCredits() > 100 ? '#ef4444' : '#10b981' }}>
-                                                {getTotalCredits().toFixed(1)}/100
-                                            </strong>
-                                        </div>
-                                        <div className="summary-item">
-                                            <span>Captain:</span>
-                                            <strong>{captain ? selectedPlayers.find(p => p.id === captain)?.name : 'Not set'}</strong>
-                                        </div>
-                                        <div className="summary-item">
-                                            <span>Vice-Captain:</span>
-                                            <strong>{viceCaptain ? selectedPlayers.find(p => p.id === viceCaptain)?.name : 'Not set'}</strong>
-                                        </div>
-                                    </div>
-
-                                    <div className="player-grid">
-                                        {players[selectedMatch.id].map(player => {
-                                            const isSelected = selectedPlayers.find(p => p.id === player.id);
-                                            const isCaptain = captain === player.id;
-                                            const isVC = viceCaptain === player.id;
-
-                                            return (
-                                                <div
-                                                    key={player.id}
-                                                    className={`player-card ${isSelected ? 'selected' : ''}`}
-                                                    onClick={() => togglePlayer(player)}
-                                                >
-                                                    <div className="player-name">
-                                                        {player.name}
-                                                        {isCaptain && ' 👑'}
-                                                        {isVC && ' ⭐'}
-                                                    </div>
-                                                    <div className="player-role">{player.role} • {player.team}</div>
-                                                    <div className="player-credits">{player.credits} Cr</div>
-                                                    
-                                                    {isSelected && (
-                                                        <div className="captain-selector">
-                                                            <button className={`captain-btn ${isCaptain ? 'active-captain' : ''}`} onClick={() => setCaptain(player.id)}>
-                                                                {isCaptain ? '👑 C (2x)' : 'Captain'}
-                                                            </button>
-                                                            <button className={`captain-btn ${isVC ? 'active-vc' : ''}`} onClick={() => setViceCaptain(player.id)}>
-                                                                {isVC ? '⭐ VC (1.5x)' : 'VC'}
-                                                            </button>
-                                                        </div>
-                                                    )}
-                                                </div>
-                                            );
-                                        })}
-                                    </div>
-
-                                    <button className="btn" onClick={saveTeam} style={{ marginTop: '30px' }}>
-                                        {myTeams[selectedMatch.id] ? 'Update Team' : 'Save Team'}
-                                    </button>
-                                </div>
-                            )}
-                        </div>
-                    )}
-
-                    {activeTab === 'myTeams' && (
-                        <div className="card">
-                            <h2>My Teams</h2>
-                            {Object.keys(myTeams).length === 0 ? (
-                                <p style={{ textAlign: 'center', padding: '40px', color: '#8892b0' }}>
-                                    No teams created yet. Go to MATCHES tab to create teams.
-                                </p>
-                            ) : (
-                                <div className="my-teams-list">
-                                    {Object.values(myTeams).map(team => (
-                                        <div key={team.id} className="team-item">
-                                            <h4>{team.matchName}</h4>
-                                            <p style={{ color: '#8892b0', marginBottom: '15px' }}>
-                                                📅 {team.matchDate} | Credits: {team.totalCredits.toFixed(1)}
-                                            </p>
-                                            <div className="team-players">
-                                                {team.players.map(p => (
-                                                    <div key={p.id} className="team-player-name">
-                                                        {p.name}
-                                                        {p.id === team.captain && ' 👑'}
-                                                        {p.id === team.viceCaptain && ' ⭐'}
-                                                        <span style={{ float: 'right', color: '#10b981' }}>
-                                                            {p.credits} Cr
-                                                        </span>
-                                                    </div>
-                                                ))}
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            )}
-                        </div>
-                    )}
-
-                    {activeTab === 'leaderboard' && (
-                        <div className="card">
-                            <h2>Leaderboard</h2>
-                            <p style={{ textAlign: 'center', padding: '40px', color: '#8892b0' }}>
-                                Leaderboard will be available once matches start!
-                            </p>
-                        </div>
-                    )}
-                </div>
-            );
-        }
-
-        // ===== LOGIN FORM =====
         function LoginForm() {
             const [identifier, setIdentifier] = useState('');
             const [password, setPassword] = useState('');
             const [error, setError] = useState('');
             const [success, setSuccess] = useState('');
             const [loading, setLoading] = useState(false);
-            const [firebaseReady, setFirebaseReady] = useState(false);
-
-            useEffect(() => {
-                waitForFirebase().then(() => {
-                    setFirebaseReady(true);
-                });
-            }, []);
 
             const handleLogin = async (e) => {
                 e.preventDefault();
@@ -874,136 +940,70 @@ const firebaseConfig = {
                 setLoading(true);
 
                 try {
-                    const { collection, query, where, getDocs, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile } = window.firebaseModules;
+                    const { collection, query, where, getDocs, signInWithEmailAndPassword, createUserWithEmailAndPassword } = window.firebaseModules;
                     
-                    console.log('🔍 Step 1: Searching for user with identifier:', identifier);
-                    
-                    // Step 1: Query Firestore for user
+                    // Query Firestore for user
                     let userData = null;
-
-                    // Try username first
                     const usersRef = collection(window.firebaseDb, 'users');
+                    
+                    // Try username
                     const usernameQuery = query(usersRef, where('username', '==', identifier));
                     const usernameSnapshot = await getDocs(usernameQuery);
 
                     if (!usernameSnapshot.empty) {
                         userData = usernameSnapshot.docs[0].data();
-                        console.log('✅ Found user by username:', userData);
                     } else {
-                        console.log('❌ Username not found, trying email...');
                         // Try email
                         const emailQuery = query(usersRef, where('email', '==', identifier));
                         const emailSnapshot = await getDocs(emailQuery);
                         
                         if (!emailSnapshot.empty) {
                             userData = emailSnapshot.docs[0].data();
-                            console.log('✅ Found user by email:', userData);
                         }
                     }
 
                     if (!userData) {
-                        console.log('❌ User not found in Firestore');
                         setError('User not found. Please check your username/email.');
                         setLoading(false);
                         return;
                     }
 
-                    console.log('🔍 Step 2: Verifying password...');
-                    console.log('Stored password:', userData.password);
-                    console.log('Entered password:', password);
-                    
-                    // Step 2: Verify password
+                    // Verify password
                     if (userData.password !== password) {
-                        console.log('❌ Password mismatch!');
                         setError('Incorrect password. Please try again.');
                         setLoading(false);
                         return;
                     }
-                    
-                    console.log('✅ Password verified!');
 
-                    // Step 3: Sign in to Firebase Auth
+                    // Sign in to Firebase Auth
                     const email = userData.email || `${userData.username}@fantasy.local`;
-                    console.log('🔍 Step 3: Authenticating with Firebase Auth using email:', email);
                     
                     try {
-                        const userCred = await signInWithEmailAndPassword(window.firebaseAuth, email, password);
-                        console.log('✅ Signed in successfully!', userCred);
+                        await signInWithEmailAndPassword(window.firebaseAuth, email, password);
                         setSuccess('Logged in successfully!');
                     } catch (signInError) {
-                        console.log('⚠️ Sign-in failed, error code:', signInError.code);
-                        console.log('Full error:', signInError);
-                        
                         if (signInError.code === 'auth/user-not-found' || signInError.code === 'auth/invalid-credential') {
-                            // Create new Firebase Auth user
-                            console.log('🔧 Creating new Firebase Auth account...');
-                            
-                            try {
-                                const userCredential = await createUserWithEmailAndPassword(window.firebaseAuth, email, password);
-                                console.log('✅ Account created successfully!', userCredential);
-                                
-                                if (userData.name) {
-                                    await updateProfile(userCredential.user, {
-                                        displayName: userData.name
-                                    });
-                                }
-                                
-                                setSuccess('Account created and logged in successfully!');
-                            } catch (createError) {
-                                console.log('❌ Account creation failed:', createError.code, createError.message);
-                                
-                                if (createError.code === 'auth/email-already-in-use') {
-                                    setError('Email already registered with different password. Please contact admin.');
-                                } else if (createError.code === 'auth/weak-password') {
-                                    setError('Password must be at least 6 characters long.');
-                                } else {
-                                    throw createError;
-                                }
-                            }
-                        } else if (signInError.code === 'auth/wrong-password') {
-                            setError('Firebase Auth password mismatch. Contact admin to reset.');
+                            const userCredential = await createUserWithEmailAndPassword(window.firebaseAuth, email, password);
+                            setSuccess('Account created and logged in successfully!');
                         } else {
                             throw signInError;
                         }
                     }
 
                 } catch (error) {
-                    console.error('❌ Login error:', error);
+                    console.error('Login error:', error);
                     setError(`Error: ${error.code || error.message || 'Login failed'}`);
                 } finally {
                     setLoading(false);
                 }
             };
 
-            if (!firebaseReady) {
-                return (
-                    <div className="login-container">
-                        <h2>🏏 T20 Fantasy Cricket</h2>
-                        <div className="warning-box">
-                            <strong>⚠️ Firebase Not Configured</strong>
-                            Please configure Firebase before using this app:
-                            <ol>
-                                <li>Go to <a href="https://console.firebase.google.com/" target="_blank">Firebase Console</a></li>
-                                <li>Create a new project (e.g., "t20-fantasy-2026")</li>
-                                <li>Click the Web icon <code>&lt;/&gt;</code> to add a web app</li>
-                                <li>Copy the config object shown</li>
-                                <li>Open this HTML file in a text editor</li>
-                                <li>Find line ~24 and replace <code>firebaseConfig</code> with your credentials</li>
-                                <li>Enable <strong>Authentication</strong> → Email/Password</li>
-                                <li>Enable <strong>Firestore Database</strong> → Test mode</li>
-                                <li>Add sample user in Firestore: collection <code>users</code> with fields: username, email, password, name</li>
-                            </ol>
-                        </div>
-                    </div>
-                );
-            }
-
             return (
                 <div className="login-container">
-                    <h2>🏏 Login to Fantasy Cricket</h2>
+                    <h2>🏏 T20 World Cup Fantasy</h2>
                     
                     <div className="info-box">
-                        <strong>✅ Firebase Connected!</strong>
+                        <strong>✅ Firebase Connected!</strong><br />
                         Login with your username or email from Firestore database.
                     </div>
 
@@ -1035,17 +1035,743 @@ const firebaseConfig = {
                             />
                         </div>
 
-                        <button type="submit" className="btn" disabled={loading}>
+                        <button type="submit" className="btn" style={{width: '100%'}} disabled={loading}>
                             {loading ? 'Logging in...' : 'Login'}
                         </button>
                     </form>
 
                     <div className="info-box" style={{ marginTop: '20px', fontSize: '0.85rem' }}>
-                        <strong>📝 Setup Instructions:</strong>
-                        1. Add a user in Firestore → <code>users</code> collection<br/>
-                        2. Fields: username, email, password, name<br/>
-                        3. Example: username="Admin", password="test123"
+                        <strong>📝 Test Credentials:</strong><br />
+                        Admin: username="admin", password="admin123"<br />
+                        User: username="test", password="@j234"
                     </div>
+                </div>
+            );
+        }
+
+        // ADMIN DASHBOARD - Will continue in next part due to length
+        function AdminDashboard({ user }) {
+            const [activeTab, setActiveTab] = useState('contests');
+            const [contests, setContests] = useState([]);
+            const [loading, setLoading] = useState(true);
+
+            const handleLogout = async () => {
+                await window.firebaseModules.signOut(window.firebaseAuth);
+            };
+
+            useEffect(() => {
+                loadContests();
+            }, []);
+
+            const loadContests = async () => {
+                try {
+                    const { collection, getDocs, orderBy, query } = window.firebaseModules;
+                    const contestsRef = collection(window.firebaseDb, 'contests');
+                    const q = query(contestsRef, orderBy('createdAt', 'desc'));
+                    const snapshot = await getDocs(q);
+                    
+                    const contestsList = snapshot.docs.map(doc => ({
+                        id: doc.id,
+                        ...doc.data()
+                    }));
+                    
+                    setContests(contestsList);
+                } catch (error) {
+                    console.error('Error loading contests:', error);
+                } finally {
+                    setLoading(false);
+                }
+            };
+
+            return (
+                <>
+                    <div className="header">
+                        <div className="user-badge">
+                            👤 {user.username}
+                            <span className="admin-badge">Admin</span>
+                        </div>
+                        <h1>⚡ T20 WORLD CUP 2026</h1>
+                        <button className="logout-btn" onClick={handleLogout}>
+                            Logout
+                        </button>
+                    </div>
+
+                    <div className="tabs">
+                        <button 
+                            className={`tab ${activeTab === 'contests' ? 'active' : ''}`}
+                            onClick={() => setActiveTab('contests')}
+                        >
+                            📋 Contests
+                        </button>
+                        <button 
+                            className={`tab ${activeTab === 'create' ? 'active' : ''}`}
+                            onClick={() => setActiveTab('create')}
+                        >
+                            ✨ Create Contest
+                        </button>
+                        <button 
+                            className={`tab ${activeTab === 'matches' ? 'active' : ''}`}
+                            onClick={() => setActiveTab('matches')}
+                        >
+                            🏆 Matches
+                        </button>
+                        <button 
+                            className={`tab ${activeTab === 'users' ? 'active' : ''}`}
+                            onClick={() => setActiveTab('users')}
+                        >
+                            👥 Users
+                        </button>
+                    </div>
+
+                    {activeTab === 'contests' && <ContestsList contests={contests} onRefresh={loadContests} />}
+                    {activeTab === 'create' && <CreateContest onSuccess={loadContests} />}
+                    {activeTab === 'matches' && <MatchesManagement />}
+                    {activeTab === 'users' && <UsersManagement />}
+                </>
+            );
+        }
+
+        function ContestsList({ contests, onRefresh }) {
+            if (contests.length === 0) {
+                return (
+                    <div className="card">
+                        <h2>📋 All Contests</h2>
+                        <p style={{ textAlign: 'center', padding: '40px', color: '#94a3b8' }}>
+                            No contests created yet. Create your first contest to get started!
+                        </p>
+                    </div>
+                );
+            }
+
+            return (
+                <div className="card">
+                    <h2>📋 All Contests ({contests.length})</h2>
+                    <div className="contest-list">
+                        {contests.map(contest => (
+                            <div key={contest.id} className="contest-item">
+                                <div className="contest-header">
+                                    <div className="contest-title">{contest.name}</div>
+                                    <span className={`contest-status status-${contest.status || 'upcoming'}`}>
+                                        {contest.status || 'upcoming'}
+                                    </span>
+                                </div>
+                                
+                                <p style={{ color: '#cbd5e1', marginBottom: '15px' }}>
+                                    {contest.description}
+                                </p>
+
+                                <div className="contest-info">
+                                    <div className="info-item">
+                                        <span className="info-icon">🏏</span>
+                                        <span>{contest.matchesCount || 0} Matches</span>
+                                    </div>
+                                    <div className="info-item">
+                                        <span className="info-icon">👥</span>
+                                        <span>{contest.participantsCount || 0} Participants</span>
+                                    </div>
+                                    <div className="info-item">
+                                        <span className="info-icon">📅</span>
+                                        <span>{contest.startDate} - {contest.endDate}</span>
+                                    </div>
+                                </div>
+
+                                <div className="contest-actions">
+                                    <button className="btn btn-small">View Details</button>
+                                    <button className="btn btn-small btn-secondary">Edit</button>
+                                    <button className="btn btn-small btn-danger">Delete</button>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            );
+        }
+
+        function CreateContest({ onSuccess }) {
+            const [formData, setFormData] = useState({
+                name: '',
+                description: '',
+                startDate: '',
+                endDate: '',
+                status: 'upcoming'
+            });
+            const [loading, setLoading] = useState(false);
+            const [error, setError] = useState('');
+            const [success, setSuccess] = useState('');
+
+            const handleSubmit = async (e) => {
+                e.preventDefault();
+                setLoading(true);
+                setError('');
+                setSuccess('');
+
+                try {
+                    const { collection, addDoc } = window.firebaseModules;
+                    const contestsRef = collection(window.firebaseDb, 'contests');
+                    
+                    await addDoc(contestsRef, {
+                        ...formData,
+                        createdAt: new Date().toISOString(),
+                        matchesCount: 0,
+                        participantsCount: 0
+                    });
+
+                    setSuccess('Contest created successfully!');
+                    setFormData({
+                        name: '',
+                        description: '',
+                        startDate: '',
+                        endDate: '',
+                        status: 'upcoming'
+                    });
+
+                    setTimeout(() => {
+                        onSuccess();
+                    }, 1500);
+
+                } catch (error) {
+                    console.error('Error creating contest:', error);
+                    setError('Failed to create contest. Please try again.');
+                } finally {
+                    setLoading(false);
+                }
+            };
+
+            const handleChange = (e) => {
+                setFormData({
+                    ...formData,
+                    [e.target.name]: e.target.value
+                });
+            };
+
+            return (
+                <div className="card">
+                    <h2>✨ Create New Contest</h2>
+                    
+                    {error && <div className="error-message">{error}</div>}
+                    {success && <div className="success-message">{success}</div>}
+
+                    <form onSubmit={handleSubmit}>
+                        <div className="form-group">
+                            <label>Contest Name *</label>
+                            <input
+                                type="text"
+                                name="name"
+                                value={formData.name}
+                                onChange={handleChange}
+                                placeholder="e.g., T20 World Cup 2026 - Group Stage"
+                                required
+                            />
+                        </div>
+
+                        <div className="form-group">
+                            <label>Description *</label>
+                            <textarea
+                                name="description"
+                                value={formData.description}
+                                onChange={handleChange}
+                                placeholder="Describe the contest..."
+                                required
+                            />
+                        </div>
+
+                        <div className="form-grid">
+                            <div className="form-group">
+                                <label>Start Date *</label>
+                                <input
+                                    type="date"
+                                    name="startDate"
+                                    value={formData.startDate}
+                                    onChange={handleChange}
+                                    required
+                                />
+                            </div>
+
+                            <div className="form-group">
+                                <label>End Date *</label>
+                                <input
+                                    type="date"
+                                    name="endDate"
+                                    value={formData.endDate}
+                                    onChange={handleChange}
+                                    required
+                                />
+                            </div>
+
+                            <div className="form-group">
+                                <label>Status</label>
+                                <select
+                                    name="status"
+                                    value={formData.status}
+                                    onChange={handleChange}
+                                >
+                                    <option value="upcoming">Upcoming</option>
+                                    <option value="active">Active</option>
+                                    <option value="completed">Completed</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <button type="submit" className="btn" disabled={loading}>
+                            {loading ? 'Creating...' : 'Create Contest'}
+                        </button>
+                    </form>
+                </div>
+            );
+        }
+
+        function MatchesManagement() {
+            return (
+                <div className="card">
+                    <h2>🏆 Matches Management</h2>
+                    <p style={{ color: '#94a3b8', marginBottom: '20px' }}>
+                        Add and manage matches for your contests
+                    </p>
+                    
+                    <div className="match-list">
+                        <div className="match-item">
+                            <div className="match-teams">
+                                <span className="team">India</span>
+                                <span className="vs">VS</span>
+                                <span className="team">Pakistan</span>
+                            </div>
+                            <div className="match-details">
+                                <span>📅 Feb 15, 2026</span>
+                                <span>🏟️ R. Premadasa Stadium, Colombo</span>
+                                <span>⏰ 7:30 PM IST</span>
+                            </div>
+                        </div>
+
+                        <div className="match-item">
+                            <div className="match-teams">
+                                <span className="team">England</span>
+                                <span className="vs">VS</span>
+                                <span className="team">Australia</span>
+                            </div>
+                            <div className="match-details">
+                                <span>📅 Feb 16, 2026</span>
+                                <span>🏟️ Eden Gardens, Kolkata</span>
+                                <span>⏰ 3:00 PM IST</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        function UsersManagement() {
+            return (
+                <div className="card">
+                    <h2>👥 Users Management</h2>
+                    <p style={{ textAlign: 'center', padding: '40px', color: '#94a3b8' }}>
+                        User management features coming soon...
+                    </p>
+                </div>
+            );
+        }
+
+        // USER DASHBOARD
+        function UserDashboard({ user }) {
+            const [activeTab, setActiveTab] = useState('contests');
+            const [contests, setContests] = useState([]);
+
+            const handleLogout = async () => {
+                await window.firebaseModules.signOut(window.firebaseAuth);
+            };
+
+            useEffect(() => {
+                loadContests();
+            }, []);
+
+            const loadContests = async () => {
+                try {
+                    const { collection, getDocs } = window.firebaseModules;
+                    const contestsRef = collection(window.firebaseDb, 'contests');
+                    const snapshot = await getDocs(contestsRef);
+                    
+                    const contestsList = snapshot.docs.map(doc => ({
+                        id: doc.id,
+                        ...doc.data()
+                    }));
+                    
+                    setContests(contestsList.filter(c => c.status === 'active' || c.status === 'upcoming'));
+                } catch (error) {
+                    console.error('Error loading contests:', error);
+                }
+            };
+
+            return (
+                <>
+                    <div className="header">
+                        <div className="user-badge">
+                            👤 {user.username}
+                        </div>
+                        <h1>⚡ T20 WORLD CUP 2026</h1>
+                        <button className="logout-btn" onClick={handleLogout}>
+                            Logout
+                        </button>
+                    </div>
+
+                    <div className="tabs">
+                        <button 
+                            className={`tab ${activeTab === 'contests' ? 'active' : ''}`}
+                            onClick={() => setActiveTab('contests')}
+                        >
+                            🏆 Contests
+                        </button>
+                        <button 
+                            className={`tab ${activeTab === 'myteams' ? 'active' : ''}`}
+                            onClick={() => setActiveTab('myteams')}
+                        >
+                            👥 My Teams
+                        </button>
+                        <button 
+                            className={`tab ${activeTab === 'leaderboard' ? 'active' : ''}`}
+                            onClick={() => setActiveTab('leaderboard')}
+                        >
+                            📊 Leaderboard
+                        </button>
+                    </div>
+
+                    {activeTab === 'contests' && <UserContests contests={contests} user={user} />}
+                    {activeTab === 'myteams' && <MyTeams user={user} />}
+                    {activeTab === 'leaderboard' && <Leaderboard />}
+                </>
+            );
+        }
+
+        function UserContests({ contests, user }) {
+            const [selectedContest, setSelectedContest] = useState(null);
+
+            if (selectedContest) {
+                return <CreateTeam contest={selectedContest} user={user} onBack={() => setSelectedContest(null)} />;
+            }
+
+            return (
+                <div className="card">
+                    <h2>🏆 Available Contests</h2>
+                    <div className="contest-list">
+                        {contests.map(contest => (
+                            <div key={contest.id} className="contest-item">
+                                <div className="contest-header">
+                                    <div className="contest-title">{contest.name}</div>
+                                    <span className={`contest-status status-${contest.status}`}>
+                                        {contest.status}
+                                    </span>
+                                </div>
+                                
+                                <p style={{ color: '#cbd5e1', marginBottom: '15px' }}>
+                                    {contest.description}
+                                </p>
+
+                                <div className="contest-actions">
+                                    <button className="btn btn-small" onClick={() => setSelectedContest(contest)}>
+                                        Create Team
+                                    </button>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            );
+        }
+
+        function CreateTeam({ contest, user, onBack }) {
+            const [selectedPlayers, setSelectedPlayers] = useState([]);
+            const [captain, setCaptain] = useState(null);
+            const [viceCaptain, setViceCaptain] = useState(null);
+            const [roleFilter, setRoleFilter] = useState('All');
+
+            // Sample teams for IND vs PAK
+            const team1Players = SAMPLE_PLAYERS['IND'] || [];
+            const team2Players = SAMPLE_PLAYERS['PAK'] || [];
+            const allPlayers = [...team1Players, ...team2Players].map((p, idx) => ({
+                ...p,
+                id: `player_${idx}`
+            }));
+
+            const filteredPlayers = roleFilter === 'All' 
+                ? allPlayers 
+                : allPlayers.filter(p => p.role === roleFilter);
+
+            const totalCredits = selectedPlayers.reduce((sum, p) => sum + p.credits, 0);
+            const remainingCredits = 100 - totalCredits;
+
+            const team1Count = selectedPlayers.filter(p => p.team === 'IND').length;
+            const team2Count = selectedPlayers.filter(p => p.team === 'PAK').length;
+
+            const roleCounts = {
+                'Wicket-Keeper': selectedPlayers.filter(p => p.role === 'Wicket-Keeper').length,
+                'Batsman': selectedPlayers.filter(p => p.role === 'Batsman').length,
+                'All-Rounder': selectedPlayers.filter(p => p.role === 'All-Rounder').length,
+                'Bowler': selectedPlayers.filter(p => p.role === 'Bowler').length
+            };
+
+            const togglePlayer = (player) => {
+                const isSelected = selectedPlayers.some(p => p.id === player.id);
+                
+                if (isSelected) {
+                    setSelectedPlayers(selectedPlayers.filter(p => p.id !== player.id));
+                    if (captain === player.id) setCaptain(null);
+                    if (viceCaptain === player.id) setViceCaptain(null);
+                } else {
+                    if (selectedPlayers.length >= 11) return;
+                    if (totalCredits + player.credits > 100) return;
+                    const teamCount = selectedPlayers.filter(p => p.team === player.team).length;
+                    if (teamCount >= 7) return;
+                    
+                    setSelectedPlayers([...selectedPlayers, player]);
+                }
+            };
+
+            const canSaveTeam = selectedPlayers.length === 11 && 
+                                captain && 
+                                viceCaptain && 
+                                roleCounts['Wicket-Keeper'] >= 1 &&
+                                roleCounts['Batsman'] >= 3 &&
+                                roleCounts['Bowler'] >= 3 &&
+                                roleCounts['All-Rounder'] >= 1;
+
+            const saveTeam = async () => {
+                if (!canSaveTeam) return;
+
+                try {
+                    const { collection, addDoc } = window.firebaseModules;
+                    const teamsRef = collection(window.firebaseDb, 'teams');
+                    
+                    await addDoc(teamsRef, {
+                        contestId: contest.id,
+                        userId: user.uid,
+                        username: user.username,
+                        players: selectedPlayers,
+                        captain,
+                        viceCaptain,
+                        totalCredits,
+                        createdAt: new Date().toISOString()
+                    });
+
+                    alert('Team saved successfully!');
+                    onBack();
+                } catch (error) {
+                    console.error('Error saving team:', error);
+                    alert('Failed to save team. Please try again.');
+                }
+            };
+
+            return (
+                <>
+                    <div className="card">
+                        <h2>
+                            <button className="btn btn-small btn-secondary" onClick={onBack}>
+                                ← Back
+                            </button>
+                            {contest.name}
+                        </h2>
+                    </div>
+
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 350px', gap: '20px' }}>
+                        <div className="card">
+                            <h2>Select Players</h2>
+                            
+                            <div className="player-filters">
+                                {['All', 'Wicket-Keeper', 'Batsman', 'All-Rounder', 'Bowler'].map(role => (
+                                    <button
+                                        key={role}
+                                        className={`filter-btn ${roleFilter === role ? 'active' : ''}`}
+                                        onClick={() => setRoleFilter(role)}
+                                    >
+                                        {role}
+                                    </button>
+                                ))}
+                            </div>
+
+                            <div className="players-grid">
+                                {filteredPlayers.map(player => {
+                                    const isSelected = selectedPlayers.some(p => p.id === player.id);
+                                    const canSelect = selectedPlayers.length < 11 && 
+                                                    totalCredits + player.credits <= 100 &&
+                                                    selectedPlayers.filter(p => p.team === player.team).length < 7;
+                                    
+                                    return (
+                                        <div
+                                            key={player.id}
+                                            className={`player-card ${isSelected ? 'selected' : ''} ${!isSelected && !canSelect ? 'disabled' : ''}`}
+                                            onClick={() => togglePlayer(player)}
+                                        >
+                                            <div className="player-header">
+                                                <div className="player-name">{player.name}</div>
+                                                <div className="player-credits">{player.credits}</div>
+                                            </div>
+                                            <div className="player-info">
+                                                <span className="player-role">{player.role}</span>
+                                                <span>{player.team}</span>
+                                            </div>
+                                            {isSelected && (
+                                                <div className="captain-controls" style={{ marginTop: '10px' }}>
+                                                    <button
+                                                        className={`captain-btn ${captain === player.id ? 'active' : ''}`}
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            setCaptain(player.id);
+                                                        }}
+                                                    >
+                                                        {captain === player.id ? '👑 C' : 'C'}
+                                                    </button>
+                                                    <button
+                                                        className={`captain-btn ${viceCaptain === player.id ? 'active' : ''}`}
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            setViceCaptain(player.id);
+                                                        }}
+                                                    >
+                                                        {viceCaptain === player.id ? '⭐ VC' : 'VC'}
+                                                    </button>
+                                                </div>
+                                            )}
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        </div>
+
+                        <div className="team-summary">
+                            <div className="summary-header">Team Summary</div>
+                            
+                            <div className="summary-stats">
+                                <div className="stat-item">
+                                    <span className="stat-label">Players</span>
+                                    <span className={`stat-value ${selectedPlayers.length < 11 ? 'warning' : ''}`}>
+                                        {selectedPlayers.length}/11
+                                    </span>
+                                </div>
+                                
+                                <div className="stat-item">
+                                    <span className="stat-label">Credits</span>
+                                    <span className={`stat-value ${remainingCredits < 0 ? 'danger' : ''}`}>
+                                        {remainingCredits.toFixed(1)}/100
+                                    </span>
+                                </div>
+
+                                <div className="stat-item">
+                                    <span className="stat-label">IND</span>
+                                    <span className={`stat-value ${team1Count > 7 ? 'danger' : ''}`}>
+                                        {team1Count}/7 max
+                                    </span>
+                                </div>
+
+                                <div className="stat-item">
+                                    <span className="stat-label">PAK</span>
+                                    <span className={`stat-value ${team2Count > 7 ? 'danger' : ''}`}>
+                                        {team2Count}/7 max
+                                    </span>
+                                </div>
+
+                                <div className="stat-item">
+                                    <span className="stat-label">WK</span>
+                                    <span className={`stat-value ${roleCounts['Wicket-Keeper'] < 1 ? 'warning' : ''}`}>
+                                        {roleCounts['Wicket-Keeper']} (min 1)
+                                    </span>
+                                </div>
+
+                                <div className="stat-item">
+                                    <span className="stat-label">BAT</span>
+                                    <span className={`stat-value ${roleCounts['Batsman'] < 3 ? 'warning' : ''}`}>
+                                        {roleCounts['Batsman']} (min 3)
+                                    </span>
+                                </div>
+
+                                <div className="stat-item">
+                                    <span className="stat-label">AR</span>
+                                    <span className={`stat-value ${roleCounts['All-Rounder'] < 1 ? 'warning' : ''}`}>
+                                        {roleCounts['All-Rounder']} (min 1)
+                                    </span>
+                                </div>
+
+                                <div className="stat-item">
+                                    <span className="stat-label">BOWL</span>
+                                    <span className={`stat-value ${roleCounts['Bowler'] < 3 ? 'warning' : ''}`}>
+                                        {roleCounts['Bowler']} (min 3)
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div className="selected-players-list">
+                                <strong style={{ color: '#10b981', marginBottom: '10px', display: 'block' }}>
+                                    Selected Players
+                                </strong>
+                                {selectedPlayers.map(player => (
+                                    <div key={player.id} className="selected-player">
+                                        <span>
+                                            {player.name}
+                                            {captain === player.id && ' 👑'}
+                                            {viceCaptain === player.id && ' ⭐'}
+                                        </span>
+                                        <span>{player.credits}</span>
+                                    </div>
+                                ))}
+                            </div>
+
+                            <button 
+                                className="btn" 
+                                style={{ width: '100%', marginTop: '20px' }}
+                                disabled={!canSaveTeam}
+                                onClick={saveTeam}
+                            >
+                                Save Team
+                            </button>
+                        </div>
+                    </div>
+                </>
+            );
+        }
+
+        function MyTeams({ user }) {
+            return (
+                <div className="card">
+                    <h2>👥 My Teams</h2>
+                    <p style={{ textAlign: 'center', padding: '40px', color: '#94a3b8' }}>
+                        No teams created yet. Go to Contests to create your team!
+                    </p>
+                </div>
+            );
+        }
+
+        function Leaderboard() {
+            const sampleData = [
+                { rank: 1, username: 'cricket_king', points: 1250, teams: 3 },
+                { rank: 2, username: 'fantasy_pro', points: 1180, teams: 2 },
+                { rank: 3, username: 'world_cup_fan', points: 1120, teams: 4 },
+                { rank: 4, username: 'player123', points: 980, teams: 2 },
+                { rank: 5, username: 'sports_master', points: 850, teams: 3 }
+            ];
+
+            return (
+                <div className="card">
+                    <h2>📊 Leaderboard</h2>
+                    <table className="leaderboard-table">
+                        <thead>
+                            <tr>
+                                <th>Rank</th>
+                                <th>Username</th>
+                                <th>Points</th>
+                                <th>Teams</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {sampleData.map(entry => (
+                                <tr key={entry.rank}>
+                                    <td>
+                                        <span className={`rank-badge rank-${entry.rank <= 3 ? entry.rank : 'other'}`}>
+                                            {entry.rank}
+                                        </span>
+                                    </td>
+                                    <td style={{ fontWeight: 600 }}>{entry.username}</td>
+                                    <td style={{ color: '#10b981', fontWeight: 700 }}>{entry.points}</td>
+                                    <td>{entry.teams}</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
                 </div>
             );
         }
