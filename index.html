@@ -5,9 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>T20 World Cup 2026 Fantasy League</title>
     
-    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- Using cdnjs instead of unpkg -->
+    <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.development.js"></script>
+    <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.development.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
     
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
@@ -320,9 +321,9 @@
                 localStorage.removeItem('user');
             };
 
-            if (loading) return <div className="loading">Loading...</div>;
-            if (!user) return <LoginPage onLogin={handleLogin} />;
-            return <MainApp user={user} onLogout={handleLogout} />;
+            if (loading) return React.createElement('div', { className: 'loading' }, 'Loading...');
+            if (!user) return React.createElement(LoginPage, { onLogin: handleLogin });
+            return React.createElement(MainApp, { user: user, onLogout: handleLogout });
         }
 
         function LoginPage({ onLogin }) {
@@ -372,7 +373,7 @@
 
                 } catch (err) {
                     console.error('Login error:', err);
-                    setError('Login failed. Please try again.');
+                    setError('Login failed: ' + err.message);
                 } finally {
                     setLoading(false);
                 }
@@ -434,6 +435,7 @@
                         data.push({ id: doc.id, ...doc.data() });
                     });
                     
+                    console.log('Matches loaded:', data);
                     setMatches(data);
                 } catch (error) {
                     console.error('Error:', error);
@@ -491,7 +493,7 @@
             );
         }
 
-        ReactDOM.render(<App />, document.getElementById('root'));
+        ReactDOM.render(React.createElement(App), document.getElementById('root'));
     </script>
 </body>
 </html>
