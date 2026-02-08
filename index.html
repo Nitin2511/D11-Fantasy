@@ -10,10 +10,10 @@
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     
-    <!-- Firebase v9 (Modular SDK) -->
+    <!-- Firebase v9 -->
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
         import { getFirestore, collection, query, where, getDocs, addDoc, orderBy, Timestamp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
 
         const firebaseConfig = {
@@ -34,7 +34,8 @@
         window.firebaseDb = db;
         window.firebaseModules = {
             collection, query, where, getDocs, addDoc, orderBy,
-            signInWithEmailAndPassword, signOut, onAuthStateChanged, Timestamp
+            signInWithEmailAndPassword, createUserWithEmailAndPassword,
+            signOut, onAuthStateChanged, Timestamp
         };
         window.firebaseReady = true;
         
@@ -178,11 +179,6 @@
             border-color: #10b981;
             transform: translateY(-2px);
             box-shadow: 0 10px 30px rgba(16, 185, 129, 0.2);
-        }
-
-        .match-card.selected {
-            border-color: #10b981;
-            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(5, 150, 105, 0.05));
         }
 
         .match-header {
@@ -488,6 +484,25 @@
             margin: 20px 0;
         }
 
+        .success-display {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid #10b981;
+            color: #6ee7b7;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .info-box {
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid #3b82f6;
+            color: #93c5fd;
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+        }
+
         @media (max-width: 768px) {
             .header h1 { font-size: 2rem; }
             .user-badge, .logout-btn {
@@ -563,24 +578,94 @@
                 }
 
                 try {
-                    const { collection, query, where, getDocs, signInWithEmailAndPassword } = window.firebaseModules;
+                    const { collection, query, where, getDocs, signInWithEmailAndPassword, createUserWithEmailAndPassword } = window.firebaseModules;
                     
+                    console.log('🔍 Looking up user:', username);
+                    
+                    // Search for user in Firestore
                     const usersRef = collection(window.firebaseDb, 'users');
                     const q = query(usersRef, where('username', '==', username));
                     const querySnapshot = await getDocs(q);
                     
                     if (querySnapshot.empty) {
-                        alert('Invalid username or password');
+                        console.error('❌ User not found in Firestore');
+                        alert('User not found. Please check your username or contact admin.');
                         return;
                     }
                     
                     const userDoc = querySnapshot.docs[0];
                     const userData = userDoc.data();
                     
-                    await signInWithEmailAndPassword(window.firebaseAuth, userData.email, password);
+                    console.log('✅ User found in Firestore:', userData.username);
+                    
+                    // Verify password matches Firestore
+                    if (userData.password !== password) {
+                        console.error('❌ Password mismatch');
+                        alert('Incorrect password. Please try again.');
+                        return;
+                    }
+                    
+                    console.log('✅ Password verified');
+                    
+                    // Generate email if not present
+                    const email = userData.email || `${username}@fantasy-cricket.local`;
+                    
+                    console.log('📧 Using email:', email);
+                    
+                    // Try to sign in to Firebase Auth
+                    try {
+                        await signInWithEmailAndPassword(window.firebaseAuth, email, password);
+                        console.log('✅ Signed in with existing Firebase Auth account');
+                    } catch (signInError) {
+                        console.log('⚠️ Firebase Auth account not found:', signInError.code);
+                        
+                        if (signInError.code === 'auth/user-not-found' || signInError.code === 'auth/wrong-password') {
+                            // Create new Firebase Auth account
+                            console.log('🔨 Creating new Firebase Auth account...');
+                            try {
+                                const userCredential = await createUserWithEmailAndPassword(window.firebaseAuth, email, password);
+                                console.log('✅ Firebase Auth account created successfully');
+                                
+                                // Update display name if available
+                                if (userData.name && userCredential.user.updateProfile) {
+                                    await userCredential.user.updateProfile({
+                                        displayName: userData.name
+                                    });
+                                }
+                            } catch (createError) {
+                                console.error('❌ Error creating Firebase Auth account:', createError);
+                                
+                                if (createError.code === 'auth/email-already-in-use') {
+                                    // Email exists but password doesn't match - try signing in again
+                                    console.log('🔄 Email exists, retrying sign in...');
+                                    await signInWithEmailAndPassword(window.firebaseAuth, email, password);
+                                } else {
+                                    throw createError;
+                                }
+                            }
+                        } else {
+                            throw signInError;
+                        }
+                    }
+                    
+                    console.log('🎉 Login successful!');
+                    
                 } catch (error) {
-                    console.error('Login error:', error);
-                    alert('Invalid username or password');
+                    console.error('❌ Login error:', error);
+                    console.error('Error code:', error.code);
+                    console.error('Error message:', error.message);
+                    
+                    let errorMessage = 'Login failed. Please try again.';
+                    
+                    if (error.code === 'auth/invalid-email') {
+                        errorMessage = 'Invalid email format. Contact admin.';
+                    } else if (error.code === 'auth/weak-password') {
+                        errorMessage = 'Password must be at least 6 characters.';
+                    } else if (error.code === 'auth/network-request-failed') {
+                        errorMessage = 'Network error. Check your connection.';
+                    }
+                    
+                    alert(errorMessage);
                 }
             };
 
@@ -598,21 +683,37 @@
                     <div className="auth-container">
                         <div className="auth-card">
                             <h2>🏏 LOGIN</h2>
+                            
+                            <div className="info-box">
+                                <strong>ℹ️ For New Users:</strong> Use your Firestore username and password. Account will be created automatically on first login.
+                            </div>
+                            
                             <form onSubmit={handleAuth}>
                                 <div className="form-group">
                                     <label>Username</label>
-                                    <input type="text" name="username" required autoComplete="username" />
+                                    <input 
+                                        type="text" 
+                                        name="username" 
+                                        required 
+                                        autoComplete="username"
+                                        placeholder="Enter your username"
+                                    />
                                 </div>
                                 <div className="form-group">
                                     <label>Password</label>
-                                    <input type="password" name="password" required />
+                                    <input 
+                                        type="password" 
+                                        name="password" 
+                                        required 
+                                        placeholder="Enter your password"
+                                    />
                                 </div>
                                 <button type="submit" className="btn" style={{ width: '100%' }}>
                                     Login
                                 </button>
                             </form>
                             <div className="auth-toggle">
-                                Contact admin for credentials
+                                Contact admin to add you to Firestore
                             </div>
                         </div>
                     </div>
@@ -722,6 +823,9 @@
             );
         }
 
+        // [TeamBuilder and MyTeamsTab components remain the same as in the previous version]
+        // ... (keeping the code from the previous fixed version for these components)
+
         function TeamBuilder({ match, user, onBack }) {
             const [players, setPlayers] = useState([]);
             const [selectedPlayers, setSelectedPlayers] = useState([]);
@@ -753,20 +857,16 @@
                                 try {
                                     const playerData = doc.data();
                                     const playerId = String(doc.id || '').trim();
-                                    const playerName = playerId;
-                                    
-                                    // Sanitize and validate data
                                     const credits = parseFloat(playerData.credits) || 10;
                                     const playerType = String(playerData.playerType || 'Batter').trim();
-                                    const role = mapPlayerTypeToRole(playerType);
                                     
                                     allPlayers.push({
                                         id: playerId,
-                                        name: playerName,
+                                        name: playerId,
                                         team: teamName,
-                                        credits: Math.max(5, Math.min(15, credits)), // Clamp between 5-15
+                                        credits: Math.max(5, Math.min(15, credits)),
                                         playerType: playerType,
-                                        role: role
+                                        role: mapPlayerTypeToRole(playerType)
                                     });
                                 } catch (playerError) {
                                     console.warn('Error processing player:', doc.id, playerError);
@@ -778,13 +878,13 @@
                     }
                     
                     if (allPlayers.length === 0) {
-                        setErrorMsg('No players found for this match. Please check Firestore data.');
+                        setErrorMsg('No players found. Please check Firestore data.');
                     }
                     
                     setPlayers(allPlayers);
                 } catch (error) {
                     console.error('Error loading players:', error);
-                    setErrorMsg('Failed to load players. Please try again.');
+                    setErrorMsg('Failed to load players.');
                 } finally {
                     setLoading(false);
                 }
@@ -801,15 +901,10 @@
 
             const validateTeam = () => {
                 const errors = [];
-                
-                if (selectedPlayers.length !== 11) {
-                    errors.push(`Select exactly 11 players (currently ${selectedPlayers.length})`);
-                }
+                if (selectedPlayers.length !== 11) errors.push(`Select exactly 11 players (currently ${selectedPlayers.length})`);
                 
                 const totalCredits = selectedPlayers.reduce((sum, p) => sum + (parseFloat(p.credits) || 10), 0);
-                if (totalCredits > 100) {
-                    errors.push(`Total credits ${totalCredits.toFixed(1)} exceeds limit of 100`);
-                }
+                if (totalCredits > 100) errors.push(`Total credits ${totalCredits.toFixed(1)} exceeds limit of 100`);
                 
                 const roleCounts = {
                     WK: selectedPlayers.filter(p => p.role === 'WK').length,
@@ -818,28 +913,22 @@
                     BOWL: selectedPlayers.filter(p => p.role === 'BOWL').length
                 };
                 
-                if (roleCounts.WK < 1 || roleCounts.WK > 4) errors.push(`Select 1-4 Wicket-Keepers (current: ${roleCounts.WK})`);
-                if (roleCounts.BAT < 3 || roleCounts.BAT > 6) errors.push(`Select 3-6 Batsmen (current: ${roleCounts.BAT})`);
-                if (roleCounts.AR < 1 || roleCounts.AR > 4) errors.push(`Select 1-4 All-Rounders (current: ${roleCounts.AR})`);
-                if (roleCounts.BOWL < 3 || roleCounts.BOWL > 6) errors.push(`Select 3-6 Bowlers (current: ${roleCounts.BOWL})`);
+                if (roleCounts.WK < 1 || roleCounts.WK > 4) errors.push(`Select 1-4 WK (current: ${roleCounts.WK})`);
+                if (roleCounts.BAT < 3 || roleCounts.BAT > 6) errors.push(`Select 3-6 BAT (current: ${roleCounts.BAT})`);
+                if (roleCounts.AR < 1 || roleCounts.AR > 4) errors.push(`Select 1-4 AR (current: ${roleCounts.AR})`);
+                if (roleCounts.BOWL < 3 || roleCounts.BOWL > 6) errors.push(`Select 3-6 BOWL (current: ${roleCounts.BOWL})`);
                 
                 const matchTeams = match.id.split(' vs ').map(t => t.trim());
                 const teamCounts = {};
                 matchTeams.forEach(t => teamCounts[t] = 0);
-                
-                selectedPlayers.forEach(p => {
-                    if (teamCounts[p.team] !== undefined) {
-                        teamCounts[p.team]++;
-                    }
-                });
-                
+                selectedPlayers.forEach(p => { if (teamCounts[p.team] !== undefined) teamCounts[p.team]++; });
                 Object.entries(teamCounts).forEach(([team, count]) => {
-                    if (count > 7) errors.push(`Maximum 7 players from ${team} (current: ${count})`);
+                    if (count > 7) errors.push(`Max 7 from ${team} (current: ${count})`);
                 });
                 
                 if (!captain) errors.push('Select a Captain');
                 if (!viceCaptain) errors.push('Select a Vice-Captain');
-                if (captain && viceCaptain && captain === viceCaptain) errors.push('Captain and Vice-Captain must be different');
+                if (captain && viceCaptain && captain === viceCaptain) errors.push('Captain and VC must be different');
                 
                 return errors;
             };
@@ -847,26 +936,21 @@
             const togglePlayer = (player) => {
                 try {
                     const isSelected = selectedPlayers.find(p => p.id === player.id);
-                    
                     if (isSelected) {
                         setSelectedPlayers(selectedPlayers.filter(p => p.id !== player.id));
                         if (captain === player.id) setCaptain(null);
                         if (viceCaptain === player.id) setViceCaptain(null);
                     } else {
-                        if (selectedPlayers.length < 11) {
-                            setSelectedPlayers([...selectedPlayers, player]);
-                        }
+                        if (selectedPlayers.length < 11) setSelectedPlayers([...selectedPlayers, player]);
                     }
                     setValidationErrors([]);
                 } catch (error) {
                     console.error('Error toggling player:', error);
-                    setErrorMsg('Error selecting player. Please try again.');
                 }
             };
 
             const saveTeam = async () => {
                 const errors = validateTeam();
-                
                 if (errors.length > 0) {
                     setValidationErrors(errors);
                     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -875,7 +959,6 @@
                 
                 try {
                     const { collection, addDoc, Timestamp } = window.firebaseModules;
-                    
                     const teamData = {
                         userId: user.uid,
                         matchId: match.id,
@@ -893,7 +976,6 @@
                     };
                     
                     await addDoc(collection(window.firebaseDb, 'userTeams'), teamData);
-                    
                     alert('✅ Team saved successfully!');
                     onBack();
                 } catch (error) {
@@ -907,10 +989,7 @@
                     const matchesRole = activeRole === 'ALL' || player.role === activeRole;
                     const matchesSearch = String(player.name || '').toLowerCase().includes(searchTerm.toLowerCase());
                     return matchesRole && matchesSearch;
-                } catch (error) {
-                    console.error('Error filtering player:', error);
-                    return false;
-                }
+                } catch { return false; }
             });
 
             const getRoleCount = (role) => selectedPlayers.filter(p => p.role === role).length;
@@ -919,9 +998,7 @@
             if (loading) {
                 return (
                     <div className="card">
-                        <button onClick={onBack} className="btn" style={{ marginBottom: '20px' }}>
-                            ← Back to Matches
-                        </button>
+                        <button onClick={onBack} className="btn" style={{ marginBottom: '20px' }}>← Back</button>
                         <div className="loading">Loading players...</div>
                     </div>
                 );
@@ -929,24 +1006,14 @@
 
             return (
                 <div className="card">
-                    <button onClick={onBack} className="btn" style={{ marginBottom: '20px' }}>
-                        ← Back to Matches
-                    </button>
-
+                    <button onClick={onBack} className="btn" style={{ marginBottom: '20px' }}>← Back</button>
                     <h2>Create Team - {match.id}</h2>
 
-                    {errorMsg && (
-                        <div className="error-display">
-                            <strong>⚠️ Error:</strong> {errorMsg}
-                        </div>
-                    )}
-
+                    {errorMsg && <div className="error-display"><strong>⚠️</strong> {errorMsg}</div>}
                     {validationErrors.length > 0 && (
                         <div className="validation-errors">
-                            <h4>⚠️ Please fix these issues:</h4>
-                            <ul>
-                                {validationErrors.map((error, i) => <li key={i}>{error}</li>)}
-                            </ul>
+                            <h4>⚠️ Fix these issues:</h4>
+                            <ul>{validationErrors.map((e, i) => <li key={i}>{e}</li>)}</ul>
                         </div>
                     )}
 
@@ -991,11 +1058,7 @@
 
                     <div className="role-tabs">
                         {['ALL', 'WK', 'BAT', 'AR', 'BOWL'].map(role => (
-                            <div
-                                key={role}
-                                className={`role-tab ${activeRole === role ? 'active' : ''}`}
-                                onClick={() => setActiveRole(role)}
-                            >
+                            <div key={role} className={`role-tab ${activeRole === role ? 'active' : ''}`} onClick={() => setActiveRole(role)}>
                                 {role}
                             </div>
                         ))}
@@ -1040,10 +1103,7 @@
                                         )}
                                     </div>
                                 );
-                            } catch (renderError) {
-                                console.error('Error rendering player:', player.id, renderError);
-                                return null;
-                            }
+                            } catch { return null; }
                         })}
                     </div>
 
@@ -1071,10 +1131,7 @@
                     
                     const teamsData = [];
                     snapshot.forEach(doc => {
-                        teamsData.push({
-                            id: doc.id,
-                            ...doc.data()
-                        });
+                        teamsData.push({ id: doc.id, ...doc.data() });
                     });
                     
                     setTeams(teamsData);
@@ -1086,7 +1143,7 @@
             };
 
             if (loading) {
-                return <div className="card"><div className="loading">Loading your teams...</div></div>;
+                return <div className="card"><div className="loading">Loading...</div></div>;
             }
 
             return (
@@ -1094,7 +1151,7 @@
                     <h2>My Teams</h2>
                     {teams.length === 0 ? (
                         <p style={{ textAlign: 'center', padding: '40px', color: '#8b92a7' }}>
-                            No teams created yet. Go to Matches to create your first team!
+                            No teams yet. Create your first team!
                         </p>
                     ) : (
                         <div className="match-list">
