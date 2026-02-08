@@ -719,16 +719,41 @@
 
             const loadMatches = async () => {
                 try {
-                    const { collection, getDocs, orderBy, query } = window.firebaseModules;
+                    const { collection, getDocs } = window.firebaseModules;
                     const matchesRef = collection(window.firebaseDb, 'matches');
-                    const q = query(matchesRef, orderBy('date', 'desc'));
-                    const snapshot = await getDocs(q);
+                    const snapshot = await getDocs(matchesRef);
                     
                     const matchesData = [];
                     snapshot.forEach(doc => {
-                        matchesData.push({ id: doc.id, ...doc.data() });
+                        const data = doc.data();
+                        // Handle both possible field names
+                        const matchId = data.matchId || data.match || doc.id;
+                        const matchTime = data.matchTime || data.time || data.date || '';
+                        
+                        // Parse match ID to get teams (e.g., "India vs Pakistan")
+                        let teamA = '';
+                        let teamB = '';
+                        if (matchId.includes(' vs ')) {
+                            const teams = matchId.split(' vs ');
+                            teamA = teams[0].trim();
+                            teamB = teams[1].trim();
+                        }
+                        
+                        matchesData.push({ 
+                            id: doc.id,
+                            matchId: matchId,
+                            teamA: teamA || matchId,
+                            teamB: teamB || '',
+                            time: matchTime,
+                            date: matchTime,
+                            venue: data.venue || 'TBD',
+                            match: data.match || matchId,
+                            matchTime: matchTime,
+                            ...data 
+                        });
                     });
                     
+                    console.log('Loaded matches:', matchesData);
                     setMatches(matchesData);
                 } catch (error) {
                     console.error('Error loading matches:', error);
@@ -753,12 +778,18 @@
                             {matches.map(match => (
                                 <div key={match.id} className="match-card" onClick={() => onSelectMatch(match)}>
                                     <div className="match-header">
-                                        <div className="teams">{match.teamA} vs {match.teamB}</div>
-                                        <div className="match-time">{match.date}</div>
+                                        <div className="teams">
+                                            {match.teamA && match.teamB 
+                                                ? `${match.teamA} vs ${match.teamB}` 
+                                                : match.matchId || match.match}
+                                        </div>
+                                        <div className="match-time">
+                                            {match.matchTime || match.time || match.date || 'TBD'}
+                                        </div>
                                     </div>
                                     <div className="match-info">
                                         <span>📍 {match.venue || 'TBD'}</span>
-                                        <span>⏰ {match.time || 'TBD'}</span>
+                                        <span>🏏 Match #{match.matchId || match.id}</span>
                                     </div>
                                 </div>
                             ))}
@@ -785,18 +816,37 @@
 
             const loadPlayers = async () => {
                 try {
-                    const { collection, query, where, getDocs } = window.firebaseModules;
+                    const { collection, getDocs } = window.firebaseModules;
                     const playersRef = collection(window.firebaseDb, 'players');
                     const snapshot = await getDocs(playersRef);
                     
                     const playersData = [];
+                    
+                    // Get team names from match
+                    const matchTeams = [];
+                    if (match.teamA && match.teamB) {
+                        matchTeams.push(match.teamA, match.teamB);
+                    } else if (match.matchId && match.matchId.includes(' vs ')) {
+                        const teams = match.matchId.split(' vs ');
+                        matchTeams.push(teams[0].trim(), teams[1].trim());
+                    } else if (match.match && match.match.includes(' vs ')) {
+                        const teams = match.match.split(' vs ');
+                        matchTeams.push(teams[0].trim(), teams[1].trim());
+                    }
+                    
+                    console.log('Loading players for teams:', matchTeams);
+                    
                     snapshot.forEach(doc => {
                         const data = doc.data();
-                        if (data.team === match.teamA || data.team === match.teamB) {
+                        // Include all players if no specific teams, or filter by team
+                        if (matchTeams.length === 0 || matchTeams.some(team => 
+                            data.team && (data.team === team || data.team.toLowerCase().includes(team.toLowerCase()))
+                        )) {
                             playersData.push({ id: doc.id, ...data });
                         }
                     });
                     
+                    console.log('Loaded players:', playersData.length);
                     setPlayers(playersData);
                 } catch (error) {
                     console.error('Error loading players:', error);
@@ -876,7 +926,7 @@
                     await addDoc(teamsRef, {
                         userId: user.uid,
                         username: user.username,
-                        matchId: `${match.teamA} vs ${match.teamB}`,
+                        matchId: match.matchId || match.match || `${match.teamA} vs ${match.teamB}`,
                         players: selectedPlayers,
                         captain,
                         viceCaptain,
@@ -903,7 +953,7 @@
             return (
                 <div className="card">
                     <button onClick={onBack} className="btn" style={{ marginBottom: '20px' }}>← Back</button>
-                    <h2>Create Team - {match.teamA} vs {match.teamB}</h2>
+                    <h2>Create Team - {match.teamA && match.teamB ? `${match.teamA} vs ${match.teamB}` : match.matchId || match.match}</h2>
 
                     {errorMsg && <div className="error-display"><strong>⚠️</strong> {errorMsg}</div>}
                     {validationErrors.length > 0 && (
