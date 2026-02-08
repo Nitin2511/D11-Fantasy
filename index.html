@@ -13,7 +13,6 @@
     <!-- Firebase v9 -->
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
         import { getFirestore, collection, query, where, getDocs, addDoc, orderBy, Timestamp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
 
         const firebaseConfig = {
@@ -27,15 +26,11 @@
         };
 
         const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
         const db = getFirestore(app);
         
-        window.firebaseAuth = auth;
         window.firebaseDb = db;
         window.firebaseModules = {
-            collection, query, where, getDocs, addDoc, orderBy,
-            signInWithEmailAndPassword, createUserWithEmailAndPassword,
-            signOut, onAuthStateChanged, Timestamp
+            collection, query, where, getDocs, addDoc, orderBy, Timestamp
         };
         window.firebaseReady = true;
         
@@ -528,43 +523,16 @@
             const [loading, setLoading] = useState(true);
 
             useEffect(() => {
-                const checkAuth = setInterval(() => {
-                    if (window.firebaseReady) {
-                        clearInterval(checkAuth);
-                        
-                        const { onAuthStateChanged } = window.firebaseModules;
-                        
-                        onAuthStateChanged(window.firebaseAuth, async (firebaseUser) => {
-                            if (firebaseUser) {
-                                try {
-                                    const { collection, query, where, getDocs } = window.firebaseModules;
-                                    const usersRef = collection(window.firebaseDb, 'users');
-                                    const q = query(usersRef, where('email', '==', firebaseUser.email));
-                                    const querySnapshot = await getDocs(q);
-                                    
-                                    if (!querySnapshot.empty) {
-                                        const userData = querySnapshot.docs[0].data();
-                                        setUser({
-                                            ...firebaseUser,
-                                            ...userData,
-                                            uid: firebaseUser.uid
-                                        });
-                                    } else {
-                                        setUser(firebaseUser);
-                                    }
-                                } catch (error) {
-                                    console.error('Error loading user data:', error);
-                                    setUser(firebaseUser);
-                                }
-                            } else {
-                                setUser(null);
-                            }
-                            setLoading(false);
-                        });
+                // Check for stored user session
+                const storedUser = localStorage.getItem('fantasyUser');
+                if (storedUser) {
+                    try {
+                        setUser(JSON.parse(storedUser));
+                    } catch (e) {
+                        localStorage.removeItem('fantasyUser');
                     }
-                }, 100);
-
-                return () => clearInterval(checkAuth);
+                }
+                setLoading(false);
             }, []);
 
             const handleAuth = async (e) => {
@@ -578,9 +546,7 @@
                 }
 
                 try {
-                    const { collection, query, where, getDocs, signInWithEmailAndPassword, createUserWithEmailAndPassword } = window.firebaseModules;
-                    
-                    console.log('🔍 Looking up user:', username);
+                    const { collection, query, where, getDocs } = window.firebaseModules;
                     
                     // Search for user in Firestore
                     const usersRef = collection(window.firebaseDb, 'users');
@@ -588,7 +554,6 @@
                     const querySnapshot = await getDocs(q);
                     
                     if (querySnapshot.empty) {
-                        console.error('❌ User not found in Firestore');
                         alert('User not found. Please check your username or contact admin.');
                         return;
                     }
@@ -596,82 +561,35 @@
                     const userDoc = querySnapshot.docs[0];
                     const userData = userDoc.data();
                     
-                    console.log('✅ User found in Firestore:', userData.username);
-                    
-                    // Verify password matches Firestore
+                    // Verify password
                     if (userData.password !== password) {
-                        console.error('❌ Password mismatch');
                         alert('Incorrect password. Please try again.');
                         return;
                     }
                     
-                    console.log('✅ Password verified');
+                    // Store user in localStorage (simple session)
+                    const userSession = {
+                        uid: userDoc.id,
+                        username: userData.username,
+                        name: userData.name,
+                        email: userData.email,
+                        isAdmin: userData.isAdmin || false
+                    };
                     
-                    // Generate email if not present
-                    const email = userData.email || `${username}@fantasy-cricket.local`;
+                    localStorage.setItem('fantasyUser', JSON.stringify(userSession));
                     
-                    console.log('📧 Using email:', email);
-                    
-                    // Try to sign in to Firebase Auth
-                    try {
-                        await signInWithEmailAndPassword(window.firebaseAuth, email, password);
-                        console.log('✅ Signed in with existing Firebase Auth account');
-                    } catch (signInError) {
-                        console.log('⚠️ Firebase Auth account not found:', signInError.code);
-                        
-                        if (signInError.code === 'auth/user-not-found' || signInError.code === 'auth/wrong-password') {
-                            // Create new Firebase Auth account
-                            console.log('🔨 Creating new Firebase Auth account...');
-                            try {
-                                const userCredential = await createUserWithEmailAndPassword(window.firebaseAuth, email, password);
-                                console.log('✅ Firebase Auth account created successfully');
-                                
-                                // Update display name if available
-                                if (userData.name && userCredential.user.updateProfile) {
-                                    await userCredential.user.updateProfile({
-                                        displayName: userData.name
-                                    });
-                                }
-                            } catch (createError) {
-                                console.error('❌ Error creating Firebase Auth account:', createError);
-                                
-                                if (createError.code === 'auth/email-already-in-use') {
-                                    // Email exists but password doesn't match - try signing in again
-                                    console.log('🔄 Email exists, retrying sign in...');
-                                    await signInWithEmailAndPassword(window.firebaseAuth, email, password);
-                                } else {
-                                    throw createError;
-                                }
-                            }
-                        } else {
-                            throw signInError;
-                        }
-                    }
-                    
-                    console.log('🎉 Login successful!');
+                    // Trigger re-render by setting user
+                    window.location.reload();
                     
                 } catch (error) {
-                    console.error('❌ Login error:', error);
-                    console.error('Error code:', error.code);
-                    console.error('Error message:', error.message);
-                    
-                    let errorMessage = 'Login failed. Please try again.';
-                    
-                    if (error.code === 'auth/invalid-email') {
-                        errorMessage = 'Invalid email format. Contact admin.';
-                    } else if (error.code === 'auth/weak-password') {
-                        errorMessage = 'Password must be at least 6 characters.';
-                    } else if (error.code === 'auth/network-request-failed') {
-                        errorMessage = 'Network error. Check your connection.';
-                    }
-                    
-                    alert(errorMessage);
+                    console.error('Login error:', error);
+                    alert('Login failed. Please try again.');
                 }
             };
 
-            const handleLogout = async () => {
-                const { signOut } = window.firebaseModules;
-                await signOut(window.firebaseAuth);
+            const handleLogout = () => {
+                localStorage.removeItem('fantasyUser');
+                window.location.reload();
             };
 
             if (loading) {
