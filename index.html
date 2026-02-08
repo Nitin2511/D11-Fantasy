@@ -13,7 +13,7 @@
     <!-- Firebase v9 -->
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-        import { getFirestore, collection, query, where, getDocs, addDoc, orderBy, Timestamp, doc, updateDoc, deleteDoc, setDoc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+        import { getFirestore, collection, query, where, getDocs, addDoc, orderBy, Timestamp, doc, updateDoc, deleteDoc, setDoc, getDoc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
 
         const firebaseConfig = {
             apiKey: "AIzaSyDacks7Qnk42D2898leU_kgG8DZsYTFxCw",
@@ -30,7 +30,7 @@
         
         window.firebaseDb = db;
         window.firebaseModules = {
-            collection, query, where, getDocs, addDoc, orderBy, Timestamp, doc, updateDoc, deleteDoc, setDoc
+            collection, query, where, getDocs, addDoc, orderBy, Timestamp, doc, updateDoc, deleteDoc, setDoc, getDoc
         };
         window.firebaseReady = true;
         
@@ -539,31 +539,13 @@
     <script type="text/babel">
         const { useState, useEffect } = React;
 
-        // Mock data - Replace with your actual data
-        const MOCK_MATCHES = [
-            { id: 'IND_vs_PAK', team1: 'IND', team2: 'PAK', venue: 'Melbourne', date: '2026-03-15', status: 'upcoming' },
-            { id: 'AUS_vs_ENG', team1: 'AUS', team2: 'ENG', venue: 'Sydney', date: '2026-03-16', status: 'upcoming' },
-            { id: 'SA_vs_NZ', team1: 'SA', team2: 'NZ', venue: 'Brisbane', date: '2026-03-17', status: 'upcoming' }
-        ];
-
-        const MOCK_PLAYERS = [
-            { id: 'p1', matchId: 'IND_vs_PAK', name: 'Virat Kohli', team: 'IND', role: 'BAT', credits: 11.0 },
-            { id: 'p2', matchId: 'IND_vs_PAK', name: 'Rohit Sharma', team: 'IND', role: 'BAT', credits: 10.5 },
-            { id: 'p3', matchId: 'IND_vs_PAK', name: 'Jasprit Bumrah', team: 'IND', role: 'BOWL', credits: 10.0 },
-            { id: 'p4', matchId: 'IND_vs_PAK', name: 'Hardik Pandya', team: 'IND', role: 'AR', credits: 9.5 },
-            { id: 'p5', matchId: 'IND_vs_PAK', name: 'Rishabh Pant', team: 'IND', role: 'WK', credits: 9.0 },
-            { id: 'p6', matchId: 'IND_vs_PAK', name: 'Babar Azam', team: 'PAK', role: 'BAT', credits: 10.5 },
-            { id: 'p7', matchId: 'IND_vs_PAK', name: 'Mohammad Rizwan', team: 'PAK', role: 'WK', credits: 9.0 },
-            { id: 'p8', matchId: 'IND_vs_PAK', name: 'Shaheen Afridi', team: 'PAK', role: 'BOWL', credits: 9.5 },
-            { id: 'p9', matchId: 'IND_vs_PAK', name: 'Shadab Khan', team: 'PAK', role: 'AR', credits: 8.5 },
-            { id: 'p10', matchId: 'IND_vs_PAK', name: 'Fakhar Zaman', team: 'PAK', role: 'BAT', credits: 9.0 },
-            { id: 'p11', matchId: 'IND_vs_PAK', name: 'Ravindra Jadeja', team: 'IND', role: 'AR', credits: 9.0 },
-            { id: 'p12', matchId: 'IND_vs_PAK', name: 'Mohammed Shami', team: 'IND', role: 'BOWL', credits: 8.5 }
-        ];
-
         function App() {
             const [user, setUser] = useState(null);
             const [activeTab, setActiveTab] = useState('matches');
+            const [loading, setLoading] = useState(true);
+            const [loginUsername, setLoginUsername] = useState('');
+            const [loginPassword, setLoginPassword] = useState('');
+            const [loginError, setLoginError] = useState('');
 
             useEffect(() => {
                 checkFirebase();
@@ -572,27 +554,93 @@
             const checkFirebase = () => {
                 const interval = setInterval(() => {
                     if (window.firebaseReady) {
-                        // Mock user - in production, use Firebase Auth
-                        setUser({
-                            uid: 'user_' + Math.random().toString(36).substr(2, 9),
-                            displayName: 'Test User',
-                            isAdmin: false // Set to true to test admin features
-                        });
+                        setLoading(false);
                         clearInterval(interval);
                     }
                 }, 100);
             };
 
+            const handleLogin = async (e) => {
+                e.preventDefault();
+                setLoginError('');
+                
+                try {
+                    const { collection, query, where, getDocs } = window.firebaseModules;
+                    const usersRef = collection(window.firebaseDb, 'users');
+                    const q = query(
+                        usersRef,
+                        where('username', '==', loginUsername),
+                        where('password', '==', loginPassword)
+                    );
+                    const snapshot = await getDocs(q);
+                    
+                    if (snapshot.empty) {
+                        setLoginError('Invalid username or password');
+                        return;
+                    }
+                    
+                    const userDoc = snapshot.docs[0];
+                    const userData = userDoc.data();
+                    
+                    setUser({
+                        uid: userDoc.id,
+                        displayName: userData.name || userData.username,
+                        username: userData.username,
+                        isAdmin: userData.isAdmin || false
+                    });
+                } catch (error) {
+                    console.error('Login error:', error);
+                    setLoginError('Login failed. Please try again.');
+                }
+            };
+
             const handleLogout = () => {
                 setUser(null);
                 setActiveTab('matches');
+                setLoginUsername('');
+                setLoginPassword('');
             };
 
-            if (!user) {
+            if (loading) {
                 return (
                     <div className="header">
                         <h1>T20 Fantasy League</h1>
                         <div className="loading">Loading...</div>
+                    </div>
+                );
+            }
+
+            if (!user) {
+                return (
+                    <div>
+                        <div className="header">
+                            <h1>🏏 T20 Fantasy League</h1>
+                        </div>
+                        <div className="card" style={{ maxWidth: '500px', margin: '0 auto' }}>
+                            <h2>Login</h2>
+                            <form onSubmit={handleLogin}>
+                                {loginError && <div className="error-display">{loginError}</div>}
+                                <input
+                                    type="text"
+                                    className="search-box"
+                                    placeholder="Username"
+                                    value={loginUsername}
+                                    onChange={(e) => setLoginUsername(e.target.value)}
+                                    required
+                                />
+                                <input
+                                    type="password"
+                                    className="search-box"
+                                    placeholder="Password"
+                                    value={loginPassword}
+                                    onChange={(e) => setLoginPassword(e.target.value)}
+                                    required
+                                />
+                                <button type="submit" className="btn" style={{ width: '100%' }}>
+                                    Login
+                                </button>
+                            </form>
+                        </div>
                     </div>
                 );
             }
@@ -646,8 +694,16 @@
 
             const loadMatches = async () => {
                 try {
-                    // In production, fetch from Firestore
-                    setMatches(MOCK_MATCHES);
+                    const { collection, getDocs } = window.firebaseModules;
+                    const matchesRef = collection(window.firebaseDb, 'matches');
+                    const snapshot = await getDocs(matchesRef);
+                    
+                    const matchesData = [];
+                    snapshot.forEach(doc => {
+                        matchesData.push({ id: doc.id, ...doc.data() });
+                    });
+                    
+                    setMatches(matchesData);
                 } catch (error) {
                     console.error('Error loading matches:', error);
                 } finally {
@@ -702,13 +758,12 @@
                             return (
                                 <div key={match.id} className="match-card" onClick={() => handleMatchSelect(match)}>
                                     <div className="match-header">
-                                        <div className="teams">{match.team1} vs {match.team2}</div>
+                                        <div className="teams">{match.id}</div>
                                         {hasTeam && <span className="has-team-badge">✓ Team Created</span>}
                                     </div>
                                     <div className="match-info">
-                                        <span>📍 {match.venue}</span>
-                                        <span>📅 {match.date}</span>
-                                        <span>⚡ {match.status}</span>
+                                        <span>📍 {match.venue || 'TBD'}</span>
+                                        <span>📅 {match.matchTime ? new Date(match.matchTime.seconds * 1000).toLocaleDateString() : 'TBD'}</span>
                                     </div>
                                 </div>
                             );
@@ -735,9 +790,59 @@
 
             const loadPlayers = async () => {
                 try {
-                    // In production, fetch from Firestore filtered by matchId
-                    const matchPlayers = MOCK_PLAYERS.filter(p => p.matchId === match.id);
-                    setPlayers(matchPlayers);
+                    const { collection, doc, getDoc } = window.firebaseModules;
+                    
+                    // Extract team names from match.id (e.g., "India vs Pakistan")
+                    const matchParts = match.id.split(' vs ');
+                    if (matchParts.length !== 2) {
+                        console.error('Invalid match ID format');
+                        setLoading(false);
+                        return;
+                    }
+                    
+                    const team1Name = matchParts[0].trim();
+                    const team2Name = matchParts[1].trim();
+                    
+                    // Fetch players from both teams
+                    const allPlayers = [];
+                    
+                    // Get team1 players
+                    const team1DocRef = doc(window.firebaseDb, 'teams', team1Name);
+                    const team1Snap = await getDoc(team1DocRef);
+                    if (team1Snap.exists()) {
+                        const team1Data = team1Snap.data();
+                        if (team1Data.playerName && Array.isArray(team1Data.playerName)) {
+                            team1Data.playerName.forEach((playerName, index) => {
+                                allPlayers.push({
+                                    id: `${team1Name}_${index}`,
+                                    name: playerName,
+                                    team: team1Name,
+                                    role: 'BAT', // Default role, you should have this in Firestore
+                                    credits: 8.5 // Default credits, you should have this in Firestore
+                                });
+                            });
+                        }
+                    }
+                    
+                    // Get team2 players
+                    const team2DocRef = doc(window.firebaseDb, 'teams', team2Name);
+                    const team2Snap = await getDoc(team2DocRef);
+                    if (team2Snap.exists()) {
+                        const team2Data = team2Snap.data();
+                        if (team2Data.playerName && Array.isArray(team2Data.playerName)) {
+                            team2Data.playerName.forEach((playerName, index) => {
+                                allPlayers.push({
+                                    id: `${team2Name}_${index}`,
+                                    name: playerName,
+                                    team: team2Name,
+                                    role: 'BAT', // Default role
+                                    credits: 8.5 // Default credits
+                                });
+                            });
+                        }
+                    }
+                    
+                    setPlayers(allPlayers);
                 } catch (error) {
                     console.error('Error loading players:', error);
                 } finally {
@@ -1045,8 +1150,22 @@
             }, []);
 
             const loadMatches = async () => {
-                setMatches(MOCK_MATCHES);
-                setLoading(false);
+                try {
+                    const { collection, getDocs } = window.firebaseModules;
+                    const matchesRef = collection(window.firebaseDb, 'matches');
+                    const snapshot = await getDocs(matchesRef);
+                    
+                    const matchesData = [];
+                    snapshot.forEach(doc => {
+                        matchesData.push({ id: doc.id, ...doc.data() });
+                    });
+                    
+                    setMatches(matchesData);
+                } catch (error) {
+                    console.error('Error loading matches:', error);
+                } finally {
+                    setLoading(false);
+                }
             };
 
             const loadLeaderboard = async (matchId) => {
@@ -1083,10 +1202,10 @@
                                         loadLeaderboard(match.id);
                                     }}
                                 >
-                                    <div className="teams">{match.team1} vs {match.team2}</div>
+                                    <div className="teams">{match.id}</div>
                                     <div className="match-info">
-                                        <span>📍 {match.venue}</span>
-                                        <span>📅 {match.date}</span>
+                                        <span>📍 {match.venue || 'TBD'}</span>
+                                        <span>📅 {match.matchTime ? new Date(match.matchTime.seconds * 1000).toLocaleDateString() : 'TBD'}</span>
                                     </div>
                                 </div>
                             ))}
@@ -1153,8 +1272,22 @@
             }, []);
 
             const loadMatches = async () => {
-                setMatches(MOCK_MATCHES);
-                setLoading(false);
+                try {
+                    const { collection, getDocs } = window.firebaseModules;
+                    const matchesRef = collection(window.firebaseDb, 'matches');
+                    const snapshot = await getDocs(matchesRef);
+                    
+                    const matchesData = [];
+                    snapshot.forEach(doc => {
+                        matchesData.push({ id: doc.id, ...doc.data() });
+                    });
+                    
+                    setMatches(matchesData);
+                } catch (error) {
+                    console.error('Error loading matches:', error);
+                } finally {
+                    setLoading(false);
+                }
             };
 
             if (!user.isAdmin) {
@@ -1179,10 +1312,10 @@
                                 className="match-card"
                                 onClick={() => setSelectedMatch(match)}
                             >
-                                <div className="teams">{match.team1} vs {match.team2}</div>
+                                <div className="teams">{match.id}</div>
                                 <div className="match-info">
-                                    <span>📍 {match.venue}</span>
-                                    <span>📅 {match.date}</span>
+                                    <span>📍 {match.venue || 'TBD'}</span>
+                                    <span>📅 {match.matchTime ? new Date(match.matchTime.seconds * 1000).toLocaleDateString() : 'TBD'}</span>
                                 </div>
                             </div>
                         ))}
@@ -1202,21 +1335,70 @@
             }, [match]);
 
             const loadPlayers = async () => {
-                const matchPlayers = MOCK_PLAYERS.filter(p => p.matchId === match.id);
-                setPlayers(matchPlayers);
-                
-                // Initialize points
-                const initialPoints = {};
-                matchPlayers.forEach(player => {
-                    initialPoints[player.id] = {
-                        runs: 0,
-                        wickets: 0,
-                        catches: 0,
-                        runOuts: 0,
-                        totalPoints: 0
-                    };
-                });
-                setPlayerPoints(initialPoints);
+                try {
+                    const { collection, doc, getDoc } = window.firebaseModules;
+                    
+                    // Extract team names from match.id
+                    const matchParts = match.id.split(' vs ');
+                    if (matchParts.length !== 2) {
+                        console.error('Invalid match ID format');
+                        return;
+                    }
+                    
+                    const team1Name = matchParts[0].trim();
+                    const team2Name = matchParts[1].trim();
+                    
+                    const allPlayers = [];
+                    
+                    // Get team1 players
+                    const team1DocRef = doc(window.firebaseDb, 'teams', team1Name);
+                    const team1Snap = await getDoc(team1DocRef);
+                    if (team1Snap.exists()) {
+                        const team1Data = team1Snap.data();
+                        if (team1Data.playerName && Array.isArray(team1Data.playerName)) {
+                            team1Data.playerName.forEach((playerName, index) => {
+                                allPlayers.push({
+                                    id: `${team1Name}_${index}`,
+                                    name: playerName,
+                                    team: team1Name
+                                });
+                            });
+                        }
+                    }
+                    
+                    // Get team2 players
+                    const team2DocRef = doc(window.firebaseDb, 'teams', team2Name);
+                    const team2Snap = await getDoc(team2DocRef);
+                    if (team2Snap.exists()) {
+                        const team2Data = team2Snap.data();
+                        if (team2Data.playerName && Array.isArray(team2Data.playerName)) {
+                            team2Data.playerName.forEach((playerName, index) => {
+                                allPlayers.push({
+                                    id: `${team2Name}_${index}`,
+                                    name: playerName,
+                                    team: team2Name
+                                });
+                            });
+                        }
+                    }
+                    
+                    setPlayers(allPlayers);
+                    
+                    // Initialize points
+                    const initialPoints = {};
+                    allPlayers.forEach(player => {
+                        initialPoints[player.id] = {
+                            runs: 0,
+                            wickets: 0,
+                            catches: 0,
+                            runOuts: 0,
+                            totalPoints: 0
+                        };
+                    });
+                    setPlayerPoints(initialPoints);
+                } catch (error) {
+                    console.error('Error loading players:', error);
+                }
             };
 
             const calculatePoints = (stats) => {
