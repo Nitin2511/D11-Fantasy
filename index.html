@@ -882,17 +882,49 @@
                     window.firebaseAuth,
                     async (authUser) => {
                         if (authUser) {
-                            // Fetch user data from Firestore
-                            const { doc, getDoc } = window.firebaseModules;
-                            const userDoc = await getDoc(doc(window.firebaseDb, 'users', authUser.uid));
-                            
-                            if (userDoc.exists()) {
-                                setUser({
-                                    uid: authUser.uid,
-                                    email: authUser.email,
-                                    ...userDoc.data()
-                                });
-                            } else {
+                            try {
+                                // Fetch user data from Firestore using auth UID
+                                const { doc, getDoc } = window.firebaseModules;
+                                const userDocRef = doc(window.firebaseDb, 'users', authUser.uid);
+                                const userDoc = await getDoc(userDocRef);
+                                
+                                if (userDoc.exists()) {
+                                    const firestoreData = userDoc.data();
+                                    console.log('✅ Loaded user data from Firestore:', firestoreData);
+                                    
+                                    setUser({
+                                        uid: authUser.uid,
+                                        email: authUser.email,
+                                        ...firestoreData
+                                    });
+                                } else {
+                                    // Fallback: search by email or username
+                                    console.log('⚠️ User doc not found with UID, searching...');
+                                    const { collection, query, where, getDocs } = window.firebaseModules;
+                                    const usersRef = collection(window.firebaseDb, 'users');
+                                    
+                                    const emailQuery = query(usersRef, where('email', '==', authUser.email));
+                                    const snapshot = await getDocs(emailQuery);
+                                    
+                                    if (!snapshot.empty) {
+                                        const userData = snapshot.docs[0].data();
+                                        console.log('✅ Found user by email:', userData);
+                                        setUser({
+                                            uid: authUser.uid,
+                                            email: authUser.email,
+                                            ...userData
+                                        });
+                                    } else {
+                                        setUser({
+                                            uid: authUser.uid,
+                                            email: authUser.email,
+                                            username: authUser.displayName || 'User',
+                                            isAdmin: false
+                                        });
+                                    }
+                                }
+                            } catch (error) {
+                                console.error('Error loading user data:', error);
                                 setUser({
                                     uid: authUser.uid,
                                     email: authUser.email,
@@ -940,10 +972,13 @@
                 setLoading(true);
 
                 try {
-                    const { collection, query, where, getDocs, signInWithEmailAndPassword, createUserWithEmailAndPassword } = window.firebaseModules;
+                    const { collection, query, where, getDocs, signInWithEmailAndPassword, createUserWithEmailAndPassword, doc, setDoc } = window.firebaseModules;
+                    
+                    console.log('🔍 Step 1: Searching for user:', identifier);
                     
                     // Query Firestore for user
                     let userData = null;
+                    let userDocId = null;
                     const usersRef = collection(window.firebaseDb, 'users');
                     
                     // Try username
@@ -951,14 +986,18 @@
                     const usernameSnapshot = await getDocs(usernameQuery);
 
                     if (!usernameSnapshot.empty) {
+                        userDocId = usernameSnapshot.docs[0].id;
                         userData = usernameSnapshot.docs[0].data();
+                        console.log('✅ Found user by username:', userData);
                     } else {
                         // Try email
                         const emailQuery = query(usersRef, where('email', '==', identifier));
                         const emailSnapshot = await getDocs(emailQuery);
                         
                         if (!emailSnapshot.empty) {
+                            userDocId = emailSnapshot.docs[0].id;
                             userData = emailSnapshot.docs[0].data();
+                            console.log('✅ Found user by email:', userData);
                         }
                     }
 
@@ -968,22 +1007,51 @@
                         return;
                     }
 
+                    console.log('🔍 Step 2: Verifying password...');
+                    
                     // Verify password
                     if (userData.password !== password) {
                         setError('Incorrect password. Please try again.');
                         setLoading(false);
                         return;
                     }
+                    
+                    console.log('✅ Password verified!');
+                    console.log('isAdmin status:', userData.isAdmin);
 
                     // Sign in to Firebase Auth
                     const email = userData.email || `${userData.username}@fantasy.local`;
                     
                     try {
-                        await signInWithEmailAndPassword(window.firebaseAuth, email, password);
+                        const userCred = await signInWithEmailAndPassword(window.firebaseAuth, email, password);
+                        console.log('✅ Signed in with Firebase Auth');
+                        
+                        // Update Firestore with auth UID if needed
+                        if (userDocId !== userCred.user.uid) {
+                            const userRef = doc(window.firebaseDb, 'users', userCred.user.uid);
+                            await setDoc(userRef, {
+                                ...userData,
+                                uid: userCred.user.uid
+                            });
+                            console.log('✅ User data synced with auth UID');
+                        }
+                        
                         setSuccess('Logged in successfully!');
                     } catch (signInError) {
+                        console.log('⚠️ Sign-in failed, creating account:', signInError.code);
+                        
                         if (signInError.code === 'auth/user-not-found' || signInError.code === 'auth/invalid-credential') {
                             const userCredential = await createUserWithEmailAndPassword(window.firebaseAuth, email, password);
+                            console.log('✅ Firebase Auth account created');
+                            
+                            // Store user data with auth UID
+                            const userRef = doc(window.firebaseDb, 'users', userCredential.user.uid);
+                            await setDoc(userRef, {
+                                ...userData,
+                                uid: userCredential.user.uid
+                            });
+                            console.log('✅ User data saved with auth UID');
+                            
                             setSuccess('Account created and logged in successfully!');
                         } else {
                             throw signInError;
@@ -991,7 +1059,7 @@
                     }
 
                 } catch (error) {
-                    console.error('Login error:', error);
+                    console.error('❌ Login error:', error);
                     setError(`Error: ${error.code || error.message || 'Login failed'}`);
                 } finally {
                     setLoading(false);
