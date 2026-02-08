@@ -651,7 +651,7 @@
         function App() {
             const [user, setUser] = useState(null);
             const [loading, setLoading] = useState(true);
-            const [isLogin, setIsLogin] = useState(true);
+            
 
             useEffect(() => {
                 const checkAuth = () => {
@@ -687,6 +687,7 @@
                     } else {
                         const newUser = {
                             email: currentUser.email,
+                            username: currentUser.email.split('@')[0],
                             role: 'user',
                             createdAt: new Date().toISOString()
                         };
@@ -703,19 +704,35 @@
 
             const handleAuth = async (e) => {
                 e.preventDefault();
-                const email = e.target.email.value;
+                const username = e.target.username.value.trim();
                 const password = e.target.password.value;
 
+                if (!username || !password) {
+                    alert('Please enter both username and password');
+                    return;
+                }
+
                 try {
-                    const { signInWithEmailAndPassword, createUserWithEmailAndPassword } = window.firebaseModules;
+                    const { collection, query, where, getDocs, signInWithEmailAndPassword } = window.firebaseModules;
                     
-                    if (isLogin) {
-                        await signInWithEmailAndPassword(window.firebaseAuth, email, password);
-                    } else {
-                        await createUserWithEmailAndPassword(window.firebaseAuth, email, password);
+                    // Find user by username
+                    const usersRef = collection(window.firebaseDb, 'users');
+                    const q = query(usersRef, where('username', '==', username));
+                    const querySnapshot = await getDocs(q);
+                    
+                    if (querySnapshot.empty) {
+                        alert('Invalid username or password. Contact admin for login credentials.');
+                        return;
                     }
+                    
+                    const userDoc = querySnapshot.docs[0];
+                    const userData = userDoc.data();
+                    
+                    // Sign in with email (stored in user document)
+                    await signInWithEmailAndPassword(window.firebaseAuth, userData.email, password);
                 } catch (error) {
-                    alert(error.message);
+                    console.error('Login error:', error);
+                    alert('Invalid username or password. Contact admin for login credentials.');
                 }
             };
 
@@ -732,25 +749,22 @@
                 return (
                     <div className="auth-container">
                         <div className="auth-card">
-                            <h2>{isLogin ? 'LOGIN' : 'SIGN UP'}</h2>
+                            <h2>LOGIN</h2>
                             <form onSubmit={handleAuth}>
                                 <div className="form-group">
-                                    <label>Email</label>
-                                    <input type="email" name="email" required />
+                                    <label>Username</label>
+                                    <input type="text" name="username" required autoComplete="username" />
                                 </div>
                                 <div className="form-group">
                                     <label>Password</label>
                                     <input type="password" name="password" required />
                                 </div>
                                 <button type="submit" className="btn" style={{ width: '100%' }}>
-                                    {isLogin ? 'Login' : 'Sign Up'}
+                                    Login
                                 </button>
                             </form>
                             <div className="auth-toggle">
-                                {isLogin ? "Don't have an account? " : "Already have an account? "}
-                                <a onClick={() => setIsLogin(!isLogin)}>
-                                    {isLogin ? 'Sign Up' : 'Login'}
-                                </a>
+                                Don't have credentials? Contact admin for access.
                             </div>
                         </div>
                     </div>
@@ -767,10 +781,10 @@
                 <>
                     <div className="header">
                         <div className="user-badge">
-                            👤 {user.email}
+                            👤 {user.username || user.email}
                             {user.role === 'admin' && <span className="admin-badge">Admin</span>}
                         </div>
-                        <h1>⚡ T20 FANTASY LEAGUE</h1>
+                        <h1>⚡ T20 WORLD CUP 2026</h1>
                         <button className="logout-btn" onClick={onLogout}>Logout</button>
                     </div>
 
@@ -824,23 +838,46 @@
 
             const loadMatches = async () => {
                 try {
-                    const { collection, getDocs, orderBy, query } = window.firebaseModules;
+                    const { collection, getDocs, orderBy, query, doc, setDoc } = window.firebaseModules;
                     const matchesRef = collection(window.firebaseDb, 'matches');
                     const q = query(matchesRef, orderBy('dateTime', 'asc'));
                     const snapshot = await getDocs(q);
                     
-                    const matchesList = snapshot.docs.map(doc => ({
-                        id: doc.id,
-                        ...doc.data()
-                    }));
+                    let matchesList = [];
+                    
+                    if (snapshot.empty) {
+                        // No matches in database, create them from fixtures
+                        console.log('Creating matches from fixtures...');
+                        for (let i = 0; i < WT20_2026_FIXTURES.length; i++) {
+                            const match = WT20_2026_FIXTURES[i];
+                            const matchId = `match_${(i + 1).toString().padStart(3, '0')}`;
+                            const matchData = {
+                                ...match,
+                                status: 'upcoming',
+                                createdAt: new Date().toISOString()
+                            };
+                            
+                            await setDoc(doc(window.firebaseDb, 'matches', matchId), matchData);
+                            matchesList.push({ id: matchId, ...matchData });
+                        }
+                        console.log(`Created ${matchesList.length} matches successfully!`);
+                    } else {
+                        matchesList = snapshot.docs.map(doc => ({
+                            id: doc.id,
+                            ...doc.data()
+                        }));
+                        console.log(`Loaded ${matchesList.length} matches from database`);
+                    }
                     
                     setMatches(matchesList);
                 } catch (error) {
                     console.error('Error loading matches:', error);
+                    alert('Error loading matches. Please refresh the page.');
                 } finally {
                     setLoading(false);
                 }
             };
+
 
             const loadPlayers = async () => {
                 if (!selectedMatch) return;
