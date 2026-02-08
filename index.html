@@ -8,6 +8,12 @@
     <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    
     <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     
     <style>
@@ -556,6 +562,26 @@
 <body>
     <div id="root"></div>
 
+    <script>
+        // Initialize Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyDacks7Qnk42D2898leU_kgG8DZsYTFxCw",
+            authDomain: "t20-fantasy-contest.firebaseapp.com",
+            projectId: "t20-fantasy-contest",
+            storageBucket: "t20-fantasy-contest.firebasestorage.app",
+            messagingSenderId: "180217303236",
+            appId: "1:180217303236:web:a6b078a7a7d0fa070c3991",
+            measurementId: "G-LYY944KN99"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const auth = firebase.auth();
+        
+        console.log("Firebase initialized successfully!");
+    </script>
+
     <script type="text/babel">
         const { useState, useEffect } = React;
 
@@ -991,48 +1017,129 @@ const PLAYERS = [
             const [joinContestCode, setJoinContestCode] = useState('');
             const [updateMatchId, setUpdateMatchId] = useState(null);
             const [playerPoints, setPlayerPoints] = useState({});
+            const [loading, setLoading] = useState(true);
+            const [allUsers, setAllUsers] = useState([]);
 
+            // Load data from Firestore on mount
             useEffect(() => {
-                // Initialize predefined users in localStorage on first load
-                const storedUsers = localStorage.getItem('users');
-                if (!storedUsers) {
-                    localStorage.setItem('users', JSON.stringify(PREDEFINED_USERS));
-                }
+                const loadFirestoreData = async () => {
+                    try {
+                        // Load current user from localStorage (for session persistence)
+                        const savedUser = localStorage.getItem('currentUser');
+                        if (savedUser) {
+                            const user = JSON.parse(savedUser);
+                            setCurrentUser(user);
+                            
+                            // Load user's teams from Firestore
+                            if (!user.isAdmin) {
+                                const teamsDoc = await db.collection('userTeams').doc(user.id).get();
+                                if (teamsDoc.exists) {
+                                    setMyTeams(teamsDoc.data().teams || {});
+                                }
+                            }
+                        }
 
-                const savedUser = localStorage.getItem('currentUser');
-                if (savedUser) {
-                    setCurrentUser(JSON.parse(savedUser));
-                }
+                        // Load contest from Firestore
+                        const contestDoc = await db.collection('contests').doc('main').get();
+                        if (contestDoc.exists) {
+                            setContest(contestDoc.data());
+                        }
 
-                const savedTeams = localStorage.getItem('myTeams');
-                if (savedTeams) setMyTeams(JSON.parse(savedTeams));
+                        // Load player points from Firestore
+                        const pointsDoc = await db.collection('gameData').doc('playerPoints').get();
+                        if (pointsDoc.exists) {
+                            setPlayerPoints(pointsDoc.data().points || {});
+                        }
 
-                const savedContest = localStorage.getItem('contest');
-                if (savedContest) setContest(JSON.parse(savedContest));
+                        // Load all users who have created teams
+                        const usersSnapshot = await db.collection('userTeams').get();
+                        const usersList = usersSnapshot.docs.map(doc => ({
+                            id: doc.data().userId,
+                            username: doc.data().username,
+                            name: doc.data().name
+                        }));
+                        setAllUsers(usersList);
 
-                const savedPoints = localStorage.getItem('playerPoints');
-                if (savedPoints) setPlayerPoints(JSON.parse(savedPoints));
+                        setLoading(false);
+                    } catch (error) {
+                        console.error("Error loading data:", error);
+                        setLoading(false);
+                    }
+                };
+
+                loadFirestoreData();
+
+                // Real-time listener for contest updates
+                const unsubscribeContest = db.collection('contests').doc('main')
+                    .onSnapshot((doc) => {
+                        if (doc.exists) {
+                            setContest(doc.data());
+                        }
+                    });
+
+                // Real-time listener for player points
+                const unsubscribePoints = db.collection('gameData').doc('playerPoints')
+                    .onSnapshot((doc) => {
+                        if (doc.exists) {
+                            setPlayerPoints(doc.data().points || {});
+                        }
+                    });
+
+                // Real-time listener for users
+                const unsubscribeUsers = db.collection('userTeams')
+                    .onSnapshot((snapshot) => {
+                        const usersList = snapshot.docs.map(doc => ({
+                            id: doc.data().userId,
+                            username: doc.data().username,
+                            name: doc.data().name
+                        }));
+                        setAllUsers(usersList);
+                    });
+
+                return () => {
+                    unsubscribeContest();
+                    unsubscribePoints();
+                    unsubscribeUsers();
+                };
             }, []);
 
+            // Save current user to localStorage for session
             useEffect(() => {
                 if (currentUser) {
                     localStorage.setItem('currentUser', JSON.stringify(currentUser));
                 }
             }, [currentUser]);
 
+            // Save user teams to Firestore
             useEffect(() => {
-                localStorage.setItem('myTeams', JSON.stringify(myTeams));
-            }, [myTeams]);
-
-            useEffect(() => {
-                if (contest) {
-                    localStorage.setItem('contest', JSON.stringify(contest));
+                if (currentUser && !currentUser.isAdmin && Object.keys(myTeams).length > 0) {
+                    db.collection('userTeams').doc(currentUser.id).set({
+                        userId: currentUser.id,
+                        username: currentUser.username,
+                        name: currentUser.name,
+                        teams: myTeams,
+                        lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
+                    }).catch(error => console.error("Error saving teams:", error));
                 }
-            }, [contest]);
+            }, [myTeams, currentUser]);
 
+            // Save contest to Firestore
             useEffect(() => {
-                localStorage.setItem('playerPoints', JSON.stringify(playerPoints));
-            }, [playerPoints]);
+                if (contest && currentUser?.isAdmin) {
+                    db.collection('contests').doc('main').set(contest)
+                        .catch(error => console.error("Error saving contest:", error));
+                }
+            }, [contest, currentUser]);
+
+            // Save player points to Firestore
+            useEffect(() => {
+                if (currentUser?.isAdmin && Object.keys(playerPoints).length > 0) {
+                    db.collection('gameData').doc('playerPoints').set({
+                        points: playerPoints,
+                        lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
+                    }).catch(error => console.error("Error saving points:", error));
+                }
+            }, [playerPoints, currentUser]);
 
             const handleLogin = () => {
                 setAuthError('');
@@ -1284,6 +1391,25 @@ const PLAYERS = [
                 return Object.values(contest.participants).sort((a, b) => b.totalPoints - a.totalPoints);
             };
 
+            const getAllUsers = () => {
+                return allUsers;
+            };
+
+            // Show loading screen while Firebase loads
+            if (loading) {
+                return (
+                    <div className="auth-container">
+                        <div className="header">
+                            <h1>🏏 T20 Fantasy</h1>
+                            <p>Loading...</p>
+                        </div>
+                        <div className="card" style={{textAlign: 'center', padding: '40px'}}>
+                            <p style={{fontSize: '1.2rem', color: '#10b981'}}>🔄 Loading data from Firebase...</p>
+                        </div>
+                    </div>
+                );
+            }
+
             // Authentication screen
             if (!currentUser) {
                 return (
@@ -1326,9 +1452,9 @@ const PLAYERS = [
                         <div className="info-box" style={{marginTop: '20px'}}>
                             <h3>ℹ️ Account Information</h3>
                             <p><strong>Pre-registered Users:</strong> Use credentials provided by admin</p>
-                            <p><strong>Admin Login:</strong> username: <code>admin</code> / password: <code>admin123</code></p>
+                            <p><strong>Admin Login:</strong> username: <code>Nitin</code> / password: <code>RishiNitin123</code></p>
                             <p><strong>Sample User:</strong> username: <code>rahul_sharma</code> / password: <code>cricket2026</code></p>
-                            <p style={{marginTop: '10px', color: '#f59e0b'}}>⚠️ Note: Accounts work only on this device due to localStorage. Contact admin if you need credentials.</p>
+                            <p style={{marginTop: '10px', color: '#10b981'}}>✅ Your data is safely stored in the cloud. Login from any device!</p>
                         </div>
                     </div>
                 );
