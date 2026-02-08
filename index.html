@@ -3,171 +3,1019 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Firestore Diagnostic Tool</title>
+    <title>T20 World Cup 2026 Fantasy Contest</title>
+    
+    <!-- React -->
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <!-- Firebase v9 (Modular SDK) -->
     <script type="module">
+        // Import Firebase modules
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-        import { getFirestore, collection, getDocs } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut, updateProfile } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+        import { getFirestore, collection, query, where, getDocs, doc, setDoc, getDoc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyDacks7Qnk42D2898leU_kgG8DZsYTFxCw",
-            authDomain: "t20-fantasy-contest.firebaseapp.com",
-            projectId: "t20-fantasy-contest",
-            storageBucket: "t20-fantasy-contest.firebasestorage.app",
-            messagingSenderId: "180217303236",
-            appId: "1:180217303236:web:a6b078a7a7d0fa070c3991",
-            measurementId: "G-LYY944KN99"
-        };
+        // ========================================
+        // 🔥 FIREBASE CONFIGURATION
+        // ========================================
+        // REPLACE THIS WITH YOUR FIREBASE CONFIG!
+        // Get it from: Firebase Console → Project Settings → Your apps → Config
+        // ========================================
+        
+   // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyDacks7Qnk42D2898leU_kgG8DZsYTFxCw",
+  authDomain: "t20-fantasy-contest.firebaseapp.com",
+  projectId: "t20-fantasy-contest",
+  storageBucket: "t20-fantasy-contest.firebasestorage.app",
+  messagingSenderId: "180217303236",
+  appId: "1:180217303236:web:a6b078a7a7d0fa070c3991",
+  measurementId: "G-LYY944KN99"
+};
 
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-
-        window.testFirestore = async function() {
-            const resultDiv = document.getElementById('result');
-            resultDiv.innerHTML = '<h3>🔍 Checking Firestore...</h3>';
+        // Initialize Firebase
+        let app, auth, db;
+        
+        try {
+            app = initializeApp(firebaseConfig);
+            auth = getAuth(app);
+            db = getFirestore(app);
+            console.log("✅ Firebase initialized successfully!");
             
-            try {
-                console.log('Fetching users collection...');
-                const usersRef = collection(db, 'users');
-                const snapshot = await getDocs(usersRef);
-                
-                console.log('Snapshot received:', snapshot);
-                console.log('Total documents:', snapshot.size);
-                
-                if (snapshot.empty) {
-                    resultDiv.innerHTML += '<p style="color: red;">❌ No users found in Firestore!</p>';
-                    resultDiv.innerHTML += '<p>The "users" collection is empty or doesn\'t exist.</p>';
-                    return;
-                }
-                
-                resultDiv.innerHTML += `<p style="color: green;">✅ Found ${snapshot.size} user(s) in Firestore!</p>`;
-                resultDiv.innerHTML += '<hr><h3>📋 User Data:</h3>';
-                
-                snapshot.docs.forEach((doc, index) => {
-                    const data = doc.data();
-                    console.log(`User ${index + 1}:`, data);
-                    
-                    resultDiv.innerHTML += `
-                        <div style="background: #f0f0f0; padding: 15px; margin: 10px 0; border-radius: 8px; color: #333;">
-                            <strong>User ${index + 1} (Document ID: ${doc.id})</strong><br/>
-                            <table style="margin-top: 10px; width: 100%;">
-                                <tr><td><strong>Username:</strong></td><td>${data.username || '❌ MISSING'}</td></tr>
-                                <tr><td><strong>Email:</strong></td><td>${data.email || '❌ MISSING'}</td></tr>
-                                <tr><td><strong>Password:</strong></td><td>${data.password || '❌ MISSING'}</td></tr>
-                                <tr><td><strong>Name:</strong></td><td>${data.name || '❌ MISSING'}</td></tr>
-                            </table>
-                            <div style="margin-top: 10px; padding: 10px; background: #e8f5e9; border-radius: 4px;">
-                                <strong>✅ Login with:</strong><br/>
-                                Username: <code style="background: #fff; padding: 2px 6px; border-radius: 3px;">${data.username}</code><br/>
-                                Password: <code style="background: #fff; padding: 2px 6px; border-radius: 3px;">${data.password}</code>
-                            </div>
-                        </div>
-                    `;
-                });
-                
-                resultDiv.innerHTML += '<hr><h3>🧪 Test Queries:</h3>';
-                
-                // Test username query
-                const testUsername = snapshot.docs[0].data().username;
-                resultDiv.innerHTML += `<p>Testing query for username: <strong>${testUsername}</strong></p>`;
-                
-                const { query, where } = await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js');
-                const testQuery = query(usersRef, where('username', '==', testUsername));
-                const testSnapshot = await getDocs(testQuery);
-                
-                if (testSnapshot.empty) {
-                    resultDiv.innerHTML += '<p style="color: red;">❌ Query FAILED! Username query returns empty.</p>';
-                    resultDiv.innerHTML += '<p>This means queries are being blocked or username field doesn\'t match.</p>';
-                } else {
-                    resultDiv.innerHTML += '<p style="color: green;">✅ Query WORKS! Found user by username.</p>';
-                }
-                
-            } catch (error) {
-                console.error('Error:', error);
-                resultDiv.innerHTML += `<p style="color: red;">❌ Error: ${error.message}</p>`;
-                resultDiv.innerHTML += `<p>Code: ${error.code}</p>`;
-                
-                if (error.code === 'permission-denied') {
-                    resultDiv.innerHTML += `
-                        <div style="background: #fff3cd; padding: 15px; border-radius: 8px; color: #856404; margin-top: 20px;">
-                            <strong>🔒 Permission Denied!</strong><br/>
-                            Your Firestore security rules are blocking access.<br/><br/>
-                            <strong>Fix:</strong><br/>
-                            1. Go to Firebase Console<br/>
-                            2. Firestore Database → Rules<br/>
-                            3. Make sure you have: <code>allow read, write: if true;</code><br/>
-                            4. Click Publish
-                        </div>
-                    `;
-                }
-            }
-        };
-
-        // Auto-run on load
-        window.addEventListener('load', () => {
-            window.testFirestore();
-        });
-    </script>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 800px;
-            margin: 50px auto;
-            padding: 20px;
-            background: #f5f5f5;
+            // Make auth and db globally available
+            window.firebaseAuth = auth;
+            window.firebaseDb = db;
+            window.firebaseModules = {
+                signInWithEmailAndPassword,
+                createUserWithEmailAndPassword,
+                onAuthStateChanged,
+                signOut,
+                updateProfile,
+                collection,
+                query,
+                where,
+                getDocs,
+                doc,
+                setDoc,
+                getDoc
+            };
+            
+        } catch (error) {
+            console.error("❌ Firebase initialization error:", error);
+            alert("Firebase Configuration Error!\n\nPlease update firebaseConfig with your actual credentials.\n\nError: " + error.message);
         }
-        h1 {
-            color: #333;
+    </script>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 50%, #0a0e27 100%);
+            color: #fff;
+            min-height: 100vh;
+        }
+        
+        #root {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            padding: 50px 20px;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            border-radius: 25px;
+            margin-bottom: 40px;
+            box-shadow: 0 30px 60px rgba(16, 185, 129, 0.4);
+            position: relative;
+        }
+        
+        .header h1 {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 700;
+            letter-spacing: 4px;
+            text-shadow: 4px 4px 8px rgba(0,0,0,0.5);
+        }
+
+        .logout-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            background: rgba(255,255,255,0.2);
+            border: 2px solid white;
+            color: white;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            font-family: 'Rajdhani', sans-serif;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+        
+        .login-container {
+            max-width: 500px;
+            margin: 80px auto;
+            background: linear-gradient(135deg, #1a1f3a 0%, #242b4a 100%);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+        }
+
+        .login-container h2 {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 2.2rem;
+            margin-bottom: 30px;
+            color: #10b981;
             text-align: center;
         }
-        #result {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            min-height: 200px;
+
+        .form-group {
+            margin-bottom: 20px;
         }
-        button {
-            background: #4CAF50;
-            color: white;
-            padding: 15px 30px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
+
+        .form-group label {
             display: block;
-            margin: 20px auto;
+            margin-bottom: 8px;
+            color: #cbd5e1;
+            font-weight: 600;
         }
-        button:hover {
-            background: #45a049;
+
+        .form-group input {
+            width: 100%;
+            padding: 15px;
+            background: #0a0e27;
+            border: 2px solid #2d3548;
+            border-radius: 12px;
+            color: white;
+            font-size: 16px;
         }
-        code {
-            background: #f4f4f4;
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #10b981;
+        }
+
+        .error-message {
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid #ef4444;
+            color: #fca5a5;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .success-message {
+            background: rgba(16, 185, 129, 0.2);
+            border: 1px solid #10b981;
+            color: #6ee7b7;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .info-box {
+            background: rgba(59, 130, 246, 0.15);
+            border: 1px solid #3b82f6;
+            color: #93c5fd;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .info-box strong {
+            display: block;
+            margin-bottom: 8px;
+            color: #60a5fa;
+            font-size: 1rem;
+        }
+
+        .warning-box {
+            background: rgba(251, 191, 36, 0.15);
+            border: 2px solid #f59e0b;
+            color: #fcd34d;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+
+        .warning-box strong {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+            color: #fbbf24;
+        }
+
+        .warning-box ol {
+            margin-left: 20px;
+            margin-top: 10px;
+        }
+
+        .warning-box li {
+            margin-bottom: 8px;
+        }
+
+        .warning-box code {
+            background: rgba(0,0,0,0.4);
             padding: 2px 6px;
-            border-radius: 3px;
-            font-family: monospace;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+
+        .warning-box a {
+            color: #60a5fa;
+            text-decoration: underline;
+        }
+        
+        .tabs {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 35px;
+            background: #1a1f3a;
+            padding: 12px;
+            border-radius: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .tab {
+            flex: 1;
+            min-width: 140px;
+            padding: 18px;
+            background: transparent;
+            border: none;
+            color: #8892b0;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 12px;
+            transition: all 0.3s;
+            font-size: 16px;
+            font-family: 'Rajdhani', sans-serif;
+        }
+        
+        .tab.active {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.5);
+        }
+        
+        .card {
+            background: linear-gradient(135deg, #1a1f3a 0%, #242b4a 100%);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 25px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+        }
+        
+        .card h2 {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 2rem;
+            margin-bottom: 25px;
+            color: #10b981;
+        }
+
+        .btn {
+            padding: 15px 35px;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 17px;
+            transition: all 0.3s;
+            font-family: 'Rajdhani', sans-serif;
+            width: 100%;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(16, 185, 129, 0.6);
+        }
+        
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .match-card {
+            background: #0a0e27;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            border: 2px solid #2d3548;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .match-card:hover {
+            border-color: #10b981;
+            transform: translateY(-2px);
+        }
+
+        .match-card.selected {
+            border-color: #10b981;
+            background: rgba(16, 185, 129, 0.1);
+        }
+
+        .match-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .match-teams {
+            font-size: 1.4rem;
+            font-weight: 700;
+            font-family: 'Rajdhani', sans-serif;
+        }
+
+        .match-date {
+            color: #8892b0;
+            font-size: 0.9rem;
+        }
+
+        .player-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .player-card {
+            background: #0a0e27;
+            padding: 20px;
+            border-radius: 12px;
+            border: 2px solid #2d3548;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .player-card:hover {
+            border-color: #10b981;
+        }
+
+        .player-card.selected {
+            border-color: #10b981;
+            background: rgba(16, 185, 129, 0.1);
+        }
+
+        .player-name {
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+        }
+
+        .player-role {
+            color: #8892b0;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+
+        .player-credits {
+            color: #10b981;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .team-summary {
+            background: #0a0e27;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border: 2px solid #10b981;
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        .captain-selector {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .captain-btn {
+            flex: 1;
+            padding: 8px;
+            background: #1a1f3a;
+            border: 1px solid #2d3548;
+            color: #8892b0;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+
+        .captain-btn:hover {
+            border-color: #10b981;
+        }
+
+        .captain-btn.active-captain {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            border-color: #f59e0b;
+            color: white;
+            font-weight: 700;
+        }
+
+        .captain-btn.active-vc {
+            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+            border-color: #8b5cf6;
+            color: white;
+            font-weight: 700;
+        }
+
+        .my-teams-list {
+            display: grid;
+            gap: 20px;
+        }
+
+        .team-item {
+            background: #0a0e27;
+            padding: 25px;
+            border-radius: 15px;
+            border: 2px solid #2d3548;
+        }
+
+        .team-item h4 {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            color: #10b981;
+            font-family: 'Rajdhani', sans-serif;
+        }
+
+        .team-players {
+            margin-top: 15px;
+        }
+
+        .team-player-name {
+            padding: 10px;
+            background: #1a1f3a;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 50px;
+            font-size: 1.2rem;
+            color: #8892b0;
         }
     </style>
 </head>
 <body>
-    <h1>🔍 Firestore Diagnostic Tool</h1>
-    <p style="text-align: center; color: #666;">
-        This will show you ALL users in your Firestore database<br/>
-        and test if queries are working properly.
-    </p>
-    
-    <button onclick="window.testFirestore()">🔄 Refresh / Test Again</button>
-    
-    <div id="result">
-        <p>Loading...</p>
-    </div>
-    
-    <div style="background: #e3f2fd; padding: 15px; border-radius: 8px; margin-top: 20px; color: #1976d2;">
-        <strong>📝 Instructions:</strong><br/>
-        1. This page will automatically check your Firestore<br/>
-        2. It will show ALL users and their login credentials<br/>
-        3. Copy the EXACT username and password shown<br/>
-        4. Use those to login in your main app<br/>
-        5. Check browser console (F12) for detailed logs
-    </div>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        // Wait for Firebase to be ready
+        function waitForFirebase() {
+            return new Promise((resolve) => {
+                const checkFirebase = setInterval(() => {
+                    if (window.firebaseAuth && window.firebaseDb && window.firebaseModules) {
+                        clearInterval(checkFirebase);
+                        resolve();
+                    }
+                }, 100);
+            });
+        }
+
+        // ===== MAIN APP =====
+        function App() {
+            const [user, setUser] = useState(null);
+            const [loading, setLoading] = useState(true);
+
+            useEffect(() => {
+                waitForFirebase().then(() => {
+                    const { onAuthStateChanged } = window.firebaseModules;
+                    const unsubscribe = onAuthStateChanged(window.firebaseAuth, (currentUser) => {
+                        setUser(currentUser);
+                        setLoading(false);
+                    });
+
+                    return () => unsubscribe();
+                });
+            }, []);
+
+            const handleLogout = async () => {
+                const { signOut } = window.firebaseModules;
+                try {
+                    await signOut(window.firebaseAuth);
+                } catch (error) {
+                    console.error('Logout error:', error);
+                }
+            };
+
+            if (loading) {
+                return <div className="loading">⏳ Loading...</div>;
+            }
+
+            if (!user) {
+                return <LoginForm />;
+            }
+
+            return (
+                <div>
+                    <div className="header">
+                        <h1>🏏 T20 FANTASY CRICKET 🏆</h1>
+                        <button className="logout-btn" onClick={handleLogout}>
+                            Logout
+                        </button>
+                    </div>
+                    <FantasyGame user={user} />
+                </div>
+            );
+        }
+
+        // ===== FANTASY GAME =====
+        function FantasyGame({ user }) {
+            const [activeTab, setActiveTab] = useState('matches');
+            const [selectedMatch, setSelectedMatch] = useState(null);
+            const [selectedPlayers, setSelectedPlayers] = useState([]);
+            const [captain, setCaptain] = useState(null);
+            const [viceCaptain, setViceCaptain] = useState(null);
+            const [myTeams, setMyTeams] = useState({});
+
+            // T20 World Cup 2026 Sample Data
+            const matches = [
+                {
+                    id: 'match1',
+                    team1: 'India',
+                    team2: 'Pakistan',
+                    date: '2026-06-01',
+                    venue: 'MCG, Melbourne'
+                },
+                {
+                    id: 'match2',
+                    team1: 'Australia',
+                    team2: 'England',
+                    date: '2026-06-02',
+                    venue: 'SCG, Sydney'
+                }
+            ];
+
+            const players = {
+                match1: [
+                    { id: 'p1', name: 'Virat Kohli', team: 'India', role: 'Batsman', credits: 11.0 },
+                    { id: 'p2', name: 'Rohit Sharma', team: 'India', role: 'Batsman', credits: 10.5 },
+                    { id: 'p3', name: 'Jasprit Bumrah', team: 'India', role: 'Bowler', credits: 10.0 },
+                    { id: 'p4', name: 'Hardik Pandya', team: 'India', role: 'All-rounder', credits: 9.5 },
+                    { id: 'p5', name: 'Rishabh Pant', team: 'India', role: 'Wicket-keeper', credits: 9.0 },
+                    { id: 'p6', name: 'Ravindra Jadeja', team: 'India', role: 'All-rounder', credits: 9.0 },
+                    { id: 'p7', name: 'Babar Azam', team: 'Pakistan', role: 'Batsman', credits: 10.5 },
+                    { id: 'p8', name: 'Mohammad Rizwan', team: 'Pakistan', role: 'Wicket-keeper', credits: 9.5 },
+                    { id: 'p9', name: 'Shaheen Afridi', team: 'Pakistan', role: 'Bowler', credits: 9.5 },
+                    { id: 'p10', name: 'Shadab Khan', team: 'Pakistan', role: 'All-rounder', credits: 8.5 },
+                    { id: 'p11', name: 'Fakhar Zaman', team: 'Pakistan', role: 'Batsman', credits: 8.5 },
+                    { id: 'p12', name: 'Haris Rauf', team: 'Pakistan', role: 'Bowler', credits: 8.0 },
+                    { id: 'p13', name: 'KL Rahul', team: 'India', role: 'Batsman', credits: 9.0 },
+                    { id: 'p14', name: 'Mohammed Shami', team: 'India', role: 'Bowler', credits: 8.5 },
+                    { id: 'p15', name: 'Hasan Ali', team: 'Pakistan', role: 'Bowler', credits: 7.5 }
+                ],
+                match2: [
+                    { id: 'p16', name: 'Steve Smith', team: 'Australia', role: 'Batsman', credits: 10.0 },
+                    { id: 'p17', name: 'David Warner', team: 'Australia', role: 'Batsman', credits: 9.5 },
+                    { id: 'p18', name: 'Pat Cummins', team: 'Australia', role: 'Bowler', credits: 10.0 },
+                    { id: 'p19', name: 'Glenn Maxwell', team: 'Australia', role: 'All-rounder', credits: 9.5 },
+                    { id: 'p20', name: 'Jos Buttler', team: 'England', role: 'Wicket-keeper', credits: 10.0 },
+                    { id: 'p21', name: 'Ben Stokes', team: 'England', role: 'All-rounder', credits: 10.5 },
+                    { id: 'p22', name: 'Jofra Archer', team: 'England', role: 'Bowler', credits: 9.0 },
+                    { id: 'p23', name: 'Joe Root', team: 'England', role: 'Batsman', credits: 9.0 },
+                    { id: 'p24', name: 'Alex Carey', team: 'Australia', role: 'Wicket-keeper', credits: 8.5 },
+                    { id: 'p25', name: 'Mitchell Starc', team: 'Australia', role: 'Bowler', credits: 9.5 },
+                    { id: 'p26', name: 'Jonny Bairstow', team: 'England', role: 'Batsman', credits: 8.5 },
+                    { id: 'p27', name: 'Mark Wood', team: 'England', role: 'Bowler', credits: 8.0 },
+                    { id: 'p28', name: 'Travis Head', team: 'Australia', role: 'Batsman', credits: 8.5 },
+                    { id: 'p29', name: 'Moeen Ali', team: 'England', role: 'All-rounder', credits: 8.0 },
+                    { id: 'p30', name: 'Josh Hazlewood', team: 'Australia', role: 'Bowler', credits: 8.5 }
+                ]
+            };
+
+            const togglePlayer = (player) => {
+                const isSelected = selectedPlayers.find(p => p.id === player.id);
+                
+                if (isSelected) {
+                    setSelectedPlayers(selectedPlayers.filter(p => p.id !== player.id));
+                    if (captain === player.id) setCaptain(null);
+                    if (viceCaptain === player.id) setViceCaptain(null);
+                } else {
+                    if (selectedPlayers.length < 11) {
+                        setSelectedPlayers([...selectedPlayers, player]);
+                    } else {
+                        alert('Maximum 11 players allowed!');
+                    }
+                }
+            };
+
+            const getTotalCredits = () => {
+                return selectedPlayers.reduce((sum, player) => sum + player.credits, 0);
+            };
+
+            const saveTeam = async () => {
+                if (selectedPlayers.length !== 11) {
+                    alert('Please select exactly 11 players!');
+                    return;
+                }
+                
+                if (!captain || !viceCaptain) {
+                    alert('Please select Captain and Vice-Captain!');
+                    return;
+                }
+
+                if (captain === viceCaptain) {
+                    alert('Captain and Vice-Captain must be different!');
+                    return;
+                }
+
+                const totalCredits = getTotalCredits();
+                if (totalCredits > 100) {
+                    alert(`Team exceeds 100 credits! Current: ${totalCredits.toFixed(1)}`);
+                    return;
+                }
+
+                try {
+                    const { doc, setDoc } = window.firebaseModules;
+                    const teamData = {
+                        matchId: selectedMatch.id,
+                        matchName: `${selectedMatch.team1} vs ${selectedMatch.team2}`,
+                        matchDate: selectedMatch.date,
+                        players: selectedPlayers,
+                        captain: captain,
+                        viceCaptain: viceCaptain,
+                        totalCredits: totalCredits,
+                        userId: user.uid,
+                        createdAt: new Date().toISOString()
+                    };
+
+                    await setDoc(doc(window.firebaseDb, 'teams', `${user.uid}_${selectedMatch.id}`), teamData);
+                    
+                    setMyTeams({
+                        ...myTeams,
+                        [selectedMatch.id]: { ...teamData, id: selectedMatch.id }
+                    });
+
+                    alert('✅ Team saved successfully!');
+                    setActiveTab('myTeams');
+                } catch (error) {
+                    console.error('Error saving team:', error);
+                    alert('Error saving team: ' + error.message);
+                }
+            };
+
+            return (
+                <div>
+                    <div className="tabs">
+                        <button
+                            className={`tab ${activeTab === 'matches' ? 'active' : ''}`}
+                            onClick={() => setActiveTab('matches')}
+                        >
+                            📅 MATCHES
+                        </button>
+                        <button
+                            className={`tab ${activeTab === 'myTeams' ? 'active' : ''}`}
+                            onClick={() => setActiveTab('myTeams')}
+                        >
+                            👥 MY TEAMS
+                        </button>
+                        <button
+                            className={`tab ${activeTab === 'leaderboard' ? 'active' : ''}`}
+                            onClick={() => setActiveTab('leaderboard')}
+                        >
+                            🏆 LEADERBOARD
+                        </button>
+                    </div>
+
+                    {activeTab === 'matches' && (
+                        <div className="card">
+                            <h2>Upcoming Matches</h2>
+                            {matches.map(match => (
+                                <div
+                                    key={match.id}
+                                    className={`match-card ${selectedMatch?.id === match.id ? 'selected' : ''}`}
+                                    onClick={() => {
+                                        setSelectedMatch(match);
+                                        setSelectedPlayers([]);
+                                        setCaptain(null);
+                                        setViceCaptain(null);
+                                    }}
+                                >
+                                    <div className="match-header">
+                                        <div className="match-teams">
+                                            {match.team1} 🆚 {match.team2}
+                                        </div>
+                                    </div>
+                                    <div className="match-date">
+                                        📅 {match.date} | 📍 {match.venue}
+                                    </div>
+                                </div>
+                            ))}
+
+                            {selectedMatch && (
+                                <div style={{ marginTop: '30px' }}>
+                                    <h2>Create Your Team</h2>
+                                    
+                                    <div className="team-summary">
+                                        <div className="summary-item">
+                                            <span>Players Selected:</span>
+                                            <strong>{selectedPlayers.length}/11</strong>
+                                        </div>
+                                        <div className="summary-item">
+                                            <span>Credits Used:</span>
+                                            <strong style={{ color: getTotalCredits() > 100 ? '#ef4444' : '#10b981' }}>
+                                                {getTotalCredits().toFixed(1)}/100
+                                            </strong>
+                                        </div>
+                                        <div className="summary-item">
+                                            <span>Captain:</span>
+                                            <strong>{captain ? selectedPlayers.find(p => p.id === captain)?.name : 'Not set'}</strong>
+                                        </div>
+                                        <div className="summary-item">
+                                            <span>Vice-Captain:</span>
+                                            <strong>{viceCaptain ? selectedPlayers.find(p => p.id === viceCaptain)?.name : 'Not set'}</strong>
+                                        </div>
+                                    </div>
+
+                                    <div className="player-grid">
+                                        {players[selectedMatch.id].map(player => {
+                                            const isSelected = selectedPlayers.find(p => p.id === player.id);
+                                            const isCaptain = captain === player.id;
+                                            const isVC = viceCaptain === player.id;
+
+                                            return (
+                                                <div
+                                                    key={player.id}
+                                                    className={`player-card ${isSelected ? 'selected' : ''}`}
+                                                    onClick={() => togglePlayer(player)}
+                                                >
+                                                    <div className="player-name">
+                                                        {player.name}
+                                                        {isCaptain && ' 👑'}
+                                                        {isVC && ' ⭐'}
+                                                    </div>
+                                                    <div className="player-role">{player.role} • {player.team}</div>
+                                                    <div className="player-credits">{player.credits} Cr</div>
+                                                    
+                                                    {isSelected && (
+                                                        <div className="captain-selector">
+                                                            <button className={`captain-btn ${isCaptain ? 'active-captain' : ''}`} onClick={() => setCaptain(player.id)}>
+                                                                {isCaptain ? '👑 C (2x)' : 'Captain'}
+                                                            </button>
+                                                            <button className={`captain-btn ${isVC ? 'active-vc' : ''}`} onClick={() => setViceCaptain(player.id)}>
+                                                                {isVC ? '⭐ VC (1.5x)' : 'VC'}
+                                                            </button>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+
+                                    <button className="btn" onClick={saveTeam} style={{ marginTop: '30px' }}>
+                                        {myTeams[selectedMatch.id] ? 'Update Team' : 'Save Team'}
+                                    </button>
+                                </div>
+                            )}
+                        </div>
+                    )}
+
+                    {activeTab === 'myTeams' && (
+                        <div className="card">
+                            <h2>My Teams</h2>
+                            {Object.keys(myTeams).length === 0 ? (
+                                <p style={{ textAlign: 'center', padding: '40px', color: '#8892b0' }}>
+                                    No teams created yet. Go to MATCHES tab to create teams.
+                                </p>
+                            ) : (
+                                <div className="my-teams-list">
+                                    {Object.values(myTeams).map(team => (
+                                        <div key={team.id} className="team-item">
+                                            <h4>{team.matchName}</h4>
+                                            <p style={{ color: '#8892b0', marginBottom: '15px' }}>
+                                                📅 {team.matchDate} | Credits: {team.totalCredits.toFixed(1)}
+                                            </p>
+                                            <div className="team-players">
+                                                {team.players.map(p => (
+                                                    <div key={p.id} className="team-player-name">
+                                                        {p.name}
+                                                        {p.id === team.captain && ' 👑'}
+                                                        {p.id === team.viceCaptain && ' ⭐'}
+                                                        <span style={{ float: 'right', color: '#10b981' }}>
+                                                            {p.credits} Cr
+                                                        </span>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                    )}
+
+                    {activeTab === 'leaderboard' && (
+                        <div className="card">
+                            <h2>Leaderboard</h2>
+                            <p style={{ textAlign: 'center', padding: '40px', color: '#8892b0' }}>
+                                Leaderboard will be available once matches start!
+                            </p>
+                        </div>
+                    )}
+                </div>
+            );
+        }
+
+        // ===== LOGIN FORM =====
+        function LoginForm() {
+            const [identifier, setIdentifier] = useState('');
+            const [password, setPassword] = useState('');
+            const [error, setError] = useState('');
+            const [success, setSuccess] = useState('');
+            const [loading, setLoading] = useState(false);
+            const [firebaseReady, setFirebaseReady] = useState(false);
+
+            useEffect(() => {
+                waitForFirebase().then(() => {
+                    setFirebaseReady(true);
+                });
+            }, []);
+
+            const handleLogin = async (e) => {
+                e.preventDefault();
+                setError('');
+                setSuccess('');
+                setLoading(true);
+
+                try {
+                    const { collection, query, where, getDocs, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile } = window.firebaseModules;
+                    
+                    // Step 1: Query Firestore for user
+                    let userData = null;
+
+                    // Try username first
+                    const usersRef = collection(window.firebaseDb, 'users');
+                    const usernameQuery = query(usersRef, where('username', '==', identifier));
+                    const usernameSnapshot = await getDocs(usernameQuery);
+
+                    if (!usernameSnapshot.empty) {
+                        userData = usernameSnapshot.docs[0].data();
+                    } else {
+                        // Try email
+                        const emailQuery = query(usersRef, where('email', '==', identifier));
+                        const emailSnapshot = await getDocs(emailQuery);
+                        
+                        if (!emailSnapshot.empty) {
+                            userData = emailSnapshot.docs[0].data();
+                        }
+                    }
+
+                    if (!userData) {
+                        setError('User not found. Please check your username/email.');
+                        setLoading(false);
+                        return;
+                    }
+
+                    // Step 2: Verify password
+                    if (userData.password !== password) {
+                        setError('Incorrect password. Please try again.');
+                        setLoading(false);
+                        return;
+                    }
+
+                    // Step 3: Sign in to Firebase Auth
+                    const email = userData.email || `${userData.username}@fantasy.local`;
+                    
+                    try {
+                        await signInWithEmailAndPassword(window.firebaseAuth, email, password);
+                        setSuccess('Logged in successfully!');
+                    } catch (signInError) {
+                        if (signInError.code === 'auth/user-not-found') {
+                            // Create new Firebase Auth user
+                            const userCredential = await createUserWithEmailAndPassword(window.firebaseAuth, email, password);
+                            
+                            if (userData.name) {
+                                await updateProfile(userCredential.user, {
+                                    displayName: userData.name
+                                });
+                            }
+                            
+                            setSuccess('Account created and logged in successfully!');
+                        } else {
+                            throw signInError;
+                        }
+                    }
+
+                } catch (error) {
+                    console.error('Login error:', error);
+                    setError(error.message || 'Login failed. Please try again.');
+                } finally {
+                    setLoading(false);
+                }
+            };
+
+            if (!firebaseReady) {
+                return (
+                    <div className="login-container">
+                        <h2>🏏 T20 Fantasy Cricket</h2>
+                        <div className="warning-box">
+                            <strong>⚠️ Firebase Not Configured</strong>
+                            Please configure Firebase before using this app:
+                            <ol>
+                                <li>Go to <a href="https://console.firebase.google.com/" target="_blank">Firebase Console</a></li>
+                                <li>Create a new project (e.g., "t20-fantasy-2026")</li>
+                                <li>Click the Web icon <code>&lt;/&gt;</code> to add a web app</li>
+                                <li>Copy the config object shown</li>
+                                <li>Open this HTML file in a text editor</li>
+                                <li>Find line ~24 and replace <code>firebaseConfig</code> with your credentials</li>
+                                <li>Enable <strong>Authentication</strong> → Email/Password</li>
+                                <li>Enable <strong>Firestore Database</strong> → Test mode</li>
+                                <li>Add sample user in Firestore: collection <code>users</code> with fields: username, email, password, name</li>
+                            </ol>
+                        </div>
+                    </div>
+                );
+            }
+
+            return (
+                <div className="login-container">
+                    <h2>🏏 Login to Fantasy Cricket</h2>
+                    
+                    <div className="info-box">
+                        <strong>✅ Firebase Connected!</strong>
+                        Login with your username or email from Firestore database.
+                    </div>
+
+                    {error && <div className="error-message">{error}</div>}
+                    {success && <div className="success-message">{success}</div>}
+
+                    <form onSubmit={handleLogin}>
+                        <div className="form-group">
+                            <label>Username / Email</label>
+                            <input
+                                type="text"
+                                value={identifier}
+                                onChange={(e) => setIdentifier(e.target.value)}
+                                placeholder="Enter username or email"
+                                required
+                                disabled={loading}
+                            />
+                        </div>
+
+                        <div className="form-group">
+                            <label>Password</label>
+                            <input
+                                type="password"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                placeholder="Enter password"
+                                required
+                                disabled={loading}
+                            />
+                        </div>
+
+                        <button type="submit" className="btn" disabled={loading}>
+                            {loading ? 'Logging in...' : 'Login'}
+                        </button>
+                    </form>
+
+                    <div className="info-box" style={{ marginTop: '20px', fontSize: '0.85rem' }}>
+                        <strong>📝 Setup Instructions:</strong>
+                        1. Add a user in Firestore → <code>users</code> collection<br/>
+                        2. Fields: username, email, password, name<br/>
+                        3. Example: username="Admin", password="test123"
+                    </div>
+                </div>
+            );
+        }
+
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
 </body>
 </html>
