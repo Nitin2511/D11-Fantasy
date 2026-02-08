@@ -12,7 +12,6 @@
     <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     
     <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     
@@ -340,25 +339,6 @@
             margin-top: 15px;
         }
         
-        .captain-btn {
-            padding: 12px;
-            background: #1a1f3a;
-            border: 2px solid #2d3548;
-            border-radius: 10px;
-            color: #fff;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-size: 14px;
-        }
-        
-        .captain-btn:hover { border-color: #10b981; }
-        .captain-btn.selected {
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-            border-color: #10b981;
-            box-shadow: 0 5px 20px rgba(16, 185, 129, 0.4);
-        }
-        
         .captain-label {
             display: inline-block;
             background: rgba(251, 191, 36, 0.2);
@@ -380,24 +360,6 @@
             font-weight: 700;
             margin-right: 8px;
         }
-        
-        .team-list {
-            margin-top: 20px;
-        }
-        
-        .team-list-item {
-            background: #0a0e27;
-            padding: 15px;
-            border-radius: 12px;
-            margin-bottom: 12px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .team-list-item .player-info { display: flex; align-items: center; gap: 12px; }
-        .team-list-item .player-name { font-weight: 600; font-size: 16px; }
-        .team-list-item .player-role { font-size: 13px; color: #94a3b8; }
         
         .leaderboard-table {
             width: 100%;
@@ -521,6 +483,13 @@
             background: rgba(16, 185, 129, 0.05);
         }
 
+        .loading {
+            text-align: center;
+            padding: 50px;
+            font-size: 1.2rem;
+            color: #10b981;
+        }
+
         @media (max-width: 768px) {
             .header h1 { font-size: 2rem; }
             .player-grid { grid-template-columns: 1fr; }
@@ -539,22 +508,39 @@
         // ============================================
         // FIREBASE CONFIGURATION
         // ============================================
-        // TODO: Replace with your Firebase config
+        // REPLACE WITH YOUR FIREBASE CONFIG
         const firebaseConfig = {
-            apiKey: "YOUR_API_KEY",
-            authDomain: "YOUR_AUTH_DOMAIN",
-            projectId: "YOUR_PROJECT_ID",
-            storageBucket: "YOUR_STORAGE_BUCKET",
-            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-            appId: "YOUR_APP_ID"
+            apiKey: "AIzaSyDfJ4SgbAc6lJ-B8i2Zcd5hHyJrT_PuKow",
+            authDomain: "t20-fantasy-contest.firebaseapp.com",
+            projectId: "t20-fantasy-contest",
+            storageBucket: "t20-fantasy-contest.firebasestorage.app",
+            messagingSenderId: "424090683649",
+            appId: "1:424090683649:web:94ca88bb41354fdb99f8e7"
         };
 
         // Initialize Firebase
-        if (!firebase.apps.length) {
-            firebase.initializeApp(firebaseConfig);
+        let db = null;
+        let firebaseInitialized = false;
+
+        try {
+            if (!firebase.apps.length) {
+                firebase.initializeApp(firebaseConfig);
+            }
+            db = firebase.firestore();
+            firebaseInitialized = true;
+            console.log("Firebase initialized successfully");
+        } catch (error) {
+            console.error("Firebase initialization error:", error);
         }
-        const db = firebase.firestore();
-        const auth = firebase.auth();
+
+        // ============================================
+        // ADMIN CREDENTIALS (Hidden from users - only you know these)
+        // ============================================
+        const ADMIN_CREDENTIALS = {
+            username: "admin",
+            password: "admin123",  // CHANGE THIS PASSWORD!
+            name: "Admin"
+        };
 
         // ============================================
         // CONSTANTS
@@ -592,7 +578,6 @@
             { id: 'm6', team1: 'PAK', team2: 'ENG', date: '2026-02-22', venue: 'Dubai' }
         ];
 
-        // Team composition rules (not displayed but used for validation)
         const TEAM_RULES = {
             minBatsmen: 3,
             maxBatsmen: 6,
@@ -612,10 +597,8 @@
         function App() {
             // Auth & User State
             const [currentUser, setCurrentUser] = useState(null);
-            const [isLogin, setIsLogin] = useState(true);
             const [username, setUsername] = useState('');
             const [password, setPassword] = useState('');
-            const [name, setName] = useState('');
             const [error, setError] = useState('');
             const [success, setSuccess] = useState('');
             
@@ -627,7 +610,6 @@
             const [allUsers, setAllUsers] = useState({});
             const [contestCode, setContestCode] = useState('');
             const [contestName, setContestName] = useState('');
-            const [joinContestCode, setJoinContestCode] = useState('');
             
             // Admin State
             const [updateMatchId, setUpdateMatchId] = useState(null);
@@ -635,36 +617,54 @@
             
             // Loading State
             const [loading, setLoading] = useState(true);
+            const [firebaseReady, setFirebaseReady] = useState(false);
+
+            // ============================================
+            // FIREBASE INITIALIZATION CHECK
+            // ============================================
+            useEffect(() => {
+                if (firebaseInitialized && db) {
+                    setFirebaseReady(true);
+                    setLoading(false);
+                } else {
+                    setError('Firebase connection failed. Please check your internet connection.');
+                    setLoading(false);
+                }
+            }, []);
 
             // ============================================
             // FIREBASE LISTENERS
             // ============================================
             useEffect(() => {
-                // Listen to contest changes
-                const unsubscribeContest = db.collection('contests').doc('main').onSnapshot((doc) => {
-                    if (doc.exists) {
-                        setContest(doc.data());
-                    }
-                });
+                if (!firebaseReady) return;
 
-                // Listen to users changes
-                const unsubscribeUsers = db.collection('users').onSnapshot((snapshot) => {
-                    const usersData = {};
-                    snapshot.forEach((doc) => {
-                        usersData[doc.id] = doc.data();
+                const unsubscribeContest = db.collection('contests').doc('main')
+                    .onSnapshot((doc) => {
+                        if (doc.exists) {
+                            setContest(doc.data());
+                        }
+                    }, (error) => {
+                        console.error("Contest listener error:", error);
                     });
-                    setAllUsers(usersData);
-                });
 
-                setLoading(false);
+                const unsubscribeUsers = db.collection('users')
+                    .onSnapshot((snapshot) => {
+                        const usersData = {};
+                        snapshot.forEach((doc) => {
+                            usersData[doc.id] = doc.data();
+                        });
+                        setAllUsers(usersData);
+                    }, (error) => {
+                        console.error("Users listener error:", error);
+                    });
 
                 return () => {
                     unsubscribeContest();
                     unsubscribeUsers();
                 };
-            }, []);
+            }, [firebaseReady]);
 
-            // Load current user from localStorage (session management)
+            // Load current user from localStorage
             useEffect(() => {
                 const savedUser = localStorage.getItem('currentUser');
                 if (savedUser) {
@@ -672,73 +672,69 @@
                 }
             }, []);
 
+            // Load user's team when contest loads
+            useEffect(() => {
+                if (contest && currentUser && contest.participants && contest.participants[currentUser.id]) {
+                    const userTeam = contest.participants[currentUser.id];
+                    const teamPlayers = PLAYERS.filter(p => userTeam.team.includes(p.id));
+                    setSelectedPlayers(teamPlayers);
+                    setCaptainSelections(userTeam.captainSelections || {});
+                }
+            }, [contest, currentUser]);
+
             // ============================================
             // AUTH FUNCTIONS
             // ============================================
-            const handleAuth = async () => {
+            const handleLogin = async () => {
                 setError('');
                 setSuccess('');
                 
-                if (isLogin) {
-                    // Login
-                    if (!username || !password) {
-                        setError('Please enter username and password');
-                        return;
-                    }
+                if (!username || !password) {
+                    setError('Please enter username and password');
+                    return;
+                }
 
-                    try {
-                        const userDoc = await db.collection('users').doc(username).get();
-                        
-                        if (!userDoc.exists) {
-                            setError('User not found');
-                            return;
-                        }
+                if (!firebaseReady) {
+                    setError('Firebase is not connected. Please check your internet connection.');
+                    return;
+                }
 
-                        const userData = userDoc.data();
-                        if (userData.password !== password) {
-                            setError('Incorrect password');
-                            return;
-                        }
-
-                        const user = { id: username, ...userData };
-                        setCurrentUser(user);
-                        localStorage.setItem('currentUser', JSON.stringify(user));
-                        setSuccess('Login successful!');
-                    } catch (err) {
-                        setError('Login failed: ' + err.message);
-                    }
-                } else {
-                    // Register
-                    if (!username || !password || !name) {
-                        setError('Please fill all fields');
-                        return;
-                    }
-
-                    try {
-                        const userDoc = await db.collection('users').doc(username).get();
-                        
-                        if (userDoc.exists) {
-                            setError('Username already exists');
-                            return;
-                        }
-
-                        const newUser = {
-                            username,
-                            password,
-                            name,
-                            isAdmin: username === 'admin',
-                            createdAt: Date.now()
+                try {
+                    // Check if admin login
+                    if (username === ADMIN_CREDENTIALS.username && password === ADMIN_CREDENTIALS.password) {
+                        const adminUser = {
+                            id: ADMIN_CREDENTIALS.username,
+                            username: ADMIN_CREDENTIALS.username,
+                            name: ADMIN_CREDENTIALS.name,
+                            isAdmin: true
                         };
-
-                        await db.collection('users').doc(username).set(newUser);
-                        
-                        const user = { id: username, ...newUser };
-                        setCurrentUser(user);
-                        localStorage.setItem('currentUser', JSON.stringify(user));
-                        setSuccess('Registration successful!');
-                    } catch (err) {
-                        setError('Registration failed: ' + err.message);
+                        setCurrentUser(adminUser);
+                        localStorage.setItem('currentUser', JSON.stringify(adminUser));
+                        setSuccess('Admin login successful!');
+                        return;
                     }
+
+                    // Check regular user in Firebase
+                    const userDoc = await db.collection('users').doc(username).get();
+                    
+                    if (!userDoc.exists) {
+                        setError('Invalid username or password');
+                        return;
+                    }
+
+                    const userData = userDoc.data();
+                    if (userData.password !== password) {
+                        setError('Invalid username or password');
+                        return;
+                    }
+
+                    const user = { id: username, ...userData };
+                    setCurrentUser(user);
+                    localStorage.setItem('currentUser', JSON.stringify(user));
+                    setSuccess('Login successful!');
+                } catch (err) {
+                    console.error("Login error:", err);
+                    setError('Login failed. Please try again.');
                 }
             };
 
@@ -747,7 +743,8 @@
                 localStorage.removeItem('currentUser');
                 setUsername('');
                 setPassword('');
-                setName('');
+                setSelectedPlayers([]);
+                setCaptainSelections({});
             };
 
             // ============================================
@@ -827,10 +824,15 @@
                     return;
                 }
 
+                if (!firebaseReady) {
+                    setError('Cannot save. Firebase is not connected.');
+                    return;
+                }
+
                 try {
                     const contestDoc = await db.collection('contests').doc('main').get();
                     if (!contestDoc.exists) {
-                        setError('No contest available');
+                        setError('No contest available. Please contact admin.');
                         return;
                     }
 
@@ -851,7 +853,8 @@
 
                     setSuccess('Team saved successfully!');
                 } catch (err) {
-                    setError('Failed to save team: ' + err.message);
+                    console.error("Save team error:", err);
+                    setError('Failed to save team. Please try again.');
                 }
             };
 
@@ -881,7 +884,7 @@
             };
 
             // ============================================
-            // CONTEST FUNCTIONS
+            // CONTEST FUNCTIONS (Admin Only)
             // ============================================
             const createContest = async () => {
                 setError('');
@@ -889,6 +892,11 @@
                 
                 if (!contestCode || !contestName) {
                     setError('Please enter contest code and name');
+                    return;
+                }
+
+                if (!firebaseReady) {
+                    setError('Cannot create contest. Firebase is not connected.');
                     return;
                 }
 
@@ -907,48 +915,8 @@
                     setContestCode('');
                     setContestName('');
                 } catch (err) {
-                    setError('Failed to create contest: ' + err.message);
-                }
-            };
-
-            const joinContest = async () => {
-                setError('');
-                setSuccess('');
-                
-                if (!joinContestCode) {
-                    setError('Please enter contest code');
-                    return;
-                }
-
-                if (!contest) {
-                    setError('No contest available');
-                    return;
-                }
-
-                if (contest.code !== joinContestCode) {
-                    setError('Invalid contest code');
-                    return;
-                }
-
-                try {
-                    const updatedParticipants = {
-                        ...contest.participants,
-                        [currentUser.id]: {
-                            name: currentUser.name,
-                            team: [],
-                            captainSelections: {},
-                            totalPoints: 0
-                        }
-                    };
-
-                    await db.collection('contests').doc('main').update({
-                        participants: updatedParticipants
-                    });
-
-                    setSuccess('Joined contest successfully!');
-                    setJoinContestCode('');
-                } catch (err) {
-                    setError('Failed to join contest: ' + err.message);
+                    console.error("Create contest error:", err);
+                    setError('Failed to create contest. Please try again.');
                 }
             };
 
@@ -969,6 +937,11 @@
                 
                 if (!updateMatchId) {
                     setError('Please select a match');
+                    return;
+                }
+
+                if (!firebaseReady) {
+                    setError('Cannot update. Firebase is not connected.');
                     return;
                 }
 
@@ -1010,7 +983,8 @@
                     setUpdateMatchId(null);
                     setPlayerPoints({});
                 } catch (err) {
-                    setError('Failed to update leaderboard: ' + err.message);
+                    console.error("Update leaderboard error:", err);
+                    setError('Failed to update leaderboard. Please try again.');
                 }
             };
 
@@ -1025,7 +999,7 @@
             };
 
             const getLeaderboard = () => {
-                if (!contest) return [];
+                if (!contest || !contest.participants) return [];
                 return Object.entries(contest.participants)
                     .map(([userId, data]) => ({
                         userId,
@@ -1036,10 +1010,12 @@
             };
 
             const getAllUsers = () => {
-                return Object.entries(allUsers).map(([id, data]) => ({
-                    id,
-                    ...data
-                }));
+                return Object.entries(allUsers)
+                    .filter(([id]) => id !== 'admin')
+                    .map(([id, data]) => ({
+                        id,
+                        ...data
+                    }));
             };
 
             const getTeamCounts = () => {
@@ -1051,21 +1027,15 @@
                 return { batsmen, bowlers, allRounders, wicketKeepers };
             };
 
-            // Load user's team when contest loads
-            useEffect(() => {
-                if (contest && currentUser && contest.participants[currentUser.id]) {
-                    const userTeam = contest.participants[currentUser.id];
-                    const teamPlayers = PLAYERS.filter(p => userTeam.team.includes(p.id));
-                    setSelectedPlayers(teamPlayers);
-                    setCaptainSelections(userTeam.captainSelections || {});
-                }
-            }, [contest, currentUser]);
-
             // ============================================
             // RENDER
             // ============================================
             if (loading) {
-                return <div style={{textAlign: 'center', padding: '50px'}}>Loading...</div>;
+                return (
+                    <div className="loading">
+                        <h2>Loading Fantasy App...</h2>
+                    </div>
+                );
             }
 
             if (!currentUser) {
@@ -1077,42 +1047,42 @@
                         </div>
                         
                         <div className="card" style={{maxWidth: '500px', margin: '0 auto'}}>
-                            <h2>{isLogin ? 'Login' : 'Register'}</h2>
+                            <h2>Login</h2>
                             
                             {error && <div className="error-box">{error}</div>}
                             {success && <div className="success-box">{success}</div>}
                             
                             <div className="input-group">
                                 <label>Username</label>
-                                <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} placeholder="Enter username" />
+                                <input 
+                                    type="text" 
+                                    value={username} 
+                                    onChange={(e) => setUsername(e.target.value)} 
+                                    placeholder="Enter your username"
+                                    onKeyPress={(e) => e.key === 'Enter' && handleLogin()}
+                                />
                             </div>
                             
                             <div className="input-group">
                                 <label>Password</label>
-                                <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Enter password" />
+                                <input 
+                                    type="password" 
+                                    value={password} 
+                                    onChange={(e) => setPassword(e.target.value)} 
+                                    placeholder="Enter your password"
+                                    onKeyPress={(e) => e.key === 'Enter' && handleLogin()}
+                                />
                             </div>
                             
-                            {!isLogin && (
-                                <div className="input-group">
-                                    <label>Full Name</label>
-                                    <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="Enter your name" />
-                                </div>
-                            )}
-                            
-                            <button className="btn" onClick={handleAuth} style={{width: '100%'}}>
-                                {isLogin ? 'Login' : 'Register'}
+                            <button className="btn" onClick={handleLogin} style={{width: '100%'}}>
+                                Login
                             </button>
                             
-                            <p style={{textAlign: 'center', marginTop: '20px', color: '#94a3b8'}}>
-                                {isLogin ? "Don't have an account? " : "Already have an account? "}
-                                <span style={{color: '#10b981', cursor: 'pointer', fontWeight: '600'}} onClick={() => {
-                                    setIsLogin(!isLogin);
-                                    setError('');
-                                    setSuccess('');
-                                }}>
-                                    {isLogin ? 'Register' : 'Login'}
-                                </span>
-                            </p>
+                            <div className="info-box" style={{marginTop: '20px'}}>
+                                <p style={{fontSize: '14px', textAlign: 'center'}}>
+                                    Don't have login credentials? Contact admin to get access.
+                                </p>
+                            </div>
                         </div>
                     </div>
                 );
@@ -1297,30 +1267,16 @@
                                     </div>
                                 )
                             ) : (
-                                <div>
-                                    <div className="card">
-                                        <h2>{contest.name}</h2>
-                                        <div className="contest-code">
-                                            <p style={{fontSize: '14px', marginBottom: '8px', color: '#94a3b8'}}>Contest Code</p>
-                                            <div className="contest-code-value">{contest.code}</div>
-                                            <p style={{fontSize: '13px', marginTop: '8px', color: '#94a3b8'}}>Share this code with participants</p>
-                                        </div>
-                                        <div style={{marginTop: '15px', padding: '12px', background: '#0a0e27', borderRadius: '10px'}}>
-                                            <p style={{color: '#cbd5e1'}}>👥 Participants: <strong>{Object.keys(contest.participants).length}</strong></p>
-                                            <p style={{color: '#cbd5e1', marginTop: '6px'}}>🏏 Matches: <strong>{contest.matches.length}</strong></p>
-                                        </div>
+                                <div className="card">
+                                    <h2>{contest.name}</h2>
+                                    <div className="contest-code">
+                                        <p style={{fontSize: '14px', marginBottom: '8px', color: '#94a3b8'}}>Contest Code</p>
+                                        <div className="contest-code-value">{contest.code}</div>
                                     </div>
-
-                                    {!contest.participants[currentUser.id] && !currentUser.isAdmin && (
-                                        <div className="card">
-                                            <h2>Join Contest</h2>
-                                            <div className="input-group">
-                                                <label>Enter Contest Code</label>
-                                                <input type="text" value={joinContestCode} onChange={(e) => setJoinContestCode(e.target.value)} placeholder="Enter code" />
-                                            </div>
-                                            <button className="btn btn-secondary" onClick={joinContest}>Join Contest</button>
-                                        </div>
-                                    )}
+                                    <div style={{marginTop: '15px', padding: '12px', background: '#0a0e27', borderRadius: '10px'}}>
+                                        <p style={{color: '#cbd5e1'}}>👥 Participants: <strong>{Object.keys(contest.participants || {}).length}</strong></p>
+                                        <p style={{color: '#cbd5e1', marginTop: '6px'}}>🏏 Matches: <strong>{contest.matches.length}</strong></p>
+                                    </div>
                                 </div>
                             )}
                         </div>
@@ -1398,7 +1354,8 @@
                             <h2>Registered Users</h2>
                             <div className="info-box">
                                 <h3>👥 User Management</h3>
-                                <p>View all users who have registered for the fantasy contest.</p>
+                                <p>View all users registered in Firebase.</p>
+                                <p>To add new users, go to Firebase Console → Firestore → users collection</p>
                             </div>
                             
                             {getAllUsers().length === 0 ? (
@@ -1410,7 +1367,6 @@
                                             <th>#</th>
                                             <th>Name</th>
                                             <th>Username</th>
-                                            <th>User ID</th>
                                             <th>Joined</th>
                                         </tr>
                                     </thead>
@@ -1420,8 +1376,7 @@
                                                 <td>{index + 1}</td>
                                                 <td style={{fontWeight: '600'}}>{user.name}</td>
                                                 <td>{user.username}</td>
-                                                <td style={{fontSize: '13px', color: '#94a3b8'}}>{user.id}</td>
-                                                <td>{new Date(user.createdAt).toLocaleDateString()}</td>
+                                                <td>{user.createdAt ? new Date(user.createdAt).toLocaleDateString() : 'N/A'}</td>
                                             </tr>
                                         ))}
                                     </tbody>
