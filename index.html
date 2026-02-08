@@ -191,322 +191,246 @@
             border-radius: 12px;
             cursor: pointer;
             transition: all 0.3s;
-            text-align: center;
-            font-size: 1rem;
             font-family: 'Orbitron', sans-serif;
-        }
-        
-        .tab:hover {
-            background: rgba(255,255,255,0.05);
-            color: #e0e6ed;
+            font-size: 1rem;
+            text-align: center;
         }
         
         .tab.active {
             background: linear-gradient(135deg, #10b981 0%, #059669 100%);
             color: white;
             border-color: #10b981;
-            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4);
+            box-shadow: 0 10px 30px rgba(16, 185, 129, 0.3);
+        }
+
+        .tab:hover:not(.active) {
+            background: rgba(16, 185, 129, 0.1);
+            border-color: rgba(16, 185, 129, 0.3);
         }
 
         /* Card Styles */
         .card {
-            background: rgba(31, 41, 55, 0.4);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 20px;
+            background: rgba(31, 41, 55, 0.6);
             padding: 30px;
+            border-radius: 20px;
             backdrop-filter: blur(10px);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            margin-bottom: 30px;
         }
 
         .card h2 {
             font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
             margin-bottom: 25px;
-            color: #10b981;
-            font-size: 1.8rem;
-            letter-spacing: 1px;
+            background: linear-gradient(135deg, #10b981 0%, #3b82f6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
-        /* Contest List */
-        .contest-list {
+        /* Match Card Styles */
+        .match-list {
             display: grid;
             gap: 20px;
         }
 
-        .contest-item {
-            background: linear-gradient(135deg, rgba(15, 23, 42, 0.8) 0%, rgba(30, 41, 59, 0.6) 100%);
-            border: 1px solid rgba(16, 185, 129, 0.3);
-            border-radius: 15px;
+        .match-card {
+            background: rgba(17, 24, 39, 0.8);
+            border: 2px solid rgba(16, 185, 129, 0.2);
+            border-radius: 16px;
             padding: 25px;
             transition: all 0.3s;
             cursor: pointer;
         }
 
-        .contest-item:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 15px 40px rgba(16, 185, 129, 0.2);
+        .match-card:hover {
             border-color: #10b981;
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(16, 185, 129, 0.3);
         }
 
-        .contest-header {
+        .match-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
 
-        .contest-title {
-            font-size: 1.3rem;
+        .teams {
+            font-size: 1.5rem;
             font-weight: 700;
-            color: #fff;
             font-family: 'Orbitron', sans-serif;
+            color: #10b981;
         }
 
-        .contest-details {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 15px;
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 1px solid rgba(255,255,255,0.1);
-        }
-
-        .detail-item {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-        }
-
-        .detail-label {
-            font-size: 0.85rem;
-            color: #94a3b8;
-            font-weight: 500;
-        }
-
-        .detail-value {
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: #e0e6ed;
-        }
-
-        /* Status Badge */
         .status-badge {
-            display: inline-block;
-            padding: 6px 14px;
+            padding: 8px 16px;
             border-radius: 20px;
             font-size: 0.85rem;
             font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 1px;
         }
 
-        .status-upcoming { background: linear-gradient(135deg, #3b82f6, #2563eb); color: white; }
-        .status-live { background: linear-gradient(135deg, #ef4444, #dc2626); color: white; animation: pulse 2s infinite; }
-        .status-completed { background: linear-gradient(135deg, #6b7280, #4b5563); color: white; }
+        .status-upcoming {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: white;
+        }
+
+        .status-live {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: white;
+            animation: pulse 2s infinite;
+        }
+
+        .status-completed {
+            background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
+            color: white;
+        }
 
         @keyframes pulse {
             0%, 100% { opacity: 1; }
             50% { opacity: 0.7; }
         }
 
+        .match-info {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .info-item {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .info-label {
+            font-size: 0.85rem;
+            color: #9ca3af;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .info-value {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #e0e6ed;
+        }
+
+        /* Player List Styles */
+        .players-section {
+            margin-top: 30px;
+        }
+
+        .team-section {
+            margin-bottom: 30px;
+        }
+
+        .team-header {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            padding: 15px 20px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+            font-weight: 700;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .players-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .player-card {
+            background: rgba(17, 24, 39, 0.6);
+            border: 2px solid rgba(16, 185, 129, 0.2);
+            border-radius: 12px;
+            padding: 15px;
+            transition: all 0.3s;
+        }
+
+        .player-card:hover {
+            border-color: #10b981;
+            transform: translateY(-3px);
+        }
+
+        .player-name {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #10b981;
+            margin-bottom: 8px;
+        }
+
+        .player-role {
+            display: inline-block;
+            background: rgba(59, 130, 246, 0.2);
+            color: #3b82f6;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .player-stats {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+            font-size: 0.9rem;
+            color: #9ca3af;
+        }
+
+        .stat {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+        }
+
+        .stat-value {
+            font-weight: 700;
+            color: #e0e6ed;
+        }
+
         /* Button Styles */
         .btn {
-            padding: 14px 28px;
+            padding: 15px 30px;
             background: linear-gradient(135deg, #10b981 0%, #059669 100%);
             color: white;
             border: none;
             border-radius: 12px;
-            cursor: pointer;
             font-weight: 700;
-            font-size: 1rem;
             font-family: 'Orbitron', sans-serif;
+            cursor: pointer;
             transition: all 0.3s;
-            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
-            letter-spacing: 0.5px;
+            font-size: 1rem;
+            box-shadow: 0 10px 30px rgba(16, 185, 129, 0.3);
         }
 
-        .btn:hover:not(:disabled) {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 30px rgba(16, 185, 129, 0.5);
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(16, 185, 129, 0.4);
         }
 
         .btn:disabled {
             opacity: 0.5;
             cursor: not-allowed;
+            transform: none;
         }
 
-        .btn-danger {
-            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-            box-shadow: 0 8px 20px rgba(239, 68, 68, 0.3);
+        .btn-secondary {
+            background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
         }
 
-        .btn-danger:hover:not(:disabled) {
-            box-shadow: 0 12px 30px rgba(239, 68, 68, 0.5);
-        }
-
-        /* Form Styles */
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: #cbd5e1;
-            font-size: 0.95rem;
-        }
-
-        .form-group input,
-        .form-group select,
-        .form-group textarea {
-            width: 100%;
-            padding: 14px;
-            background: rgba(15, 23, 42, 0.6);
-            border: 2px solid rgba(255,255,255,0.1);
-            border-radius: 10px;
-            color: #e0e6ed;
-            font-size: 1rem;
-            font-family: 'Exo 2', sans-serif;
-            transition: all 0.3s;
-        }
-
-        .form-group input:focus,
-        .form-group select:focus,
-        .form-group textarea:focus {
-            outline: none;
-            border-color: #10b981;
-            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
-        }
-
-        /* Player Card */
-        .player-card {
-            background: linear-gradient(135deg, rgba(15, 23, 42, 0.8) 0%, rgba(30, 41, 59, 0.6) 100%);
-            border: 2px solid rgba(255,255,255,0.1);
-            border-radius: 12px;
-            padding: 15px;
-            cursor: pointer;
-            transition: all 0.3s;
-            position: relative;
-        }
-
-        .player-card:hover {
-            transform: translateY(-3px);
-            border-color: #10b981;
-            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.2);
-        }
-
-        .player-card.selected {
-            border-color: #10b981;
-            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(5, 150, 105, 0.1) 100%);
-            box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
-        }
-
-        .player-card.captain {
-            border-color: #f59e0b;
-            background: linear-gradient(135deg, rgba(245, 158, 11, 0.2) 0%, rgba(217, 119, 6, 0.1) 100%);
-        }
-
-        .player-card.vice-captain {
-            border-color: #3b82f6;
-            background: linear-gradient(135deg, rgba(59, 130, 246, 0.2) 0%, rgba(37, 99, 235, 0.1) 100%);
-        }
-
-        .player-name {
-            font-weight: 700;
-            font-size: 1.1rem;
-            color: #fff;
-            margin-bottom: 8px;
-        }
-
-        .player-role {
-            font-size: 0.85rem;
-            color: #94a3b8;
-            margin-bottom: 10px;
-        }
-
-        .player-credits {
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: #10b981;
-        }
-
-        /* Team Summary */
-        .team-summary {
-            background: rgba(15, 23, 42, 0.6);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 12px;
-            padding: 20px;
-            position: sticky;
-            top: 20px;
-        }
-
-        .credits-bar {
-            background: rgba(255,255,255,0.1);
-            height: 10px;
-            border-radius: 5px;
-            margin: 10px 0;
-            overflow: hidden;
-        }
-
-        .credits-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #10b981, #059669);
-            transition: width 0.3s;
-            border-radius: 5px;
-        }
-
-        .credits-fill.over-budget {
-            background: linear-gradient(90deg, #ef4444, #dc2626);
-        }
-
-        .role-stats {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-            margin: 20px 0;
-        }
-
-        .stat-item {
-            background: rgba(15, 23, 42, 0.6);
-            padding: 12px;
-            border-radius: 8px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .stat-label {
-            font-size: 0.85rem;
-            color: #94a3b8;
-            font-weight: 600;
-        }
-
-        .stat-value {
-            font-size: 1rem;
-            font-weight: 700;
-            color: #10b981;
-        }
-
-        .stat-value.warning {
-            color: #f59e0b;
-        }
-
-        .selected-players-list {
-            max-height: 300px;
-            overflow-y: auto;
-        }
-
-        .selected-player {
-            display: flex;
-            justify-content: space-between;
-            padding: 10px;
-            background: rgba(15, 23, 42, 0.4);
-            border-radius: 8px;
-            margin-bottom: 8px;
-            font-size: 0.9rem;
-        }
-
-        /* Leaderboard Table */
+        /* Leaderboard Styles */
         .leaderboard-table {
             width: 100%;
             border-collapse: collapse;
@@ -521,191 +445,199 @@
             padding: 15px;
             text-align: left;
             font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
             color: #10b981;
-            font-family: 'Orbitron', sans-serif;
-            letter-spacing: 0.5px;
         }
 
         .leaderboard-table td {
             padding: 15px;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+            border-top: 1px solid rgba(255,255,255,0.1);
         }
 
-        .leaderboard-table tbody tr {
-            transition: all 0.2s;
-        }
-
-        .leaderboard-table tbody tr:hover {
+        .leaderboard-table tr:hover {
             background: rgba(16, 185, 129, 0.1);
         }
 
-        .rank-badge {
-            display: inline-block;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .rank {
+            font-size: 1.5rem;
             font-weight: 900;
-            font-size: 1.1rem;
+            font-family: 'Orbitron', sans-serif;
+            color: #10b981;
+        }
+
+        .rank-1 { color: #fbbf24; }
+        .rank-2 { color: #d1d5db; }
+        .rank-3 { color: #f97316; }
+
+        .points-highlight {
+            font-size: 1.3rem;
+            font-weight: 900;
+            color: #10b981;
             font-family: 'Orbitron', sans-serif;
         }
 
-        .rank-1 {
-            background: linear-gradient(135deg, #fbbf24, #f59e0b);
-            color: white;
-            box-shadow: 0 0 20px rgba(251, 191, 36, 0.5);
-        }
-
-        .rank-2 {
-            background: linear-gradient(135deg, #9ca3af, #6b7280);
-            color: white;
-            box-shadow: 0 0 20px rgba(156, 163, 175, 0.5);
-        }
-
-        .rank-3 {
-            background: linear-gradient(135deg, #f87171, #ef4444);
-            color: white;
-            box-shadow: 0 0 20px rgba(248, 113, 113, 0.5);
-        }
-
-        .rank-other {
-            background: rgba(255,255,255,0.1);
-            color: #cbd5e1;
-        }
-
-        /* Loading & Messages */
-        .loading {
-            text-align: center;
-            padding: 40px;
-            color: #94a3b8;
-            font-size: 1.1rem;
-        }
-
-        .error-message {
-            background: rgba(239, 68, 68, 0.2);
-            border: 2px solid #ef4444;
-            border-radius: 12px;
-            padding: 20px;
-            color: #fca5a5;
-            margin: 20px 0;
-            text-align: center;
-        }
-
-        .success-message {
-            background: rgba(16, 185, 129, 0.2);
-            border: 2px solid #10b981;
-            border-radius: 12px;
-            padding: 20px;
-            color: #6ee7b7;
-            margin: 20px 0;
-            text-align: center;
-        }
-
-        /* Auth Container */
+        /* Auth Styles */
         .auth-container {
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
+            padding: 20px;
         }
 
         .auth-card {
             background: rgba(31, 41, 55, 0.8);
-            border: 2px solid rgba(16, 185, 129, 0.3);
-            border-radius: 24px;
             padding: 50px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.4);
             max-width: 450px;
             width: 100%;
-            backdrop-filter: blur(20px);
-            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
         }
 
-        .auth-title {
+        .auth-card h2 {
             font-family: 'Orbitron', sans-serif;
-            font-size: 2.2rem;
-            font-weight: 900;
+            font-size: 2.5rem;
             text-align: center;
             margin-bottom: 40px;
-            background: linear-gradient(135deg, #10b981, #059669);
+            background: linear-gradient(135deg, #10b981 0%, #3b82f6 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
 
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #9ca3af;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 15px;
+            background: rgba(17, 24, 39, 0.8);
+            border: 2px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #10b981;
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
+        }
+
         .auth-toggle {
             text-align: center;
-            margin-top: 25px;
-            color: #94a3b8;
+            margin-top: 20px;
+            color: #9ca3af;
         }
 
         .auth-toggle a {
             color: #10b981;
-            cursor: pointer;
-            font-weight: 700;
             text-decoration: none;
+            font-weight: 700;
+            cursor: pointer;
         }
 
         .auth-toggle a:hover {
             text-decoration: underline;
         }
 
-        /* Admin Panel Styles */
-        .admin-section {
-            background: rgba(245, 158, 11, 0.1);
-            border: 2px solid rgba(245, 158, 11, 0.3);
-            border-radius: 15px;
-            padding: 25px;
+        .loading {
+            text-align: center;
+            padding: 40px;
+            font-size: 1.2rem;
+            color: #10b981;
+        }
+
+        .error {
+            background: rgba(239, 68, 68, 0.2);
+            border: 2px solid #ef4444;
+            padding: 15px;
+            border-radius: 12px;
+            color: #fecaca;
             margin-bottom: 20px;
         }
 
+        /* Admin Styles */
+        .admin-section {
+            margin-top: 30px;
+        }
+
         .admin-section h3 {
-            color: #f59e0b;
             font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
             margin-bottom: 20px;
+            color: #10b981;
         }
 
         .player-score-input {
             display: grid;
             grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr;
-            gap: 10px;
+            gap: 15px;
             align-items: center;
-            padding: 10px;
-            background: rgba(15, 23, 42, 0.6);
-            border-radius: 8px;
+            padding: 15px;
+            background: rgba(17, 24, 39, 0.6);
+            border-radius: 12px;
             margin-bottom: 10px;
         }
 
         .player-score-input input {
-            padding: 8px;
-            background: rgba(255,255,255,0.1);
-            border: 1px solid rgba(255,255,255,0.2);
-            border-radius: 6px;
-            color: #e0e6ed;
-            text-align: center;
+            padding: 10px;
+            background: rgba(31, 41, 55, 0.8);
+            border: 2px solid rgba(255,255,255,0.1);
+            border-radius: 8px;
+            color: white;
+            font-size: 0.95rem;
         }
 
-        /* Responsive */
+        .player-score-input input:focus {
+            outline: none;
+            border-color: #10b981;
+        }
+
         @media (max-width: 768px) {
             .header h1 {
                 font-size: 2rem;
             }
-            
+
+            .user-badge, .logout-btn {
+                position: relative;
+                top: auto;
+                left: auto;
+                right: auto;
+                margin-top: 15px;
+            }
+
             .tabs {
                 flex-direction: column;
             }
-            
+
             .tab {
-                min-width: unset;
+                min-width: auto;
             }
-            
-            .contest-details {
+
+            .players-grid {
                 grid-template-columns: 1fr;
             }
 
             .player-score-input {
                 grid-template-columns: 1fr;
+            }
+
+            .leaderboard-table {
+                font-size: 0.85rem;
             }
         }
     </style>
@@ -716,174 +648,74 @@
     <script type="text/babel">
         const { useState, useEffect } = React;
 
-        // ==================== CONSTANTS ====================
-        const MAIN_CONTEST_ID = 'wt20-2026';
-        const MAIN_CONTEST_NAME = 'T20 World Cup 2026';
-
-        // ==================== MAIN APP COMPONENT ====================
         function App() {
-            const [firebaseInitialized, setFirebaseInitialized] = useState(false);
             const [user, setUser] = useState(null);
-            const [isAdmin, setIsAdmin] = useState(false);
             const [loading, setLoading] = useState(true);
+            const [isLogin, setIsLogin] = useState(true);
 
             useEffect(() => {
-                const checkFirebase = setInterval(() => {
-                    if (window.firebaseReady) {
-                        setFirebaseInitialized(true);
-                        clearInterval(checkFirebase);
-                        
-                        const { onAuthStateChanged } = window.firebaseModules;
-                        onAuthStateChanged(window.firebaseAuth, async (currentUser) => {
-                            setUser(currentUser);
-                            
-                            if (currentUser) {
-                                const { doc, getDoc } = window.firebaseModules;
-                                const userDoc = await getDoc(doc(window.firebaseDb, 'users', currentUser.uid));
-                                if (userDoc.exists()) {
-                                    setIsAdmin(userDoc.data().role === 'admin');
-                                }
-                            } else {
-                                setIsAdmin(false);
-                            }
-                            
-                            setLoading(false);
-                        });
+                const checkAuth = () => {
+                    if (!window.firebaseReady) {
+                        setTimeout(checkAuth, 100);
+                        return;
                     }
-                }, 100);
 
-                return () => clearInterval(checkFirebase);
+                    const { onAuthStateChanged } = window.firebaseModules;
+                    onAuthStateChanged(window.firebaseAuth, (currentUser) => {
+                        if (currentUser) {
+                            checkUserRole(currentUser);
+                        } else {
+                            setUser(null);
+                            setLoading(false);
+                        }
+                    });
+                };
+                checkAuth();
             }, []);
 
-            if (loading) {
-                return (
-                    <div className="auth-container">
-                        <div className="loading">🏏 Loading Fantasy Cricket...</div>
-                    </div>
-                );
-            }
-
-            if (!user) {
-                return <AuthScreen />;
-            }
-
-            return <Dashboard user={user} isAdmin={isAdmin} />;
-        }
-
-        // ==================== AUTH SCREEN ====================
-        function AuthScreen() {
-            const [isLogin, setIsLogin] = useState(true);
-            const [email, setEmail] = useState('');
-            const [password, setPassword] = useState('');
-            const [username, setUsername] = useState('');
-            const [error, setError] = useState('');
-            const [loading, setLoading] = useState(false);
-
-            const handleSubmit = async (e) => {
-                e.preventDefault();
-                setError('');
-                setLoading(true);
-
+            const checkUserRole = async (currentUser) => {
                 try {
-                    const { signInWithEmailAndPassword, createUserWithEmailAndPassword } = window.firebaseModules;
-                    const { doc, setDoc, getDoc } = window.firebaseModules;
-
-                    if (isLogin) {
-                        await signInWithEmailAndPassword(window.firebaseAuth, email, password);
+                    const { doc, getDoc } = window.firebaseModules;
+                    const userDoc = await getDoc(doc(window.firebaseDb, 'users', currentUser.uid));
+                    
+                    if (userDoc.exists()) {
+                        setUser({
+                            uid: currentUser.uid,
+                            email: currentUser.email,
+                            ...userDoc.data()
+                        });
                     } else {
-                        const userCredential = await createUserWithEmailAndPassword(window.firebaseAuth, email, password);
-                        
-                        await setDoc(doc(window.firebaseDb, 'users', userCredential.user.uid), {
-                            email: email,
-                            username: username,
+                        const newUser = {
+                            email: currentUser.email,
                             role: 'user',
                             createdAt: new Date().toISOString()
-                        });
+                        };
+                        const { setDoc } = window.firebaseModules;
+                        await setDoc(doc(window.firebaseDb, 'users', currentUser.uid), newUser);
+                        setUser({ uid: currentUser.uid, ...newUser });
                     }
-                } catch (err) {
-                    setError(err.message);
+                } catch (error) {
+                    console.error('Error checking user role:', error);
                 } finally {
                     setLoading(false);
                 }
             };
 
-            return (
-                <div className="auth-container">
-                    <div className="auth-card">
-                        <h1 className="auth-title">🏏 T20 WC 2026</h1>
-                        
-                        {error && <div className="error-message">{error}</div>}
-                        
-                        <form onSubmit={handleSubmit}>
-                            {!isLogin && (
-                                <div className="form-group">
-                                    <label>Username</label>
-                                    <input
-                                        type="text"
-                                        value={username}
-                                        onChange={(e) => setUsername(e.target.value)}
-                                        required
-                                        placeholder="Enter username"
-                                    />
-                                </div>
-                            )}
-                            
-                            <div className="form-group">
-                                <label>Email</label>
-                                <input
-                                    type="email"
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
-                                    required
-                                    placeholder="Enter email"
-                                />
-                            </div>
-                            
-                            <div className="form-group">
-                                <label>Password</label>
-                                <input
-                                    type="password"
-                                    value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
-                                    required
-                                    placeholder="Enter password"
-                                />
-                            </div>
-                            
-                            <button type="submit" className="btn" style={{ width: '100%' }} disabled={loading}>
-                                {loading ? 'Please wait...' : (isLogin ? 'Login' : 'Sign Up')}
-                            </button>
-                        </form>
-                        
-                        <div className="auth-toggle">
-                            {isLogin ? "Don't have an account? " : "Already have an account? "}
-                            <a onClick={() => setIsLogin(!isLogin)}>
-                                {isLogin ? 'Sign Up' : 'Login'}
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            );
-        }
+            const handleAuth = async (e) => {
+                e.preventDefault();
+                const email = e.target.email.value;
+                const password = e.target.password.value;
 
-        // ==================== DASHBOARD ====================
-        function Dashboard({ user, isAdmin }) {
-            const [activeTab, setActiveTab] = useState('contests');
-            const [username, setUsername] = useState('User');
-
-            useEffect(() => {
-                loadUserData();
-            }, []);
-
-            const loadUserData = async () => {
                 try {
-                    const { doc, getDoc } = window.firebaseModules;
-                    const userDoc = await getDoc(doc(window.firebaseDb, 'users', user.uid));
-                    if (userDoc.exists()) {
-                        setUsername(userDoc.data().username || 'User');
+                    const { signInWithEmailAndPassword, createUserWithEmailAndPassword } = window.firebaseModules;
+                    
+                    if (isLogin) {
+                        await signInWithEmailAndPassword(window.firebaseAuth, email, password);
+                    } else {
+                        await createUserWithEmailAndPassword(window.firebaseAuth, email, password);
                     }
                 } catch (error) {
-                    console.error('Error loading user data:', error);
+                    alert(error.message);
                 }
             };
 
@@ -892,200 +724,109 @@
                 await signOut(window.firebaseAuth);
             };
 
-            return (
-                <>
-                    <div className="header">
-                        <div className="user-badge">
-                            👤 {username}
-                            {isAdmin && <span className="admin-badge">ADMIN</span>}
-                        </div>
-                        <h1>T20 WORLD CUP 2026</h1>
-                        <button onClick={handleLogout} className="logout-btn">Logout</button>
-                    </div>
-
-                    <div className="tabs">
-                        <div 
-                            className={`tab ${activeTab === 'contests' ? 'active' : ''}`}
-                            onClick={() => setActiveTab('contests')}
-                        >
-                            🏆 Contests
-                        </div>
-                        <div 
-                            className={`tab ${activeTab === 'matches' ? 'active' : ''}`}
-                            onClick={() => setActiveTab('matches')}
-                        >
-                            🏏 Matches
-                        </div>
-                        <div 
-                            className={`tab ${activeTab === 'myteams' ? 'active' : ''}`}
-                            onClick={() => setActiveTab('myteams')}
-                        >
-                            👥 My Teams
-                        </div>
-                        <div 
-                            className={`tab ${activeTab === 'leaderboard' ? 'active' : ''}`}
-                            onClick={() => setActiveTab('leaderboard')}
-                        >
-                            📊 Leaderboard
-                        </div>
-                        {isAdmin && (
-                            <div 
-                                className={`tab ${activeTab === 'admin' ? 'active' : ''}`}
-                                onClick={() => setActiveTab('admin')}
-                            >
-                                ⚙️ Admin
-                            </div>
-                        )}
-                    </div>
-
-                    {activeTab === 'contests' && <Contests user={user} />}
-                    {activeTab === 'matches' && <Matches user={user} />}
-                    {activeTab === 'myteams' && <MyTeams user={user} />}
-                    {activeTab === 'leaderboard' && <Leaderboard />}
-                    {activeTab === 'admin' && isAdmin && <AdminPanel />}
-                </>
-            );
-        }
-
-        // ==================== CONTESTS COMPONENT ====================
-        function Contests({ user }) {
-            const [hasJoined, setHasJoined] = useState(false);
-            const [loading, setLoading] = useState(true);
-
-            useEffect(() => {
-                checkContestJoin();
-            }, []);
-
-            const checkContestJoin = async () => {
-                try {
-                    const { doc, getDoc } = window.firebaseModules;
-                    const participantDoc = await getDoc(
-                        doc(window.firebaseDb, 'contestParticipants', `${MAIN_CONTEST_ID}_${user.uid}`)
-                    );
-                    setHasJoined(participantDoc.exists());
-                } catch (error) {
-                    console.error('Error checking contest:', error);
-                } finally {
-                    setLoading(false);
-                }
-            };
-
-            const joinContest = async () => {
-                try {
-                    const { doc, setDoc, getDoc, updateDoc } = window.firebaseModules;
-                    
-                    // Add user to contest participants
-                    await setDoc(doc(window.firebaseDb, 'contestParticipants', `${MAIN_CONTEST_ID}_${user.uid}`), {
-                        contestId: MAIN_CONTEST_ID,
-                        userId: user.uid,
-                        joinedAt: new Date().toISOString()
-                    });
-
-                    // Initialize leaderboard entry
-                    await setDoc(doc(window.firebaseDb, 'leaderboard', `${MAIN_CONTEST_ID}_${user.uid}`), {
-                        contestId: MAIN_CONTEST_ID,
-                        userId: user.uid,
-                        totalPoints: 0,
-                        matchesPlayed: 0,
-                        updatedAt: new Date().toISOString()
-                    });
-
-                    // Get username
-                    const userDoc = await getDoc(doc(window.firebaseDb, 'users', user.uid));
-                    const username = userDoc.exists() ? userDoc.data().username : 'Unknown';
-
-                    // Update contest participant count
-                    const contestRef = doc(window.firebaseDb, 'contests', MAIN_CONTEST_ID);
-                    const contestDoc = await getDoc(contestRef);
-                    if (contestDoc.exists()) {
-                        await updateDoc(contestRef, {
-                            participantCount: (contestDoc.data().participantCount || 0) + 1
-                        });
-                    }
-
-                    setHasJoined(true);
-                    alert('Successfully joined the contest!');
-                } catch (error) {
-                    console.error('Error joining contest:', error);
-                    alert('Failed to join contest');
-                }
-            };
-
             if (loading) {
+                return <div className="loading">Loading...</div>;
+            }
+
+            if (!user) {
                 return (
-                    <div className="card">
-                        <h2>🏆 Contests</h2>
-                        <div className="loading">Loading...</div>
+                    <div className="auth-container">
+                        <div className="auth-card">
+                            <h2>{isLogin ? 'LOGIN' : 'SIGN UP'}</h2>
+                            <form onSubmit={handleAuth}>
+                                <div className="form-group">
+                                    <label>Email</label>
+                                    <input type="email" name="email" required />
+                                </div>
+                                <div className="form-group">
+                                    <label>Password</label>
+                                    <input type="password" name="password" required />
+                                </div>
+                                <button type="submit" className="btn" style={{ width: '100%' }}>
+                                    {isLogin ? 'Login' : 'Sign Up'}
+                                </button>
+                            </form>
+                            <div className="auth-toggle">
+                                {isLogin ? "Don't have an account? " : "Already have an account? "}
+                                <a onClick={() => setIsLogin(!isLogin)}>
+                                    {isLogin ? 'Sign Up' : 'Login'}
+                                </a>
+                            </div>
+                        </div>
                     </div>
                 );
             }
 
-            return (
-                <div className="card">
-                    <h2>🏆 Contests</h2>
-                    
-                    <div className="contest-list">
-                        <div className="contest-item">
-                            <div className="contest-header">
-                                <div className="contest-title">{MAIN_CONTEST_NAME}</div>
-                                <span className="status-badge status-live">LIVE</span>
-                            </div>
-                            
-                            <div className="contest-details">
-                                <div className="detail-item">
-                                    <span className="detail-label">Prize Pool</span>
-                                    <span className="detail-value">₹1,00,000</span>
-                                </div>
-                                <div className="detail-item">
-                                    <span className="detail-label">Entry Fee</span>
-                                    <span className="detail-value">FREE</span>
-                                </div>
-                                <div className="detail-item">
-                                    <span className="detail-label">Total Matches</span>
-                                    <span className="detail-value">56</span>
-                                </div>
-                            </div>
+            return <Dashboard user={user} onLogout={handleLogout} />;
+        }
 
-                            {!hasJoined ? (
-                                <button onClick={joinContest} className="btn" style={{ width: '100%', marginTop: '20px' }}>
-                                    Join Contest
-                                </button>
-                            ) : (
-                                <div className="success-message" style={{ marginTop: '20px' }}>
-                                    ✅ You're participating in this contest!
-                                </div>
-                            )}
+        function Dashboard({ user, onLogout }) {
+            const [activeTab, setActiveTab] = useState('matches');
+
+            return (
+                <>
+                    <div className="header">
+                        <div className="user-badge">
+                            👤 {user.email}
+                            {user.role === 'admin' && <span className="admin-badge">Admin</span>}
                         </div>
+                        <h1>⚡ T20 FANTASY LEAGUE</h1>
+                        <button className="logout-btn" onClick={onLogout}>Logout</button>
                     </div>
-                </div>
+
+                    <div className="tabs">
+                        <button 
+                            className={`tab ${activeTab === 'matches' ? 'active' : ''}`}
+                            onClick={() => setActiveTab('matches')}
+                        >
+                            🏏 Matches
+                        </button>
+                        <button 
+                            className={`tab ${activeTab === 'leaderboard' ? 'active' : ''}`}
+                            onClick={() => setActiveTab('leaderboard')}
+                        >
+                            🏆 Leaderboard
+                        </button>
+                        {user.role === 'admin' && (
+                            <button 
+                                className={`tab ${activeTab === 'admin' ? 'active' : ''}`}
+                                onClick={() => setActiveTab('admin')}
+                            >
+                                ⚙️ Admin
+                            </button>
+                        )}
+                    </div>
+
+                    {activeTab === 'matches' && <MatchesTab user={user} />}
+                    {activeTab === 'leaderboard' && <LeaderboardTab />}
+                    {activeTab === 'admin' && user.role === 'admin' && <AdminTab />}
+                </>
             );
         }
 
-        // ==================== MATCHES COMPONENT (UPDATED) ====================
-        function Matches({ user }) {
+        function MatchesTab({ user }) {
             const [matches, setMatches] = useState([]);
-            const [hasJoinedContest, setHasJoinedContest] = useState(false);
-            const [loading, setLoading] = useState(true);
             const [selectedMatch, setSelectedMatch] = useState(null);
-            const [userTeams, setUserTeams] = useState({});
+            const [players, setPlayers] = useState({ team1: [], team2: [] });
+            const [loading, setLoading] = useState(true);
+            const [hasJoined, setHasJoined] = useState(false);
 
             useEffect(() => {
-                loadData();
+                loadMatches();
             }, []);
 
-            const loadData = async () => {
-                try {
-                    const { collection, query, where, getDocs, doc, getDoc } = window.firebaseModules;
-                    
-                    // Check if user joined contest
-                    const participantDoc = await getDoc(
-                        doc(window.firebaseDb, 'contestParticipants', `${MAIN_CONTEST_ID}_${user.uid}`)
-                    );
-                    setHasJoinedContest(participantDoc.exists());
+            useEffect(() => {
+                if (selectedMatch) {
+                    loadPlayers();
+                    checkIfJoined();
+                }
+            }, [selectedMatch]);
 
-                    // ✅ UPDATED: Fetch matches linked to contest
+            const loadMatches = async () => {
+                try {
+                    const { collection, getDocs, orderBy, query } = window.firebaseModules;
                     const matchesRef = collection(window.firebaseDb, 'matches');
-                    const q = query(matchesRef, where('contestId', '==', MAIN_CONTEST_ID));
+                    const q = query(matchesRef, orderBy('dateTime', 'asc'));
                     const snapshot = await getDocs(q);
                     
                     const matchesList = snapshot.docs.map(doc => ({
@@ -1094,23 +835,6 @@
                     }));
                     
                     setMatches(matchesList);
-
-                    // Load user's teams for each match
-                    const teamsRef = collection(window.firebaseDb, 'userTeams');
-                    const teamsQuery = query(
-                        teamsRef,
-                        where('userId', '==', user.uid),
-                        where('contestId', '==', MAIN_CONTEST_ID)
-                    );
-                    const teamsSnapshot = await getDocs(teamsQuery);
-                    
-                    const teamsMap = {};
-                    teamsSnapshot.docs.forEach(doc => {
-                        const data = doc.data();
-                        teamsMap[data.matchId] = { id: doc.id, ...data };
-                    });
-                    
-                    setUserTeams(teamsMap);
                 } catch (error) {
                     console.error('Error loading matches:', error);
                 } finally {
@@ -1118,443 +842,221 @@
                 }
             };
 
-            if (!hasJoinedContest) {
-                return (
-                    <div className="card">
-                        <h2>🏏 Matches</h2>
-                        <div className="error-message">
-                            ⚠️ Please join the contest first to create teams for matches
-                        </div>
-                    </div>
-                );
-            }
-
-            if (loading) {
-                return (
-                    <div className="card">
-                        <h2>🏏 Matches</h2>
-                        <div className="loading">Loading matches...</div>
-                    </div>
-                );
-            }
-
-            if (selectedMatch) {
-                return <CreateTeam 
-                    user={user} 
-                    match={selectedMatch} 
-                    onBack={() => {
-                        setSelectedMatch(null);
-                        loadData();
-                    }}
-                    existingTeam={userTeams[selectedMatch.id]}
-                />;
-            }
-
-            return (
-                <div className="card">
-                    <h2>🏏 Matches ({matches.length})</h2>
-                    
-                    {matches.length === 0 ? (
-                        <div className="loading">No matches available yet</div>
-                    ) : (
-                        <div className="contest-list">
-                            {matches.map(match => (
-                                <div key={match.id} className="contest-item">
-                                    <div className="contest-header">
-                                        <div className="contest-title">{match.team1} vs {match.team2}</div>
-                                        <span className={`status-badge status-${match.status || 'upcoming'}`}>
-                                            {(match.status || 'upcoming').toUpperCase()}
-                                        </span>
-                                    </div>
-                                    
-                                    <div className="contest-details">
-                                        <div className="detail-item">
-                                            <span className="detail-label">Date</span>
-                                            <span className="detail-value">{match.date}</span>
-                                        </div>
-                                        <div className="detail-item">
-                                            <span className="detail-label">Venue</span>
-                                            <span className="detail-value">{match.venue}</span>
-                                        </div>
-                                    </div>
-
-                                    {userTeams[match.id] ? (
-                                        <div className="success-message" style={{ marginTop: '20px' }}>
-                                            ✅ Team Created
-                                        </div>
-                                    ) : match.status === 'completed' ? (
-                                        <div className="error-message" style={{ marginTop: '20px' }}>
-                                            ⏱️ Match Completed
-                                        </div>
-                                    ) : (
-                                        <button 
-                                            onClick={() => setSelectedMatch(match)} 
-                                            className="btn" 
-                                            style={{ width: '100%', marginTop: '20px' }}
-                                        >
-                                            Create Team
-                                        </button>
-                                    )}
-                                </div>
-                            ))}
-                        </div>
-                    )}
-                </div>
-            );
-        }
-
-        // ==================== CREATE TEAM COMPONENT (UPDATED) ====================
-        function CreateTeam({ user, match, onBack, existingTeam }) {
-            const [players, setPlayers] = useState([]);
-            const [selectedPlayers, setSelectedPlayers] = useState([]);
-            const [captain, setCaptain] = useState(null);
-            const [viceCaptain, setViceCaptain] = useState(null);
-            const [loading, setLoading] = useState(true);
-
-            useEffect(() => {
-                loadPlayers();
-            }, []);
-
             const loadPlayers = async () => {
+                if (!selectedMatch) return;
+
                 try {
                     const { collection, query, where, getDocs } = window.firebaseModules;
                     const playersRef = collection(window.firebaseDb, 'players');
-                    const q = query(playersRef, where('team', 'in', [match.team1, match.team2]));
-                    const snapshot = await getDocs(q);
                     
-                    const playersList = snapshot.docs.map(doc => ({
-                        id: doc.id,
-                        ...doc.data()
-                    }));
+                    const team1Query = query(playersRef, where('team', '==', selectedMatch.team1));
+                    const team2Query = query(playersRef, where('team', '==', selectedMatch.team2));
                     
-                    setPlayers(playersList);
-
-                    // Load existing team if editing
-                    if (existingTeam) {
-                        setSelectedPlayers(existingTeam.players);
-                        setCaptain(existingTeam.captain);
-                        setViceCaptain(existingTeam.viceCaptain);
-                    }
+                    const [team1Snapshot, team2Snapshot] = await Promise.all([
+                        getDocs(team1Query),
+                        getDocs(team2Query)
+                    ]);
+                    
+                    const team1Players = team1Snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                    const team2Players = team2Snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                    
+                    setPlayers({ team1: team1Players, team2: team2Players });
                 } catch (error) {
                     console.error('Error loading players:', error);
-                } finally {
-                    setLoading(false);
                 }
             };
 
-            const togglePlayer = (player) => {
-                if (selectedPlayers.find(p => p.id === player.id)) {
-                    setSelectedPlayers(selectedPlayers.filter(p => p.id !== player.id));
-                    if (captain === player.id) setCaptain(null);
-                    if (viceCaptain === player.id) setViceCaptain(null);
-                } else if (selectedPlayers.length < 11) {
-                    setSelectedPlayers([...selectedPlayers, player]);
-                }
-            };
-
-            const totalCredits = selectedPlayers.reduce((sum, p) => sum + p.credits, 0);
-            
-            const roleCounts = selectedPlayers.reduce((acc, p) => {
-                acc[p.role] = (acc[p.role] || 0) + 1;
-                return acc;
-            }, {});
-
-            const canSaveTeam = 
-                selectedPlayers.length === 11 &&
-                totalCredits <= 100 &&
-                captain &&
-                viceCaptain &&
-                (roleCounts['Wicket-Keeper'] || 0) >= 1 &&
-                (roleCounts['Batsman'] || 0) >= 3 &&
-                (roleCounts['All-Rounder'] || 0) >= 1 &&
-                (roleCounts['Bowler'] || 0) >= 3;
-
-            // ✅ UPDATED: Save team with contestId and matchId
-            const saveTeam = async () => {
-                if (!canSaveTeam) return;
+            const checkIfJoined = async () => {
+                if (!selectedMatch || !user) return;
 
                 try {
-                    const { doc, setDoc } = window.firebaseModules;
+                    const { doc, getDoc } = window.firebaseModules;
+                    const participationRef = doc(
+                        window.firebaseDb, 
+                        'matchParticipation', 
+                        `${selectedMatch.id}_${user.uid}`
+                    );
+                    const participationDoc = await getDoc(participationRef);
+                    setHasJoined(participationDoc.exists());
+                } catch (error) {
+                    console.error('Error checking participation:', error);
+                }
+            };
+
+            const joinMatch = async () => {
+                if (!selectedMatch || !user) return;
+
+                try {
+                    const { doc, setDoc, getDoc, updateDoc } = window.firebaseModules;
                     
-                    // ✅ Prevent duplicate team creation
-                    const teamId = `${MAIN_CONTEST_ID}_${match.id}_${user.uid}`;
+                    // Create participation record
+                    const participationRef = doc(
+                        window.firebaseDb, 
+                        'matchParticipation', 
+                        `${selectedMatch.id}_${user.uid}`
+                    );
                     
-                    await setDoc(doc(window.firebaseDb, 'userTeams', teamId), {
-                        contestId: MAIN_CONTEST_ID,
-                        matchId: match.id,
+                    await setDoc(participationRef, {
+                        matchId: selectedMatch.id,
                         userId: user.uid,
-                        matchName: `${match.team1} vs ${match.team2}`,
-                        players: selectedPlayers,
-                        captain: captain,
-                        viceCaptain: viceCaptain,
-                        totalCredits: totalCredits,
-                        createdAt: new Date().toISOString()
+                        userEmail: user.email,
+                        joinedAt: new Date().toISOString(),
+                        points: 0
                     });
 
-                    alert('Team saved successfully!');
-                    onBack();
+                    // Initialize or update leaderboard entry
+                    const leaderboardRef = doc(window.firebaseDb, 'leaderboard', user.uid);
+                    const leaderboardDoc = await getDoc(leaderboardRef);
+
+                    if (leaderboardDoc.exists()) {
+                        await updateDoc(leaderboardRef, {
+                            matchesJoined: (leaderboardDoc.data().matchesJoined || 0) + 1,
+                            updatedAt: new Date().toISOString()
+                        });
+                    } else {
+                        await setDoc(leaderboardRef, {
+                            userId: user.uid,
+                            userEmail: user.email,
+                            totalPoints: 0,
+                            matchesJoined: 1,
+                            matchesPlayed: 0,
+                            createdAt: new Date().toISOString(),
+                            updatedAt: new Date().toISOString()
+                        });
+                    }
+
+                    alert('Successfully joined the match!');
+                    setHasJoined(true);
                 } catch (error) {
-                    console.error('Error saving team:', error);
-                    alert('Failed to save team');
+                    console.error('Error joining match:', error);
+                    alert('Failed to join match');
                 }
             };
 
             if (loading) {
-                return (
-                    <div className="card">
-                        <h2>Create Team</h2>
-                        <div className="loading">Loading players...</div>
-                    </div>
-                );
+                return <div className="card"><div className="loading">Loading matches...</div></div>;
             }
 
-            return (
-                <>
-                    <button onClick={onBack} className="btn" style={{ marginBottom: '20px' }}>
-                        ← Back to Matches
-                    </button>
-
+            if (selectedMatch) {
+                return (
                     <div className="card">
-                        <h2>🏏 {match.team1} vs {match.team2}</h2>
-                        <p style={{ color: '#94a3b8', marginBottom: '20px' }}>
-                            Select 11 players within 100 credits
-                        </p>
+                        <button 
+                            onClick={() => setSelectedMatch(null)} 
+                            className="btn btn-secondary" 
+                            style={{ marginBottom: '20px' }}
+                        >
+                            ← Back to Matches
+                        </button>
 
-                        <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '30px' }}>
-                            <div>
-                                <h3 style={{ marginBottom: '20px', color: '#10b981' }}>Available Players</h3>
-                                <div style={{ display: 'grid', gap: '15px' }}>
-                                    {players.map(player => (
-                                        <div 
-                                            key={player.id}
-                                            className={`player-card ${
-                                                selectedPlayers.find(p => p.id === player.id) ? 'selected' : ''
-                                            } ${captain === player.id ? 'captain' : ''} ${
-                                                viceCaptain === player.id ? 'vice-captain' : ''
-                                            }`}
-                                            onClick={() => togglePlayer(player)}
-                                        >
-                                            <div className="player-name">
-                                                {player.name}
-                                                {captain === player.id && ' 👑'}
-                                                {viceCaptain === player.id && ' ⭐'}
-                                            </div>
-                                            <div className="player-role">{player.role} • {player.team}</div>
-                                            <div className="player-credits">{player.credits} Credits</div>
-                                            
-                                            {selectedPlayers.find(p => p.id === player.id) && (
-                                                <div style={{ marginTop: '10px', display: 'flex', gap: '10px' }}>
-                                                    <button
-                                                        onClick={(e) => {
-                                                            e.stopPropagation();
-                                                            setCaptain(player.id);
-                                                        }}
-                                                        className="btn"
-                                                        style={{ fontSize: '0.8rem', padding: '6px 12px' }}
-                                                    >
-                                                        {captain === player.id ? '👑 Captain' : 'Make Captain'}
-                                                    </button>
-                                                    <button
-                                                        onClick={(e) => {
-                                                            e.stopPropagation();
-                                                            setViceCaptain(player.id);
-                                                        }}
-                                                        className="btn"
-                                                        style={{ fontSize: '0.8rem', padding: '6px 12px' }}
-                                                    >
-                                                        {viceCaptain === player.id ? '⭐ Vice Captain' : 'Make VC'}
-                                                    </button>
+                        <div className="match-header">
+                            <div className="teams">{selectedMatch.team1} vs {selectedMatch.team2}</div>
+                            <span className={`status-badge status-${selectedMatch.status || 'upcoming'}`}>
+                                {(selectedMatch.status || 'upcoming').toUpperCase()}
+                            </span>
+                        </div>
+
+                        <div className="match-info">
+                            <div className="info-item">
+                                <span className="info-label">Date & Time</span>
+                                <span className="info-value">
+                                    {new Date(selectedMatch.dateTime).toLocaleString()}
+                                </span>
+                            </div>
+                            <div className="info-item">
+                                <span className="info-label">Venue</span>
+                                <span className="info-value">{selectedMatch.venue}</span>
+                            </div>
+                        </div>
+
+                        {selectedMatch.status !== 'completed' && (
+                            <button 
+                                className="btn" 
+                                style={{ marginTop: '20px', width: '100%' }}
+                                onClick={joinMatch}
+                                disabled={hasJoined}
+                            >
+                                {hasJoined ? '✓ Joined' : 'Join This Match'}
+                            </button>
+                        )}
+
+                        <div className="players-section">
+                            <div className="team-section">
+                                <div className="team-header">
+                                    {selectedMatch.team1} - Squad ({players.team1.length} players)
+                                </div>
+                                <div className="players-grid">
+                                    {players.team1.map(player => (
+                                        <div key={player.id} className="player-card">
+                                            <div className="player-name">{player.name}</div>
+                                            <span className="player-role">{player.role}</span>
+                                            <div className="player-stats">
+                                                <div className="stat">
+                                                    <span className="stat-label">Type</span>
+                                                    <span className="stat-value">{player.type || 'All-rounder'}</span>
                                                 </div>
-                                            )}
+                                            </div>
                                         </div>
                                     ))}
                                 </div>
                             </div>
 
-                            <div className="team-summary">
-                                <h3 style={{ color: '#10b981', marginBottom: '15px' }}>Team Summary</h3>
-                                
-                                <div>
-                                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '5px' }}>
-                                        <span>Credits Used</span>
-                                        <span style={{ fontWeight: '700', color: totalCredits > 100 ? '#ef4444' : '#10b981' }}>
-                                            {totalCredits.toFixed(1)} / 100
-                                        </span>
-                                    </div>
-                                    <div className="credits-bar">
-                                        <div 
-                                            className={`credits-fill ${totalCredits > 100 ? 'over-budget' : ''}`}
-                                            style={{ width: `${Math.min(totalCredits, 100)}%` }}
-                                        ></div>
-                                    </div>
+                            <div className="team-section">
+                                <div className="team-header">
+                                    {selectedMatch.team2} - Squad ({players.team2.length} players)
                                 </div>
-
-                                <div style={{ margin: '15px 0' }}>
-                                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                        <span>Players Selected</span>
-                                        <span style={{ fontWeight: '700', color: selectedPlayers.length === 11 ? '#10b981' : '#f59e0b' }}>
-                                            {selectedPlayers.length} / 11
-                                        </span>
-                                    </div>
-                                </div>
-
-                                <div className="role-stats">
-                                    <div className="stat-item">
-                                        <span className="stat-label">WK</span>
-                                        <span className={`stat-value ${(roleCounts['Wicket-Keeper'] || 0) < 1 ? 'warning' : ''}`}>
-                                            {roleCounts['Wicket-Keeper'] || 0} (min 1)
-                                        </span>
-                                    </div>
-
-                                    <div className="stat-item">
-                                        <span className="stat-label">BAT</span>
-                                        <span className={`stat-value ${(roleCounts['Batsman'] || 0) < 3 ? 'warning' : ''}`}>
-                                            {roleCounts['Batsman'] || 0} (min 3)
-                                        </span>
-                                    </div>
-
-                                    <div className="stat-item">
-                                        <span className="stat-label">AR</span>
-                                        <span className={`stat-value ${(roleCounts['All-Rounder'] || 0) < 1 ? 'warning' : ''}`}>
-                                            {roleCounts['All-Rounder'] || 0} (min 1)
-                                        </span>
-                                    </div>
-
-                                    <div className="stat-item">
-                                        <span className="stat-label">BOWL</span>
-                                        <span className={`stat-value ${(roleCounts['Bowler'] || 0) < 3 ? 'warning' : ''}`}>
-                                            {roleCounts['Bowler'] || 0} (min 3)
-                                        </span>
-                                    </div>
-                                </div>
-
-                                <div className="selected-players-list">
-                                    <strong style={{ color: '#10b981', marginBottom: '10px', display: 'block' }}>
-                                        Selected Players
-                                    </strong>
-                                    {selectedPlayers.length === 0 ? (
-                                        <p style={{ color: '#94a3b8', fontSize: '0.9rem' }}>No players selected yet</p>
-                                    ) : (
-                                        selectedPlayers.map(player => (
-                                            <div key={player.id} className="selected-player">
-                                                <span>
-                                                    {player.name}
-                                                    {captain === player.id && ' 👑'}
-                                                    {viceCaptain === player.id && ' ⭐'}
-                                                </span>
-                                                <span>{player.credits}</span>
+                                <div className="players-grid">
+                                    {players.team2.map(player => (
+                                        <div key={player.id} className="player-card">
+                                            <div className="player-name">{player.name}</div>
+                                            <span className="player-role">{player.role}</span>
+                                            <div className="player-stats">
+                                                <div className="stat">
+                                                    <span className="stat-label">Type</span>
+                                                    <span className="stat-value">{player.type || 'All-rounder'}</span>
+                                                </div>
                                             </div>
-                                        ))
-                                    )}
+                                        </div>
+                                    ))}
                                 </div>
-
-                                <button 
-                                    className="btn" 
-                                    style={{ width: '100%', marginTop: '20px' }}
-                                    disabled={!canSaveTeam}
-                                    onClick={saveTeam}
-                                >
-                                    Save Team
-                                </button>
-
-                                {!canSaveTeam && selectedPlayers.length > 0 && (
-                                    <p style={{ color: '#f59e0b', fontSize: '0.85rem', marginTop: '10px', textAlign: 'center' }}>
-                                        {selectedPlayers.length < 11 && '⚠️ Select 11 players\n'}
-                                        {!captain && '⚠️ Choose Captain\n'}
-                                        {!viceCaptain && '⚠️ Choose Vice-Captain\n'}
-                                        {(roleCounts['Wicket-Keeper'] || 0) < 1 && '⚠️ Need 1 WK\n'}
-                                        {(roleCounts['Batsman'] || 0) < 3 && '⚠️ Need 3 BAT\n'}
-                                        {(roleCounts['All-Rounder'] || 0) < 1 && '⚠️ Need 1 AR\n'}
-                                        {(roleCounts['Bowler'] || 0) < 3 && '⚠️ Need 3 BOWL'}
-                                    </p>
-                                )}
                             </div>
                         </div>
-                    </div>
-                </>
-            );
-        }
-
-        // ==================== MY TEAMS COMPONENT (UPDATED) ====================
-        function MyTeams({ user }) {
-            const [teams, setTeams] = useState([]);
-            const [loading, setLoading] = useState(true);
-
-            useEffect(() => {
-                loadTeams();
-            }, []);
-
-            const loadTeams = async () => {
-                try {
-                    const { collection, query, where, getDocs } = window.firebaseModules;
-                    const teamsRef = collection(window.firebaseDb, 'userTeams');
-                    const q = query(
-                        teamsRef,
-                        where('userId', '==', user.uid),
-                        where('contestId', '==', MAIN_CONTEST_ID)
-                    );
-                    const snapshot = await getDocs(q);
-                    
-                    const teamsList = snapshot.docs.map(doc => ({
-                        id: doc.id,
-                        ...doc.data()
-                    }));
-                    
-                    setTeams(teamsList);
-                } catch (error) {
-                    console.error('Error loading teams:', error);
-                } finally {
-                    setLoading(false);
-                }
-            };
-
-            if (loading) {
-                return (
-                    <div className="card">
-                        <h2>👥 My Teams</h2>
-                        <div className="loading">Loading your teams...</div>
                     </div>
                 );
             }
 
             return (
                 <div className="card">
-                    <h2>👥 My Teams ({teams.length})</h2>
-                    {teams.length === 0 ? (
-                        <p style={{ textAlign: 'center', padding: '40px', color: '#94a3b8' }}>
-                            No teams created yet. Go to Matches to create your first team!
+                    <h2>🏏 All Matches</h2>
+                    
+                    {matches.length === 0 ? (
+                        <p style={{ textAlign: 'center', color: '#9ca3af', padding: '40px' }}>
+                            No matches available yet.
                         </p>
                     ) : (
-                        <div className="contest-list">
-                            {teams.map(team => (
-                                <div key={team.id} className="contest-item">
-                                    <div className="contest-header">
-                                        <div className="contest-title">{team.matchName}</div>
-                                        <span style={{ color: '#10b981', fontWeight: '700' }}>
-                                            {team.totalCredits.toFixed(1)} Credits
+                        <div className="match-list">
+                            {matches.map(match => (
+                                <div 
+                                    key={match.id} 
+                                    className="match-card"
+                                    onClick={() => setSelectedMatch(match)}
+                                >
+                                    <div className="match-header">
+                                        <div className="teams">{match.team1} vs {match.team2}</div>
+                                        <span className={`status-badge status-${match.status || 'upcoming'}`}>
+                                            {(match.status || 'upcoming').toUpperCase()}
                                         </span>
                                     </div>
                                     
-                                    <div style={{ marginTop: '15px' }}>
-                                        <strong style={{ color: '#cbd5e1' }}>Team Players:</strong>
-                                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '10px', marginTop: '10px' }}>
-                                            {team.players.map(player => (
-                                                <div key={player.id} style={{ 
-                                                    padding: '10px', 
-                                                    background: 'rgba(15, 23, 42, 0.6)', 
-                                                    borderRadius: '8px',
-                                                    fontSize: '0.9rem'
-                                                }}>
-                                                    <div style={{ fontWeight: '600', color: '#fff' }}>
-                                                        {player.name}
-                                                        {team.captain === player.id && ' 👑'}
-                                                        {team.viceCaptain === player.id && ' ⭐'}
-                                                    </div>
-                                                    <div style={{ color: '#94a3b8', fontSize: '0.85rem', marginTop: '4px' }}>
-                                                        {player.role} • {player.credits} Cr
-                                                    </div>
-                                                </div>
-                                            ))}
+                                    <div className="match-info">
+                                        <div className="info-item">
+                                            <span className="info-label">Date & Time</span>
+                                            <span className="info-value">
+                                                {new Date(match.dateTime).toLocaleString()}
+                                            </span>
+                                        </div>
+                                        <div className="info-item">
+                                            <span className="info-label">Venue</span>
+                                            <span className="info-value">{match.venue}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -1565,8 +1067,7 @@
             );
         }
 
-        // ==================== LEADERBOARD COMPONENT (UPDATED) ====================
-        function Leaderboard() {
+        function LeaderboardTab() {
             const [leaderboard, setLeaderboard] = useState([]);
             const [loading, setLoading] = useState(true);
 
@@ -1576,33 +1077,16 @@
 
             const loadLeaderboard = async () => {
                 try {
-                    const { collection, query, where, getDocs, doc, getDoc, orderBy } = window.firebaseModules;
-                    
-                    // ✅ UPDATED: Fetch contest-specific leaderboard
+                    const { collection, getDocs, orderBy, query } = window.firebaseModules;
                     const leaderboardRef = collection(window.firebaseDb, 'leaderboard');
-                    const q = query(
-                        leaderboardRef,
-                        where('contestId', '==', MAIN_CONTEST_ID),
-                        orderBy('totalPoints', 'desc')
-                    );
+                    const q = query(leaderboardRef, orderBy('totalPoints', 'desc'));
                     const snapshot = await getDocs(q);
                     
-                    const leaderboardData = await Promise.all(
-                        snapshot.docs.map(async (leaderDoc, index) => {
-                            const data = leaderDoc.data();
-                            
-                            // Get username
-                            const userDoc = await getDoc(doc(window.firebaseDb, 'users', data.userId));
-                            const username = userDoc.exists() ? userDoc.data().username : 'Unknown';
-                            
-                            return {
-                                rank: index + 1,
-                                username: username,
-                                points: data.totalPoints || 0,
-                                matchesPlayed: data.matchesPlayed || 0
-                            };
-                        })
-                    );
+                    const leaderboardData = snapshot.docs.map((doc, index) => ({
+                        id: doc.id,
+                        rank: index + 1,
+                        ...doc.data()
+                    }));
                     
                     setLeaderboard(leaderboardData);
                 } catch (error) {
@@ -1613,42 +1097,44 @@
             };
 
             if (loading) {
-                return (
-                    <div className="card">
-                        <h2>📊 Leaderboard</h2>
-                        <div className="loading">Loading leaderboard...</div>
-                    </div>
-                );
+                return <div className="card"><div className="loading">Loading leaderboard...</div></div>;
             }
 
             return (
                 <div className="card">
-                    <h2>📊 Leaderboard</h2>
+                    <h2>🏆 Leaderboard</h2>
+                    
                     {leaderboard.length === 0 ? (
-                        <p style={{ textAlign: 'center', padding: '40px', color: '#94a3b8' }}>
-                            No data yet. Leaderboard will update after matches are completed.
+                        <p style={{ textAlign: 'center', color: '#9ca3af', padding: '40px' }}>
+                            No players on the leaderboard yet. Join a match to get started!
                         </p>
                     ) : (
                         <table className="leaderboard-table">
                             <thead>
                                 <tr>
                                     <th>Rank</th>
-                                    <th>Username</th>
-                                    <th>Points</th>
-                                    <th>Matches</th>
+                                    <th>Player</th>
+                                    <th>Matches Joined</th>
+                                    <th>Matches Played</th>
+                                    <th>Total Points</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {leaderboard.map(entry => (
-                                    <tr key={entry.rank}>
+                                    <tr key={entry.id}>
                                         <td>
-                                            <span className={`rank-badge rank-${entry.rank <= 3 ? entry.rank : 'other'}`}>
-                                                {entry.rank}
+                                            <span className={`rank rank-${entry.rank}`}>
+                                                #{entry.rank}
                                             </span>
                                         </td>
-                                        <td style={{ fontWeight: 600 }}>{entry.username}</td>
-                                        <td style={{ color: '#10b981', fontWeight: 700 }}>{entry.points}</td>
-                                        <td>{entry.matchesPlayed}</td>
+                                        <td>{entry.userEmail}</td>
+                                        <td>{entry.matchesJoined || 0}</td>
+                                        <td>{entry.matchesPlayed || 0}</td>
+                                        <td>
+                                            <span className="points-highlight">
+                                                {entry.totalPoints || 0}
+                                            </span>
+                                        </td>
                                     </tr>
                                 ))}
                             </tbody>
@@ -1658,8 +1144,7 @@
             );
         }
 
-        // ==================== ADMIN PANEL (NEW) ====================
-        function AdminPanel() {
+        function AdminTab() {
             const [matches, setMatches] = useState([]);
             const [selectedMatch, setSelectedMatch] = useState(null);
             const [players, setPlayers] = useState([]);
@@ -1672,9 +1157,9 @@
 
             const loadMatches = async () => {
                 try {
-                    const { collection, query, where, getDocs } = window.firebaseModules;
+                    const { collection, getDocs, orderBy, query } = window.firebaseModules;
                     const matchesRef = collection(window.firebaseDb, 'matches');
-                    const q = query(matchesRef, where('contestId', '==', MAIN_CONTEST_ID));
+                    const q = query(matchesRef, orderBy('dateTime', 'asc'));
                     const snapshot = await getDocs(q);
                     
                     const matchesList = snapshot.docs.map(doc => ({
@@ -1691,33 +1176,31 @@
             };
 
             const loadMatchPlayers = async (match) => {
-                setSelectedMatch(match);
-                
                 try {
-                    const { collection, query, where, getDocs, doc, getDoc } = window.firebaseModules;
+                    const { collection, query, where, getDocs } = window.firebaseModules;
                     const playersRef = collection(window.firebaseDb, 'players');
-                    const q = query(playersRef, where('team', 'in', [match.team1, match.team2]));
-                    const snapshot = await getDocs(q);
                     
-                    const playersList = snapshot.docs.map(doc => ({
-                        id: doc.id,
-                        ...doc.data()
-                    }));
+                    const team1Query = query(playersRef, where('team', '==', match.team1));
+                    const team2Query = query(playersRef, where('team', '==', match.team2));
                     
-                    setPlayers(playersList);
-
-                    // Load existing scores
+                    const [team1Snapshot, team2Snapshot] = await Promise.all([
+                        getDocs(team1Query),
+                        getDocs(team2Query)
+                    ]);
+                    
+                    const allPlayers = [
+                        ...team1Snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })),
+                        ...team2Snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }))
+                    ];
+                    
+                    setPlayers(allPlayers);
+                    setSelectedMatch(match);
+                    
+                    // Initialize scores
                     const scores = {};
-                    for (const player of playersList) {
-                        const scoreDoc = await getDoc(
-                            doc(window.firebaseDb, 'playerMatchPoints', `${match.id}_${player.id}`)
-                        );
-                        if (scoreDoc.exists()) {
-                            scores[player.id] = scoreDoc.data();
-                        } else {
-                            scores[player.id] = { runs: 0, wickets: 0, catches: 0, bonus: 0 };
-                        }
-                    }
+                    allPlayers.forEach(player => {
+                        scores[player.id] = { runs: 0, wickets: 0, catches: 0, bonus: 0 };
+                    });
                     setPlayerScores(scores);
                 } catch (error) {
                     console.error('Error loading players:', error);
@@ -1735,20 +1218,15 @@
             };
 
             const calculatePoints = (score) => {
-                let points = 0;
-                points += score.runs * 1; // 1 point per run
-                points += score.wickets * 25; // 25 points per wicket
-                points += score.catches * 10; // 10 points per catch
-                points += score.bonus || 0;
-                return points;
+                const { runs = 0, wickets = 0, catches = 0, bonus = 0 } = score;
+                return (runs * 1) + (wickets * 25) + (catches * 8) + bonus;
             };
 
-            // ✅ NEW: Save match results and update leaderboard
             const saveMatchResults = async () => {
                 if (!selectedMatch) return;
 
                 try {
-                    const { doc, setDoc, getDoc, updateDoc, collection, query, where, getDocs, writeBatch } = window.firebaseModules;
+                    const { writeBatch, doc, collection, query, where, getDocs, getDoc, updateDoc } = window.firebaseModules;
                     const batch = writeBatch(window.firebaseDb);
 
                     // 1. Save player match points
@@ -1778,8 +1256,8 @@
 
                     await batch.commit();
 
-                    // 3. Calculate and update team points
-                    await calculateTeamPoints(selectedMatch.id);
+                    // 3. Update leaderboard for all participants
+                    await updateLeaderboard(selectedMatch.id);
 
                     alert('Match results saved and leaderboard updated!');
                     setSelectedMatch(null);
@@ -1790,59 +1268,42 @@
                 }
             };
 
-            // ✅ NEW: Calculate team points for all users
-            const calculateTeamPoints = async (matchId) => {
+            const updateLeaderboard = async (matchId) => {
                 try {
                     const { collection, query, where, getDocs, doc, getDoc, updateDoc } = window.firebaseModules;
                     
-                    // Get all teams for this match
-                    const teamsRef = collection(window.firebaseDb, 'userTeams');
-                    const q = query(teamsRef, where('matchId', '==', matchId));
-                    const teamsSnapshot = await getDocs(q);
+                    // Get all participants for this match
+                    const participantsRef = collection(window.firebaseDb, 'matchParticipation');
+                    const q = query(participantsRef, where('matchId', '==', matchId));
+                    const participantsSnapshot = await getDocs(q);
 
-                    for (const teamDoc of teamsSnapshot.docs) {
-                        const team = teamDoc.data();
-                        let totalTeamPoints = 0;
+                    for (const participantDoc of participantsSnapshot.docs) {
+                        const participant = participantDoc.data();
+                        const userId = participant.userId;
 
-                        // Calculate points for each player
-                        for (const player of team.players) {
-                            const playerPointsDoc = await getDoc(
-                                doc(window.firebaseDb, 'playerMatchPoints', `${matchId}_${player.id}`)
-                            );
-                            
-                            if (playerPointsDoc.exists()) {
-                                let playerPoints = playerPointsDoc.data().totalPoints || 0;
-                                
-                                // Apply captain/vice-captain multipliers
-                                if (player.id === team.captain) {
-                                    playerPoints *= 2; // Captain gets 2x points
-                                } else if (player.id === team.viceCaptain) {
-                                    playerPoints *= 1.5; // Vice-captain gets 1.5x points
-                                }
-                                
-                                totalTeamPoints += playerPoints;
-                            }
+                        // Calculate total points from all players in this match
+                        let totalMatchPoints = 0;
+                        
+                        for (const playerId in playerScores) {
+                            const points = calculatePoints(playerScores[playerId]);
+                            totalMatchPoints += points;
                         }
 
                         // Update leaderboard
-                        const leaderboardRef = doc(
-                            window.firebaseDb,
-                            'leaderboard',
-                            `${MAIN_CONTEST_ID}_${team.userId}`
-                        );
+                        const leaderboardRef = doc(window.firebaseDb, 'leaderboard', userId);
                         const leaderboardDoc = await getDoc(leaderboardRef);
                         
                         if (leaderboardDoc.exists()) {
                             const currentData = leaderboardDoc.data();
                             await updateDoc(leaderboardRef, {
-                                totalPoints: (currentData.totalPoints || 0) + totalTeamPoints,
+                                totalPoints: (currentData.totalPoints || 0) + totalMatchPoints,
                                 matchesPlayed: (currentData.matchesPlayed || 0) + 1,
                                 updatedAt: new Date().toISOString()
                             });
                         }
                     }
                 } catch (error) {
-                    console.error('Error calculating team points:', error);
+                    console.error('Error updating leaderboard:', error);
                 }
             };
 
@@ -1858,7 +1319,11 @@
             if (selectedMatch) {
                 return (
                     <div className="card">
-                        <button onClick={() => setSelectedMatch(null)} className="btn" style={{ marginBottom: '20px' }}>
+                        <button 
+                            onClick={() => setSelectedMatch(null)} 
+                            className="btn btn-secondary" 
+                            style={{ marginBottom: '20px' }}
+                        >
                             ← Back to Matches
                         </button>
 
@@ -1902,7 +1367,11 @@
                                 </div>
                             ))}
 
-                            <button onClick={saveMatchResults} className="btn" style={{ marginTop: '20px' }}>
+                            <button 
+                                onClick={saveMatchResults} 
+                                className="btn" 
+                                style={{ marginTop: '20px', width: '100%' }}
+                            >
                                 Save Results & Update Leaderboard
                             </button>
                         </div>
@@ -1916,11 +1385,11 @@
                     
                     <div className="admin-section">
                         <h3>Manage Match Results</h3>
-                        <div className="contest-list">
+                        <div className="match-list">
                             {matches.map(match => (
-                                <div key={match.id} className="contest-item">
-                                    <div className="contest-header">
-                                        <div className="contest-title">{match.team1} vs {match.team2}</div>
+                                <div key={match.id} className="match-card">
+                                    <div className="match-header">
+                                        <div className="teams">{match.team1} vs {match.team2}</div>
                                         <span className={`status-badge status-${match.status || 'upcoming'}`}>
                                             {(match.status || 'upcoming').toUpperCase()}
                                         </span>
