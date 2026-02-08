@@ -488,17 +488,6 @@
     <script type="text/babel">
         const { useState, useEffect } = React;
 
-        // ===== FIREBASE CONFIGURATION =====
-        // 🔥 REPLACE WITH YOUR FIREBASE CONFIG
-        const firebaseConfig = {
-            apiKey: "AIzaSyAOi9xHXDkpU-_nTGY8r6sPyIh8lWNz5gQ",
-            authDomain: "t20-fantasy-contest.firebaseapp.com",
-            projectId: "t20-fantasy-contest",
-            storageBucket: "t20-fantasy-contest.firebasestorage.app",
-            messagingSenderId: "970758732651",
-            appId: "1:970758732651:web:a7ff4d16ac8919a0f5ed2a"
-        };
-
         // Initialize Firebase
         if (!firebase.apps.length) {
             firebase.initializeApp(firebaseConfig);
