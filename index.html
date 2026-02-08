@@ -460,6 +460,42 @@
             margin-bottom: 5px;
             color: #60a5fa;
         }
+
+        .warning-box {
+            background: rgba(251, 191, 36, 0.15);
+            border: 2px solid #f59e0b;
+            color: #fcd34d;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px auto;
+            max-width: 600px;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .warning-box strong {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+            color: #fbbf24;
+        }
+
+        .warning-box ol {
+            margin-left: 25px;
+            margin-top: 10px;
+        }
+
+        .warning-box li {
+            margin-bottom: 8px;
+        }
+
+        .warning-box code {
+            background: rgba(0,0,0,0.3);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+            color: #93c5fd;
+        }
     </style>
 </head>
 <body>
@@ -470,6 +506,38 @@
 
         // ===== FIREBASE CONFIGURATION =====
         // 🔥 REPLACE WITH YOUR FIREBASE CONFIG
+        // ========================================
+        // FIREBASE CONFIGURATION
+        // ========================================
+        // IMPORTANT: Replace this with YOUR Firebase project credentials
+        // 
+        // Steps to get your Firebase config:
+        // 1. Go to https://console.firebase.google.com/
+        // 2. Create a new project or select existing one
+        // 3. Click the Web icon (</>) to add a web app
+        // 4. Register your app and copy the config values below
+        // 5. Enable Authentication (Email/Password) in Firebase Console
+        // 6. Enable Firestore Database in Firebase Console
+        // ========================================
+        
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY_HERE",
+            authDomain: "your-project.firebaseapp.com",
+            projectId: "your-project-id",
+            storageBucket: "your-project.firebasestorage.app",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
+        
+        // ========================================
+        // Alternative: If you want to use the old config, make sure:
+        // 1. The Firebase project exists
+        // 2. The API key is valid and not restricted
+        // 3. Authentication and Firestore are enabled
+        // 
+        // Uncomment below to use old config:
+        // ========================================
+        /*
         const firebaseConfig = {
             apiKey: "AIzaSyAOi9xHXDkpU-_nTGY8r6sPyIh8lWNz5gQ",
             authDomain: "t20-fantasy-contest.firebaseapp.com",
@@ -478,14 +546,28 @@
             messagingSenderId: "970758732651",
             appId: "1:970758732651:web:a7ff4d16ac8919a0f5ed2a"
         };
+        */
 
-        // Initialize Firebase
-        if (!firebase.apps.length) {
-            firebase.initializeApp(firebaseConfig);
+        // Initialize Firebase with error handling
+        let db, auth;
+        
+        try {
+            if (!firebase.apps.length) {
+                // Check if config is placeholder
+                if (firebaseConfig.apiKey === "YOUR_API_KEY_HERE") {
+                    throw new Error("Firebase not configured. Please add your Firebase credentials.");
+                }
+                firebase.initializeApp(firebaseConfig);
+            }
+            
+            db = firebase.firestore();
+            auth = firebase.auth();
+            
+            console.log("✅ Firebase initialized successfully!");
+        } catch (error) {
+            console.error("❌ Firebase initialization error:", error);
+            alert(`Firebase Configuration Error: ${error.message}\n\nPlease update the firebaseConfig with your actual Firebase credentials.`);
         }
-
-        const db = firebase.firestore();
-        const auth = firebase.auth();
 
         // ===== T20 WORLD CUP 2026 DATA =====
         const TEAMS_DATA = {
@@ -1044,47 +1126,64 @@
                 <div className="login-container">
                     <h2>🏏 Login to Fantasy Cricket</h2>
                     
-                    <div className="info-box">
-                        <strong>📌 Firestore Integration Active</strong>
-                        Login with your username or email from Firestore database.
-                    </div>
-
-                    {error && <div className="error-message">{error}</div>}
-                    {success && <div className="success-message">{success}</div>}
-
-                    <form onSubmit={handleLogin}>
-                        <div className="form-group">
-                            <label>Username / Email</label>
-                            <input
-                                type="text"
-                                value={identifier}
-                                onChange={(e) => setIdentifier(e.target.value)}
-                                placeholder="Enter username or email"
-                                required
-                                disabled={loading}
-                            />
+                    {firebaseConfig.apiKey === "YOUR_API_KEY_HERE" ? (
+                        <div className="warning-box">
+                            <strong>⚠️ Firebase Not Configured</strong>
+                            Please configure Firebase before using this app:
+                            <ol>
+                                <li>Go to <a href="https://console.firebase.google.com/" target="_blank" style={{color: '#60a5fa'}}>Firebase Console</a></li>
+                                <li>Create a new project or select existing one</li>
+                                <li>Click the Web icon <code>&lt;/&gt;</code> to add a web app</li>
+                                <li>Copy the config and replace the <code>firebaseConfig</code> in the code (line ~473)</li>
+                                <li>Enable <strong>Authentication</strong> (Email/Password method)</li>
+                                <li>Enable <strong>Firestore Database</strong></li>
+                            </ol>
                         </div>
+                    ) : (
+                        <>
+                            <div className="info-box">
+                                <strong>📌 Firestore Integration Active</strong>
+                                Login with your username or email from Firestore database.
+                            </div>
 
-                        <div className="form-group">
-                            <label>Password</label>
-                            <input
-                                type="password"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                                placeholder="Enter password"
-                                required
-                                disabled={loading}
-                            />
-                        </div>
+                            {error && <div className="error-message">{error}</div>}
+                            {success && <div className="success-message">{success}</div>}
 
-                        <button type="submit" className="btn" disabled={loading}>
-                            {loading ? 'Logging in...' : 'Login'}
-                        </button>
-                    </form>
+                            <form onSubmit={handleLogin}>
+                                <div className="form-group">
+                                    <label>Username / Email</label>
+                                    <input
+                                        type="text"
+                                        value={identifier}
+                                        onChange={(e) => setIdentifier(e.target.value)}
+                                        placeholder="Enter username or email"
+                                        required
+                                        disabled={loading}
+                                    />
+                                </div>
 
-                    <p style={{ marginTop: '20px', textAlign: 'center', color: '#8892b0', fontSize: '0.9rem' }}>
-                        Example: Username "SubhesGlim" with your Firestore password
-                    </p>
+                                <div className="form-group">
+                                    <label>Password</label>
+                                    <input
+                                        type="password"
+                                        value={password}
+                                        onChange={(e) => setPassword(e.target.value)}
+                                        placeholder="Enter password"
+                                        required
+                                        disabled={loading}
+                                    />
+                                </div>
+
+                                <button type="submit" className="btn" disabled={loading}>
+                                    {loading ? 'Logging in...' : 'Login'}
+                                </button>
+                            </form>
+
+                            <p style={{ marginTop: '20px', textAlign: 'center', color: '#8892b0', fontSize: '0.9rem' }}>
+                                Example: Username "SubhesGlim" with your Firestore password
+                            </p>
+                        </>
+                    )}
                 </div>
             );
         }
