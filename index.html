@@ -13,8 +13,7 @@
     <!-- Firebase v9 -->
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
-        import { getFirestore, collection, query, where, getDocs, addDoc, orderBy, Timestamp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+        import { getFirestore, collection, query, where, getDocs, addDoc, orderBy, Timestamp, doc, getDoc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
 
         const firebaseConfig = {
             apiKey: "AIzaSyDacks7Qnk42D2898leU_kgG8DZsYTFxCw",
@@ -27,15 +26,11 @@
         };
 
         const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
         const db = getFirestore(app);
         
-        window.firebaseAuth = auth;
         window.firebaseDb = db;
         window.firebaseModules = {
-            collection, query, where, getDocs, addDoc, orderBy,
-            signInWithEmailAndPassword, createUserWithEmailAndPassword,
-            signOut, onAuthStateChanged, Timestamp
+            collection, query, where, getDocs, addDoc, orderBy, Timestamp, doc, getDoc
         };
         window.firebaseReady = true;
         
@@ -189,23 +184,133 @@
         }
 
         .teams {
-            font-family: 'Orbitron', sans-serif;
             font-size: 1.3rem;
             font-weight: 700;
-            color: #e0e6ed;
+            color: #ffffff;
+        }
+
+        .match-time {
+            background: #10b981;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
         }
 
         .match-info {
             display: flex;
             gap: 20px;
+            margin-top: 10px;
+            font-size: 0.9rem;
             color: #8b92a7;
-            font-size: 0.95rem;
-            flex-wrap: wrap;
+        }
+
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .login-card {
+            background: #151a2b;
+            padding: 50px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(16, 185, 129, 0.2);
+            max-width: 450px;
+            width: 100%;
+            border: 1px solid #2a3142;
+        }
+
+        .login-card h1 {
+            font-family: 'Orbitron', sans-serif;
+            color: #10b981;
+            text-align: center;
+            margin-bottom: 40px;
+            font-size: 2.5rem;
+        }
+
+        .info-notice {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid #10b981;
+            border-radius: 10px;
+            padding: 12px 15px;
+            margin-bottom: 25px;
+            font-size: 0.85rem;
+            color: #10b981;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #8b92a7;
+            font-weight: 600;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 15px;
+            background: #1a1f2e;
+            border: 2px solid #2a3142;
+            border-radius: 10px;
+            color: white;
+            font-size: 1rem;
+            transition: border 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #10b981;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #10b981, #059669);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(16, 185, 129, 0.4);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .error-display {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid #ef4444;
+            color: #ef4444;
+            padding: 12px 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #10b981;
+            font-size: 1.2rem;
         }
 
         .players-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
             gap: 15px;
             margin-top: 20px;
         }
@@ -217,53 +322,57 @@
             border: 2px solid #2a3142;
             cursor: pointer;
             transition: all 0.3s;
+            position: relative;
         }
 
-        .player-card:hover { border-color: #10b981; }
+        .player-card:hover {
+            border-color: #10b981;
+            transform: translateY(-2px);
+        }
 
         .player-card.selected {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(5, 150, 105, 0.1));
             border-color: #10b981;
-            background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(5, 150, 105, 0.1));
         }
 
         .player-card.disabled {
-            opacity: 0.5;
+            opacity: 0.4;
             cursor: not-allowed;
+        }
+
+        .player-card.disabled:hover {
+            transform: none;
         }
 
         .player-name {
             font-weight: 700;
             font-size: 1.1rem;
-            margin-bottom: 8px;
-            color: #e0e6ed;
+            margin-bottom: 5px;
+        }
+
+        .player-team {
+            color: #8b92a7;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
         }
 
         .player-meta {
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
+            margin-top: 10px;
         }
 
         .player-role {
-            background: #2a3142;
-            padding: 4px 12px;
-            border-radius: 6px;
-            font-size: 0.85rem;
-            color: #10b981;
+            background: #10b981;
+            padding: 4px 10px;
+            border-radius: 5px;
+            font-size: 0.8rem;
             font-weight: 600;
         }
 
         .player-credits {
-            color: #10b981;
+            color: #fbbf24;
             font-weight: 700;
-            font-size: 1.1rem;
-        }
-
-        .player-team {
-            font-size: 0.9rem;
-            color: #60a5fa;
-            margin-bottom: 10px;
         }
 
         .captain-buttons {
@@ -274,47 +383,30 @@
 
         .captain-btn {
             flex: 1;
-            padding: 8px;
+            padding: 6px;
             background: #2a3142;
-            border: none;
-            border-radius: 8px;
-            color: #8b92a7;
+            border: 1px solid #3a4152;
+            border-radius: 6px;
+            color: white;
+            font-size: 0.85rem;
             cursor: pointer;
-            font-weight: 600;
             transition: all 0.3s;
+        }
+
+        .captain-btn:hover {
+            background: #3a4152;
         }
 
         .captain-btn.active-captain {
-            background: #10b981;
-            color: white;
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            border-color: #fbbf24;
+            font-weight: 700;
         }
 
         .captain-btn.active-vc {
-            background: #3b82f6;
-            color: white;
-        }
-
-        .btn {
-            padding: 12px 30px;
-            background: linear-gradient(135deg, #10b981, #059669);
-            border: none;
-            border-radius: 10px;
-            color: white;
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+            border-color: #8b5cf6;
             font-weight: 700;
-            cursor: pointer;
-            font-size: 1rem;
-            transition: all 0.3s;
-        }
-
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4);
-        }
-
-        .btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
         }
 
         .team-summary {
@@ -322,20 +414,21 @@
             padding: 20px;
             border-radius: 12px;
             margin-bottom: 20px;
-            border: 2px solid #2a3142;
         }
 
         .summary-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
             gap: 15px;
         }
 
-        .summary-item { text-align: center; }
+        .summary-item {
+            text-align: center;
+        }
 
         .summary-label {
-            font-size: 0.9rem;
             color: #8b92a7;
+            font-size: 0.85rem;
             margin-bottom: 5px;
         }
 
@@ -345,84 +438,20 @@
             color: #10b981;
         }
 
-        .validation-errors {
-            background: rgba(239, 68, 68, 0.1);
-            border: 2px solid #ef4444;
+        .search-box {
+            width: 100%;
+            padding: 12px 20px;
+            background: #1a1f2e;
+            border: 2px solid #2a3142;
             border-radius: 10px;
-            padding: 15px;
+            color: white;
+            font-size: 1rem;
             margin-bottom: 20px;
         }
 
-        .validation-errors h4 {
-            color: #ef4444;
-            margin-bottom: 10px;
-        }
-
-        .validation-errors ul {
-            margin-left: 20px;
-            color: #fca5a5;
-        }
-
-        .loading {
-            text-align: center;
-            padding: 60px 20px;
-            font-size: 1.2rem;
-            color: #8b92a7;
-        }
-
-        .auth-container {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .auth-card {
-            background: #151a2b;
-            padding: 40px;
-            border-radius: 20px;
-            max-width: 450px;
-            width: 100%;
-            border: 1px solid #2a3142;
-        }
-
-        .auth-card h2 {
-            font-family: 'Orbitron', sans-serif;
-            text-align: center;
-            color: #10b981;
-            margin-bottom: 30px;
-            font-size: 2rem;
-        }
-
-        .form-group { margin-bottom: 20px; }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            color: #8b92a7;
-            font-weight: 600;
-        }
-
-        .form-group input {
-            width: 100%;
-            padding: 12px 15px;
-            background: #1a1f2e;
-            border: 2px solid #2a3142;
-            border-radius: 8px;
-            color: #e0e6ed;
-            font-size: 1rem;
-        }
-
-        .form-group input:focus {
+        .search-box:focus {
             outline: none;
             border-color: #10b981;
-        }
-
-        .auth-toggle {
-            text-align: center;
-            margin-top: 20px;
-            color: #8b92a7;
-            font-size: 0.9rem;
         }
 
         .role-tabs {
@@ -437,84 +466,65 @@
             background: #1a1f2e;
             border: 2px solid #2a3142;
             border-radius: 8px;
-            color: #8b92a7;
             cursor: pointer;
             font-weight: 600;
             transition: all 0.3s;
         }
 
         .role-tab.active {
+            background: #10b981;
             border-color: #10b981;
-            background: rgba(16, 185, 129, 0.1);
-            color: #10b981;
         }
 
-        .search-box {
-            width: 100%;
-            padding: 12px 15px;
-            background: #1a1f2e;
-            border: 2px solid #2a3142;
+        .validation-errors {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid #ef4444;
             border-radius: 10px;
-            color: #e0e6ed;
-            font-size: 1rem;
+            padding: 15px;
             margin-bottom: 20px;
         }
 
-        .search-box:focus {
-            outline: none;
-            border-color: #10b981;
+        .validation-errors h4 {
+            color: #ef4444;
+            margin-bottom: 10px;
         }
 
-        .admin-badge {
-            background: #ef4444;
-            color: white;
-            padding: 3px 10px;
-            border-radius: 12px;
-            font-size: 0.75rem;
-            margin-left: 10px;
+        .validation-errors ul {
+            margin-left: 20px;
+            color: #ef4444;
+        }
+
+        .leaderboard-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .leaderboard-table th,
+        .leaderboard-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #2a3142;
+        }
+
+        .leaderboard-table th {
+            background: #1a1f2e;
+            color: #10b981;
             font-weight: 700;
         }
 
-        .error-display {
-            background: rgba(239, 68, 68, 0.1);
-            border: 1px solid #ef4444;
-            color: #fca5a5;
-            padding: 15px;
-            border-radius: 10px;
-            margin: 20px 0;
+        .leaderboard-table tr:hover {
+            background: #1a1f2e;
         }
 
-        .success-display {
-            background: rgba(16, 185, 129, 0.1);
-            border: 1px solid #10b981;
-            color: #6ee7b7;
-            padding: 15px;
-            border-radius: 10px;
-            margin: 20px 0;
+        .rank {
+            font-weight: 700;
+            color: #10b981;
         }
 
-        .info-box {
-            background: rgba(59, 130, 246, 0.1);
-            border: 1px solid #3b82f6;
-            color: #93c5fd;
-            padding: 12px 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            font-size: 0.9rem;
-        }
-
-        @media (max-width: 768px) {
-            .header h1 { font-size: 2rem; }
-            .user-badge, .logout-btn {
-                position: static;
-                display: block;
-                margin: 10px auto;
-                width: fit-content;
-            }
-            .players-grid { grid-template-columns: 1fr; }
-            .tabs { flex-direction: column; }
-            .tab { min-width: 100%; }
-        }
+        .rank.gold { color: #fbbf24; }
+        .rank.silver { color: #d1d5db; }
+        .rank.bronze { color: #cd7f32; }
     </style>
 </head>
 <body>
@@ -528,150 +538,22 @@
             const [loading, setLoading] = useState(true);
 
             useEffect(() => {
-                const checkAuth = setInterval(() => {
-                    if (window.firebaseReady) {
-                        clearInterval(checkAuth);
-                        
-                        const { onAuthStateChanged } = window.firebaseModules;
-                        
-                        onAuthStateChanged(window.firebaseAuth, async (firebaseUser) => {
-                            if (firebaseUser) {
-                                try {
-                                    const { collection, query, where, getDocs } = window.firebaseModules;
-                                    const usersRef = collection(window.firebaseDb, 'users');
-                                    const q = query(usersRef, where('email', '==', firebaseUser.email));
-                                    const querySnapshot = await getDocs(q);
-                                    
-                                    if (!querySnapshot.empty) {
-                                        const userData = querySnapshot.docs[0].data();
-                                        setUser({
-                                            ...firebaseUser,
-                                            ...userData,
-                                            uid: firebaseUser.uid
-                                        });
-                                    } else {
-                                        setUser(firebaseUser);
-                                    }
-                                } catch (error) {
-                                    console.error('Error loading user data:', error);
-                                    setUser(firebaseUser);
-                                }
-                            } else {
-                                setUser(null);
-                            }
-                            setLoading(false);
-                        });
-                    }
-                }, 100);
-
-                return () => clearInterval(checkAuth);
+                // Check for stored session
+                const storedUser = localStorage.getItem('fantasyUser');
+                if (storedUser) {
+                    setUser(JSON.parse(storedUser));
+                }
+                setLoading(false);
             }, []);
 
-            const handleAuth = async (e) => {
-                e.preventDefault();
-                const username = e.target.username.value.trim();
-                const password = e.target.password.value;
-
-                if (!username || !password) {
-                    alert('Please enter both username and password');
-                    return;
-                }
-
-                try {
-                    const { collection, query, where, getDocs, signInWithEmailAndPassword, createUserWithEmailAndPassword } = window.firebaseModules;
-                    
-                    console.log('🔍 Looking up user:', username);
-                    
-                    // Search for user in Firestore
-                    const usersRef = collection(window.firebaseDb, 'users');
-                    const q = query(usersRef, where('username', '==', username));
-                    const querySnapshot = await getDocs(q);
-                    
-                    if (querySnapshot.empty) {
-                        console.error('❌ User not found in Firestore');
-                        alert('User not found. Please check your username or contact admin.');
-                        return;
-                    }
-                    
-                    const userDoc = querySnapshot.docs[0];
-                    const userData = userDoc.data();
-                    
-                    console.log('✅ User found in Firestore:', userData.username);
-                    
-                    // Verify password matches Firestore
-                    if (userData.password !== password) {
-                        console.error('❌ Password mismatch');
-                        alert('Incorrect password. Please try again.');
-                        return;
-                    }
-                    
-                    console.log('✅ Password verified');
-                    
-                    // Generate email if not present
-                    const email = userData.email || `${username}@fantasy-cricket.local`;
-                    
-                    console.log('📧 Using email:', email);
-                    
-                    // Try to sign in to Firebase Auth
-                    try {
-                        await signInWithEmailAndPassword(window.firebaseAuth, email, password);
-                        console.log('✅ Signed in with existing Firebase Auth account');
-                    } catch (signInError) {
-                        console.log('⚠️ Firebase Auth account not found:', signInError.code);
-                        
-                        if (signInError.code === 'auth/user-not-found' || signInError.code === 'auth/wrong-password') {
-                            // Create new Firebase Auth account
-                            console.log('🔨 Creating new Firebase Auth account...');
-                            try {
-                                const userCredential = await createUserWithEmailAndPassword(window.firebaseAuth, email, password);
-                                console.log('✅ Firebase Auth account created successfully');
-                                
-                                // Update display name if available
-                                if (userData.name && userCredential.user.updateProfile) {
-                                    await userCredential.user.updateProfile({
-                                        displayName: userData.name
-                                    });
-                                }
-                            } catch (createError) {
-                                console.error('❌ Error creating Firebase Auth account:', createError);
-                                
-                                if (createError.code === 'auth/email-already-in-use') {
-                                    // Email exists but password doesn't match - try signing in again
-                                    console.log('🔄 Email exists, retrying sign in...');
-                                    await signInWithEmailAndPassword(window.firebaseAuth, email, password);
-                                } else {
-                                    throw createError;
-                                }
-                            }
-                        } else {
-                            throw signInError;
-                        }
-                    }
-                    
-                    console.log('🎉 Login successful!');
-                    
-                } catch (error) {
-                    console.error('❌ Login error:', error);
-                    console.error('Error code:', error.code);
-                    console.error('Error message:', error.message);
-                    
-                    let errorMessage = 'Login failed. Please try again.';
-                    
-                    if (error.code === 'auth/invalid-email') {
-                        errorMessage = 'Invalid email format. Contact admin.';
-                    } else if (error.code === 'auth/weak-password') {
-                        errorMessage = 'Password must be at least 6 characters.';
-                    } else if (error.code === 'auth/network-request-failed') {
-                        errorMessage = 'Network error. Check your connection.';
-                    }
-                    
-                    alert(errorMessage);
-                }
+            const handleLogin = (userData) => {
+                setUser(userData);
+                localStorage.setItem('fantasyUser', JSON.stringify(userData));
             };
 
-            const handleLogout = async () => {
-                const { signOut } = window.firebaseModules;
-                await signOut(window.firebaseAuth);
+            const handleLogout = () => {
+                setUser(null);
+                localStorage.removeItem('fantasyUser');
             };
 
             if (loading) {
@@ -679,88 +561,156 @@
             }
 
             if (!user) {
-                return (
-                    <div className="auth-container">
-                        <div className="auth-card">
-                            <h2>🏏 LOGIN</h2>
-                            
-                            <div className="info-box">
-                                <strong>ℹ️ For New Users:</strong> Use your Firestore username and password. Account will be created automatically on first login.
-                            </div>
-                            
-                            <form onSubmit={handleAuth}>
-                                <div className="form-group">
-                                    <label>Username</label>
-                                    <input 
-                                        type="text" 
-                                        name="username" 
-                                        required 
-                                        autoComplete="username"
-                                        placeholder="Enter your username"
-                                    />
-                                </div>
-                                <div className="form-group">
-                                    <label>Password</label>
-                                    <input 
-                                        type="password" 
-                                        name="password" 
-                                        required 
-                                        placeholder="Enter your password"
-                                    />
-                                </div>
-                                <button type="submit" className="btn" style={{ width: '100%' }}>
-                                    Login
-                                </button>
-                            </form>
-                            <div className="auth-toggle">
-                                Contact admin to add you to Firestore
-                            </div>
-                        </div>
-                    </div>
-                );
+                return <LoginPage onLogin={handleLogin} />;
             }
 
-            return <Dashboard user={user} onLogout={handleLogout} />;
+            return <MainApp user={user} onLogout={handleLogout} />;
         }
 
-        function Dashboard({ user, onLogout }) {
+        function LoginPage({ onLogin }) {
+            const [username, setUsername] = useState('');
+            const [password, setPassword] = useState('');
+            const [error, setError] = useState('');
+            const [loading, setLoading] = useState(false);
+
+            const handleSubmit = async (e) => {
+                e.preventDefault();
+                setError('');
+                setLoading(true);
+
+                try {
+                    // Wait for Firebase to be ready
+                    if (!window.firebaseReady) {
+                        await new Promise(resolve => {
+                            const check = setInterval(() => {
+                                if (window.firebaseReady) {
+                                    clearInterval(check);
+                                    resolve();
+                                }
+                            }, 100);
+                        });
+                    }
+
+                    const { collection, query, where, getDocs } = window.firebaseModules;
+                    const usersRef = collection(window.firebaseDb, 'users');
+                    const q = query(usersRef, where('username', '==', username));
+                    const snapshot = await getDocs(q);
+
+                    if (snapshot.empty) {
+                        setError('User not found');
+                        setLoading(false);
+                        return;
+                    }
+
+                    let userDoc = null;
+                    snapshot.forEach(doc => {
+                        userDoc = { id: doc.id, ...doc.data() };
+                    });
+
+                    if (userDoc.password !== password) {
+                        setError('Incorrect password');
+                        setLoading(false);
+                        return;
+                    }
+
+                    // Successful login
+                    onLogin({
+                        uid: userDoc.id,
+                        username: userDoc.username,
+                        name: userDoc.name,
+                        email: userDoc.email,
+                        isAdmin: userDoc.isAdmin || false
+                    });
+
+                } catch (err) {
+                    console.error('Login error:', err);
+                    setError('Login failed. Please try again.');
+                } finally {
+                    setLoading(false);
+                }
+            };
+
+            return (
+                <div className="login-container">
+                    <div className="login-card">
+                        <h1>🏏 LOGIN</h1>
+                        
+                        <div className="info-notice">
+                            📋 For New Users: Use your Firestore username and password. Account will be created automatically on first login.
+                        </div>
+
+                        {error && <div className="error-display"><strong>⚠️</strong> {error}</div>}
+
+                        <form onSubmit={handleSubmit}>
+                            <div className="form-group">
+                                <label>Username</label>
+                                <input
+                                    type="text"
+                                    value={username}
+                                    onChange={(e) => setUsername(e.target.value)}
+                                    placeholder="nitin"
+                                    required
+                                />
+                            </div>
+
+                            <div className="form-group">
+                                <label>Password</label>
+                                <input
+                                    type="password"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    placeholder="••••••••••"
+                                    required
+                                />
+                            </div>
+
+                            <button type="submit" className="btn" disabled={loading}>
+                                {loading ? 'Logging in...' : 'Login'}
+                            </button>
+                        </form>
+
+                        <p style={{ textAlign: 'center', marginTop: '20px', color: '#8b92a7', fontSize: '0.9rem' }}>
+                            Contact admin to add you to Firestore
+                        </p>
+                    </div>
+                </div>
+            );
+        }
+
+        function MainApp({ user, onLogout }) {
             const [activeTab, setActiveTab] = useState('matches');
+            const [selectedMatch, setSelectedMatch] = useState(null);
 
             return (
                 <>
                     <div className="header">
-                        <div className="user-badge">
-                            👤 {user.username || user.email}
-                            {user.role === 'admin' && <span className="admin-badge">Admin</span>}
-                        </div>
-                        <h1>⚡ T20 WORLD CUP 2026</h1>
+                        <div className="user-badge">👤 {user.name}</div>
                         <button className="logout-btn" onClick={onLogout}>Logout</button>
+                        <h1>🏏 T20 World Cup Fantasy</h1>
                     </div>
 
                     <div className="tabs">
-                        <button 
-                            className={`tab ${activeTab === 'matches' ? 'active' : ''}`}
-                            onClick={() => setActiveTab('matches')}
-                        >
-                            🏏 Matches
-                        </button>
-                        <button 
-                            className={`tab ${activeTab === 'my-teams' ? 'active' : ''}`}
-                            onClick={() => setActiveTab('my-teams')}
-                        >
-                            👥 My Teams
-                        </button>
+                        <div className={`tab ${activeTab === 'matches' ? 'active' : ''}`} onClick={() => { setActiveTab('matches'); setSelectedMatch(null); }}>
+                            Matches
+                        </div>
+                        <div className={`tab ${activeTab === 'myteams' ? 'active' : ''}`} onClick={() => { setActiveTab('myteams'); setSelectedMatch(null); }}>
+                            My Teams
+                        </div>
+                        <div className={`tab ${activeTab === 'leaderboard' ? 'active' : ''}`} onClick={() => { setActiveTab('leaderboard'); setSelectedMatch(null); }}>
+                            Leaderboard
+                        </div>
                     </div>
 
-                    {activeTab === 'matches' && <MatchesTab user={user} />}
-                    {activeTab === 'my-teams' && <MyTeamsTab user={user} />}
+                    {activeTab === 'matches' && !selectedMatch && <MatchesTab user={user} onSelectMatch={setSelectedMatch} />}
+                    {activeTab === 'matches' && selectedMatch && <TeamCreator user={user} match={selectedMatch} onBack={() => setSelectedMatch(null)} />}
+                    {activeTab === 'myteams' && <MyTeamsTab user={user} />}
+                    {activeTab === 'leaderboard' && <LeaderboardTab />}
                 </>
             );
         }
 
-        function MatchesTab({ user }) {
+        function MatchesTab({ user, onSelectMatch }) {
             const [matches, setMatches] = useState([]);
-            const [selectedMatch, setSelectedMatch] = useState(null);
             const [loading, setLoading] = useState(true);
 
             useEffect(() => {
@@ -771,15 +721,12 @@
                 try {
                     const { collection, getDocs, orderBy, query } = window.firebaseModules;
                     const matchesRef = collection(window.firebaseDb, 'matches');
-                    const q = query(matchesRef, orderBy('match#', 'asc'));
+                    const q = query(matchesRef, orderBy('date', 'desc'));
                     const snapshot = await getDocs(q);
                     
                     const matchesData = [];
                     snapshot.forEach(doc => {
-                        matchesData.push({
-                            id: doc.id,
-                            ...doc.data()
-                        });
+                        matchesData.push({ id: doc.id, ...doc.data() });
                     });
                     
                     setMatches(matchesData);
@@ -794,48 +741,43 @@
                 return <div className="card"><div className="loading">Loading matches...</div></div>;
             }
 
-            if (selectedMatch) {
-                return <TeamBuilder match={selectedMatch} user={user} onBack={() => setSelectedMatch(null)} />;
-            }
-
             return (
                 <div className="card">
-                    <h2>Select a Match</h2>
-                    <div className="match-list">
-                        {matches.map(match => (
-                            <div 
-                                key={match.id} 
-                                className="match-card"
-                                onClick={() => setSelectedMatch(match)}
-                            >
-                                <div className="match-header">
-                                    <div className="teams">{match.id}</div>
+                    <h2>Upcoming Matches</h2>
+                    {matches.length === 0 ? (
+                        <p style={{ textAlign: 'center', padding: '40px', color: '#8b92a7' }}>
+                            No matches available
+                        </p>
+                    ) : (
+                        <div className="match-list">
+                            {matches.map(match => (
+                                <div key={match.id} className="match-card" onClick={() => onSelectMatch(match)}>
+                                    <div className="match-header">
+                                        <div className="teams">{match.teamA} vs {match.teamB}</div>
+                                        <div className="match-time">{match.date}</div>
+                                    </div>
+                                    <div className="match-info">
+                                        <span>📍 {match.venue || 'TBD'}</span>
+                                        <span>⏰ {match.time || 'TBD'}</span>
+                                    </div>
                                 </div>
-                                <div className="match-info">
-                                    <span>📅 {match.matchtime?.toDate?.()?.toLocaleDateString() || 'TBD'}</span>
-                                    <span>⏰ {match.matchtime?.toDate?.()?.toLocaleTimeString() || 'TBD'}</span>
-                                    <span>📍 Match #{match['match#']}</span>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
+                            ))}
+                        </div>
+                    )}
                 </div>
             );
         }
 
-        // [TeamBuilder and MyTeamsTab components remain the same as in the previous version]
-        // ... (keeping the code from the previous fixed version for these components)
-
-        function TeamBuilder({ match, user, onBack }) {
+        function TeamCreator({ user, match, onBack }) {
             const [players, setPlayers] = useState([]);
             const [selectedPlayers, setSelectedPlayers] = useState([]);
             const [captain, setCaptain] = useState(null);
             const [viceCaptain, setViceCaptain] = useState(null);
-            const [activeRole, setActiveRole] = useState('ALL');
-            const [searchTerm, setSearchTerm] = useState('');
             const [loading, setLoading] = useState(true);
-            const [validationErrors, setValidationErrors] = useState([]);
+            const [searchTerm, setSearchTerm] = useState('');
+            const [activeRole, setActiveRole] = useState('ALL');
             const [errorMsg, setErrorMsg] = useState('');
+            const [validationErrors, setValidationErrors] = useState([]);
 
             useEffect(() => {
                 loadPlayers();
@@ -843,162 +785,116 @@
 
             const loadPlayers = async () => {
                 try {
-                    setErrorMsg('');
-                    const matchTeams = match.id.split(' vs ').map(t => t.trim());
-                    const allPlayers = [];
+                    const { collection, query, where, getDocs } = window.firebaseModules;
+                    const playersRef = collection(window.firebaseDb, 'players');
+                    const snapshot = await getDocs(playersRef);
                     
-                    for (const teamName of matchTeams) {
-                        try {
-                            const { collection, getDocs } = window.firebaseModules;
-                            const teamRef = collection(window.firebaseDb, 'teams', teamName, 'playerName');
-                            const snapshot = await getDocs(teamRef);
-                            
-                            snapshot.forEach(doc => {
-                                try {
-                                    const playerData = doc.data();
-                                    const playerId = String(doc.id || '').trim();
-                                    const credits = parseFloat(playerData.credits) || 10;
-                                    const playerType = String(playerData.playerType || 'Batter').trim();
-                                    
-                                    allPlayers.push({
-                                        id: playerId,
-                                        name: playerId,
-                                        team: teamName,
-                                        credits: Math.max(5, Math.min(15, credits)),
-                                        playerType: playerType,
-                                        role: mapPlayerTypeToRole(playerType)
-                                    });
-                                } catch (playerError) {
-                                    console.warn('Error processing player:', doc.id, playerError);
-                                }
-                            });
-                        } catch (teamError) {
-                            console.error(`Error loading team ${teamName}:`, teamError);
+                    const playersData = [];
+                    snapshot.forEach(doc => {
+                        const data = doc.data();
+                        if (data.team === match.teamA || data.team === match.teamB) {
+                            playersData.push({ id: doc.id, ...data });
                         }
-                    }
+                    });
                     
-                    if (allPlayers.length === 0) {
-                        setErrorMsg('No players found. Please check Firestore data.');
-                    }
-                    
-                    setPlayers(allPlayers);
+                    setPlayers(playersData);
                 } catch (error) {
                     console.error('Error loading players:', error);
-                    setErrorMsg('Failed to load players.');
+                    setErrorMsg('Failed to load players');
                 } finally {
                     setLoading(false);
                 }
             };
 
-            const mapPlayerTypeToRole = (playerType) => {
-                if (!playerType) return 'BAT';
-                const type = String(playerType).toLowerCase();
-                if (type.includes('keeper') || type.includes('wk')) return 'WK';
-                if (type.includes('all')) return 'AR';
-                if (type.includes('bowl')) return 'BOWL';
-                return 'BAT';
+            const togglePlayer = (player) => {
+                const isSelected = selectedPlayers.find(p => p.id === player.id);
+                
+                if (isSelected) {
+                    setSelectedPlayers(selectedPlayers.filter(p => p.id !== player.id));
+                    if (captain === player.id) setCaptain(null);
+                    if (viceCaptain === player.id) setViceCaptain(null);
+                } else {
+                    if (selectedPlayers.length < 11) {
+                        setSelectedPlayers([...selectedPlayers, player]);
+                    }
+                }
             };
+
+            const getRoleCount = (role) => {
+                return selectedPlayers.filter(p => p.role === role).length;
+            };
+
+            const totalCredits = selectedPlayers.reduce((sum, p) => sum + (p.credits || 0), 0);
+
+            const filteredPlayers = players.filter(p => {
+                const matchesSearch = p.name.toLowerCase().includes(searchTerm.toLowerCase());
+                const matchesRole = activeRole === 'ALL' || p.role === activeRole;
+                return matchesSearch && matchesRole;
+            });
 
             const validateTeam = () => {
                 const errors = [];
-                if (selectedPlayers.length !== 11) errors.push(`Select exactly 11 players (currently ${selectedPlayers.length})`);
                 
-                const totalCredits = selectedPlayers.reduce((sum, p) => sum + (parseFloat(p.credits) || 10), 0);
-                if (totalCredits > 100) errors.push(`Total credits ${totalCredits.toFixed(1)} exceeds limit of 100`);
+                if (selectedPlayers.length !== 11) {
+                    errors.push('Select exactly 11 players');
+                }
                 
-                const roleCounts = {
-                    WK: selectedPlayers.filter(p => p.role === 'WK').length,
-                    BAT: selectedPlayers.filter(p => p.role === 'BAT').length,
-                    AR: selectedPlayers.filter(p => p.role === 'AR').length,
-                    BOWL: selectedPlayers.filter(p => p.role === 'BOWL').length
-                };
+                if (totalCredits > 100) {
+                    errors.push(`Total credits ${totalCredits.toFixed(1)} exceeds 100`);
+                }
                 
-                if (roleCounts.WK < 1 || roleCounts.WK > 4) errors.push(`Select 1-4 WK (current: ${roleCounts.WK})`);
-                if (roleCounts.BAT < 3 || roleCounts.BAT > 6) errors.push(`Select 3-6 BAT (current: ${roleCounts.BAT})`);
-                if (roleCounts.AR < 1 || roleCounts.AR > 4) errors.push(`Select 1-4 AR (current: ${roleCounts.AR})`);
-                if (roleCounts.BOWL < 3 || roleCounts.BOWL > 6) errors.push(`Select 3-6 BOWL (current: ${roleCounts.BOWL})`);
+                const wk = getRoleCount('WK');
+                const bat = getRoleCount('BAT');
+                const ar = getRoleCount('AR');
+                const bowl = getRoleCount('BOWL');
                 
-                const matchTeams = match.id.split(' vs ').map(t => t.trim());
-                const teamCounts = {};
-                matchTeams.forEach(t => teamCounts[t] = 0);
-                selectedPlayers.forEach(p => { if (teamCounts[p.team] !== undefined) teamCounts[p.team]++; });
-                Object.entries(teamCounts).forEach(([team, count]) => {
-                    if (count > 7) errors.push(`Max 7 from ${team} (current: ${count})`);
-                });
+                if (wk < 1 || wk > 4) errors.push('Select 1-4 Wicketkeepers');
+                if (bat < 1 || bat > 6) errors.push('Select 1-6 Batsmen');
+                if (ar < 1 || ar > 4) errors.push('Select 1-4 All-rounders');
+                if (bowl < 1 || bowl > 6) errors.push('Select 1-6 Bowlers');
                 
                 if (!captain) errors.push('Select a Captain');
-                if (!viceCaptain) errors.push('Select a Vice-Captain');
-                if (captain && viceCaptain && captain === viceCaptain) errors.push('Captain and VC must be different');
+                if (!viceCaptain) errors.push('Select a Vice Captain');
+                if (captain === viceCaptain && captain) errors.push('Captain and VC must be different');
                 
                 return errors;
             };
 
-            const togglePlayer = (player) => {
-                try {
-                    const isSelected = selectedPlayers.find(p => p.id === player.id);
-                    if (isSelected) {
-                        setSelectedPlayers(selectedPlayers.filter(p => p.id !== player.id));
-                        if (captain === player.id) setCaptain(null);
-                        if (viceCaptain === player.id) setViceCaptain(null);
-                    } else {
-                        if (selectedPlayers.length < 11) setSelectedPlayers([...selectedPlayers, player]);
-                    }
-                    setValidationErrors([]);
-                } catch (error) {
-                    console.error('Error toggling player:', error);
-                }
-            };
-
             const saveTeam = async () => {
                 const errors = validateTeam();
+                setValidationErrors(errors);
+                
                 if (errors.length > 0) {
-                    setValidationErrors(errors);
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                    setErrorMsg('Please fix the validation errors');
                     return;
                 }
                 
                 try {
                     const { collection, addDoc, Timestamp } = window.firebaseModules;
-                    const teamData = {
-                        userId: user.uid,
-                        matchId: match.id,
-                        players: selectedPlayers.map(p => ({
-                            id: String(p.id),
-                            name: String(p.name),
-                            team: String(p.team),
-                            credits: parseFloat(p.credits),
-                            role: String(p.role)
-                        })),
-                        captain: String(captain),
-                        viceCaptain: String(viceCaptain),
-                        totalCredits: selectedPlayers.reduce((sum, p) => sum + (parseFloat(p.credits) || 10), 0),
-                        createdAt: Timestamp.now()
-                    };
+                    const teamsRef = collection(window.firebaseDb, 'userTeams');
                     
-                    await addDoc(collection(window.firebaseDb, 'userTeams'), teamData);
-                    alert('✅ Team saved successfully!');
+                    await addDoc(teamsRef, {
+                        userId: user.uid,
+                        username: user.username,
+                        matchId: `${match.teamA} vs ${match.teamB}`,
+                        players: selectedPlayers,
+                        captain,
+                        viceCaptain,
+                        totalCredits,
+                        createdAt: Timestamp.now()
+                    });
+                    
+                    alert('Team saved successfully! ✅');
                     onBack();
                 } catch (error) {
                     console.error('Error saving team:', error);
-                    alert('Error saving team: ' + error.message);
+                    setErrorMsg('Failed to save team');
                 }
             };
-
-            const filteredPlayers = players.filter(player => {
-                try {
-                    const matchesRole = activeRole === 'ALL' || player.role === activeRole;
-                    const matchesSearch = String(player.name || '').toLowerCase().includes(searchTerm.toLowerCase());
-                    return matchesRole && matchesSearch;
-                } catch { return false; }
-            });
-
-            const getRoleCount = (role) => selectedPlayers.filter(p => p.role === role).length;
-            const totalCredits = selectedPlayers.reduce((sum, p) => sum + (parseFloat(p.credits) || 10), 0);
 
             if (loading) {
                 return (
                     <div className="card">
-                        <button onClick={onBack} className="btn" style={{ marginBottom: '20px' }}>← Back</button>
                         <div className="loading">Loading players...</div>
                     </div>
                 );
@@ -1007,7 +903,7 @@
             return (
                 <div className="card">
                     <button onClick={onBack} className="btn" style={{ marginBottom: '20px' }}>← Back</button>
-                    <h2>Create Team - {match.id}</h2>
+                    <h2>Create Team - {match.teamA} vs {match.teamB}</h2>
 
                     {errorMsg && <div className="error-display"><strong>⚠️</strong> {errorMsg}</div>}
                     {validationErrors.length > 0 && (
@@ -1066,44 +962,42 @@
 
                     <div className="players-grid">
                         {filteredPlayers.map(player => {
-                            try {
-                                const isSelected = selectedPlayers.find(p => p.id === player.id);
-                                const isCaptain = captain === player.id;
-                                const isVC = viceCaptain === player.id;
-                                const canSelect = selectedPlayers.length < 11 || isSelected;
-                                
-                                return (
-                                    <div
-                                        key={player.id}
-                                        className={`player-card ${isSelected ? 'selected' : ''} ${!canSelect ? 'disabled' : ''}`}
-                                        onClick={() => canSelect && togglePlayer(player)}
-                                    >
-                                        <div className="player-name">{player.name}</div>
-                                        <div className="player-team">{player.team}</div>
-                                        <div className="player-meta">
-                                            <span className="player-role">{player.role}</span>
-                                            <span className="player-credits">{player.credits} Cr</span>
-                                        </div>
-                                        
-                                        {isSelected && (
-                                            <div className="captain-buttons" onClick={(e) => e.stopPropagation()}>
-                                                <button
-                                                    className={`captain-btn ${isCaptain ? 'active-captain' : ''}`}
-                                                    onClick={() => setCaptain(player.id)}
-                                                >
-                                                    {isCaptain ? '👑 C (2x)' : 'Captain'}
-                                                </button>
-                                                <button
-                                                    className={`captain-btn ${isVC ? 'active-vc' : ''}`}
-                                                    onClick={() => setViceCaptain(player.id)}
-                                                >
-                                                    {isVC ? '⭐ VC (1.5x)' : 'VC'}
-                                                </button>
-                                            </div>
-                                        )}
+                            const isSelected = selectedPlayers.find(p => p.id === player.id);
+                            const isCaptain = captain === player.id;
+                            const isVC = viceCaptain === player.id;
+                            const canSelect = selectedPlayers.length < 11 || isSelected;
+                            
+                            return (
+                                <div
+                                    key={player.id}
+                                    className={`player-card ${isSelected ? 'selected' : ''} ${!canSelect ? 'disabled' : ''}`}
+                                    onClick={() => canSelect && togglePlayer(player)}
+                                >
+                                    <div className="player-name">{player.name}</div>
+                                    <div className="player-team">{player.team}</div>
+                                    <div className="player-meta">
+                                        <span className="player-role">{player.role}</span>
+                                        <span className="player-credits">{player.credits} Cr</span>
                                     </div>
-                                );
-                            } catch { return null; }
+                                    
+                                    {isSelected && (
+                                        <div className="captain-buttons" onClick={(e) => e.stopPropagation()}>
+                                            <button
+                                                className={`captain-btn ${isCaptain ? 'active-captain' : ''}`}
+                                                onClick={() => setCaptain(player.id)}
+                                            >
+                                                {isCaptain ? '👑 C (2x)' : 'Captain'}
+                                            </button>
+                                            <button
+                                                className={`captain-btn ${isVC ? 'active-vc' : ''}`}
+                                                onClick={() => setViceCaptain(player.id)}
+                                            >
+                                                {isVC ? '⭐ VC (1.5x)' : 'VC'}
+                                            </button>
+                                        </div>
+                                    )}
+                                </div>
+                            );
                         })}
                     </div>
 
@@ -1179,6 +1073,75 @@
                                 </div>
                             ))}
                         </div>
+                    )}
+                </div>
+            );
+        }
+
+        function LeaderboardTab() {
+            const [leaderboard, setLeaderboard] = useState([]);
+            const [loading, setLoading] = useState(true);
+
+            useEffect(() => {
+                loadLeaderboard();
+            }, []);
+
+            const loadLeaderboard = async () => {
+                try {
+                    const { collection, getDocs } = window.firebaseModules;
+                    const leaderboardRef = collection(window.firebaseDb, 'leaderboard');
+                    const snapshot = await getDocs(leaderboardRef);
+                    
+                    const data = [];
+                    snapshot.forEach(doc => {
+                        data.push({ id: doc.id, ...doc.data() });
+                    });
+                    
+                    data.sort((a, b) => b.points - a.points);
+                    setLeaderboard(data);
+                } catch (error) {
+                    console.error('Error loading leaderboard:', error);
+                } finally {
+                    setLoading(false);
+                }
+            };
+
+            if (loading) {
+                return <div className="card"><div className="loading">Loading leaderboard...</div></div>;
+            }
+
+            return (
+                <div className="card">
+                    <h2>🏆 Leaderboard</h2>
+                    {leaderboard.length === 0 ? (
+                        <p style={{ textAlign: 'center', padding: '40px', color: '#8b92a7' }}>
+                            No rankings yet
+                        </p>
+                    ) : (
+                        <table className="leaderboard-table">
+                            <thead>
+                                <tr>
+                                    <th>Rank</th>
+                                    <th>Player</th>
+                                    <th>Points</th>
+                                    <th>Teams</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {leaderboard.map((entry, index) => (
+                                    <tr key={entry.id}>
+                                        <td>
+                                            <span className={`rank ${index === 0 ? 'gold' : index === 1 ? 'silver' : index === 2 ? 'bronze' : ''}`}>
+                                                {index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : `#${index + 1}`}
+                                            </span>
+                                        </td>
+                                        <td>{entry.username}</td>
+                                        <td style={{ fontWeight: '700', color: '#10b981' }}>{entry.points}</td>
+                                        <td>{entry.totalTeams || 0}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
                     )}
                 </div>
             );
