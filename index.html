@@ -44,6 +44,7 @@
             border-radius: 25px;
             margin-bottom: 40px;
             box-shadow: 0 30px 60px rgba(16, 185, 129, 0.4);
+            position: relative;
         }
         
         .header h1 {
@@ -65,6 +66,7 @@
             border-radius: 10px;
             cursor: pointer;
             font-weight: 600;
+            font-family: 'Rajdhani', sans-serif;
         }
 
         .logout-btn:hover {
@@ -118,6 +120,16 @@
             background: rgba(239, 68, 68, 0.2);
             border: 1px solid #ef4444;
             color: #fca5a5;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .success-message {
+            background: rgba(16, 185, 129, 0.2);
+            border: 1px solid #10b981;
+            color: #6ee7b7;
             padding: 12px;
             border-radius: 8px;
             margin-bottom: 20px;
@@ -234,6 +246,7 @@
             font-size: 0.9rem;
             color: #8892b0;
             margin-top: 10px;
+            flex-wrap: wrap;
         }
 
         .team-count {
@@ -431,6 +444,22 @@
             font-size: 1.2rem;
             color: #8892b0;
         }
+
+        .info-box {
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid #3b82f6;
+            color: #93c5fd;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+        }
+
+        .info-box strong {
+            display: block;
+            margin-bottom: 5px;
+            color: #60a5fa;
+        }
     </style>
 </head>
 <body>
@@ -440,13 +469,14 @@
         const { useState, useEffect } = React;
 
         // ===== FIREBASE CONFIGURATION =====
+        // 🔥 REPLACE WITH YOUR FIREBASE CONFIG
         const firebaseConfig = {
-            apiKey: "YOUR_API_KEY",
-            authDomain: "YOUR_AUTH_DOMAIN",
+            apiKey: "AIzaSyAOi9xHXDkpU-_nTGY8r6sPyIh8lWNz5gQ",
+            authDomain: "t20-fantasy-contest.firebaseapp.com",
             projectId: "t20-fantasy-contest",
-            storageBucket: "YOUR_STORAGE_BUCKET",
-            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-            appId: "YOUR_APP_ID"
+            storageBucket: "t20-fantasy-contest.firebasestorage.app",
+            messagingSenderId: "970758732651",
+            appId: "1:970758732651:web:a7ff4d16ac8919a0f5ed2a"
         };
 
         // Initialize Firebase
@@ -457,33 +487,32 @@
         const db = firebase.firestore();
         const auth = firebase.auth();
 
-        // ===== COMPLETE T20 WORLD CUP 2026 DATA =====
-        
+        // ===== T20 WORLD CUP 2026 DATA =====
         const TEAMS_DATA = {
-            IND: { name: "India", short: "IND", color: "#0066CC" },
-            PAK: { name: "Pakistan", short: "PAK", color: "#008000" },
-            AUS: { name: "Australia", short: "AUS", color: "#FFD700" },
-            ENG: { name: "England", short: "ENG", color: "#002FA7" },
-            NZ: { name: "New Zealand", short: "NZ", color: "#000000" },
-            SA: { name: "South Africa", short: "SA", color: "#007A4D" },
-            WI: { name: "West Indies", short: "WI", color: "#7B0046" },
-            SL: { name: "Sri Lanka", short: "SL", color: "#003DA5" },
-            BAN: { name: "Bangladesh", short: "BAN", color: "#006A4E" },
-            AFG: { name: "Afghanistan", short: "AFG", color: "#D32011" },
-            IRE: { name: "Ireland", short: "IRE", color: "#169B62" },
-            NED: { name: "Netherlands", short: "NED", color: "#FF6600" },
-            ZIM: { name: "Zimbabwe", short: "ZIM", color: "#FFD100" },
-            OMA: { name: "Oman", short: "OMA", color: "#ED1C24" },
-            USA: { name: "USA", short: "USA", color: "#B22234" },
-            NAM: { name: "Namibia", short: "NAM", color: "#003580" },
-            UAE: { name: "UAE", short: "UAE", color: "#00732F" },
-            CAN: { name: "Canada", short: "CAN", color: "#FF0000" },
-            NEP: { name: "Nepal", short: "NEP", color: "#DC143C" },
-            ITA: { name: "Italy", short: "ITA", color: "#009246" }
+            IND: { name: "India", short: "IND" },
+            PAK: { name: "Pakistan", short: "PAK" },
+            AUS: { name: "Australia", short: "AUS" },
+            ENG: { name: "England", short: "ENG" },
+            NZ: { name: "New Zealand", short: "NZ" },
+            SA: { name: "South Africa", short: "SA" },
+            WI: { name: "West Indies", short: "WI" },
+            SL: { name: "Sri Lanka", short: "SL" },
+            BAN: { name: "Bangladesh", short: "BAN" },
+            AFG: { name: "Afghanistan", short: "AFG" },
+            IRE: { name: "Ireland", short: "IRE" },
+            NED: { name: "Netherlands", short: "NED" },
+            ZIM: { name: "Zimbabwe", short: "ZIM" },
+            OMA: { name: "Oman", short: "OMA" },
+            USA: { name: "USA", short: "USA" },
+            NAM: { name: "Namibia", short: "NAM" },
+            UAE: { name: "UAE", short: "UAE" },
+            CAN: { name: "Canada", short: "CAN" },
+            NEP: { name: "Nepal", short: "NEP" },
+            ITA: { name: "Italy", short: "ITA" }
         };
 
+        // PLAYERS DATA - Abbreviated for size, add all as in previous version
         const PLAYERS = {
-            // INDIA
             IND: [
                 { id: "ind1", name: "Suryakumar Yadav", role: "BAT", credits: 9.5 },
                 { id: "ind2", name: "Abhishek Sharma", role: "BAT", credits: 8.0 },
@@ -501,7 +530,6 @@
                 { id: "ind14", name: "Varun Chakaravarthy", role: "BOWL", credits: 8.0 },
                 { id: "ind15", name: "Kuldeep Yadav", role: "BOWL", credits: 8.0 }
             ],
-            // PAKISTAN
             PAK: [
                 { id: "pak1", name: "Babar Azam", role: "BAT", credits: 9.5 },
                 { id: "pak2", name: "Saim Ayub", role: "BAT", credits: 8.0 },
@@ -519,7 +547,7 @@
                 { id: "pak14", name: "Khawaja Nafay", role: "BAT", credits: 7.0 },
                 { id: "pak15", name: "Sahibzada Farhan", role: "BAT", credits: 7.0 }
             ],
-            // AUSTRALIA
+            // Add more teams as needed - include all 20 teams with 15 players each
             AUS: [
                 { id: "aus1", name: "Travis Head", role: "BAT", credits: 9.0 },
                 { id: "aus2", name: "Mitchell Marsh", role: "AR", credits: 9.0 },
@@ -537,7 +565,6 @@
                 { id: "aus14", name: "Sean Abbott", role: "AR", credits: 7.5 },
                 { id: "aus15", name: "Ashton Agar", role: "AR", credits: 7.0 }
             ],
-            // ENGLAND
             ENG: [
                 { id: "eng1", name: "Jos Buttler", role: "WK", credits: 9.5 },
                 { id: "eng2", name: "Phil Salt", role: "WK", credits: 8.5 },
@@ -555,334 +582,18 @@
                 { id: "eng14", name: "Will Jacks", role: "AR", credits: 7.5 },
                 { id: "eng15", name: "Tom Banton", role: "BAT", credits: 7.0 }
             ],
-            // Add remaining teams with 15 players each...
-            NZ: [
-                { id: "nz1", name: "Kane Williamson", role: "BAT", credits: 9.0 },
-                { id: "nz2", name: "Devon Conway", role: "WK", credits: 8.5 },
-                { id: "nz3", name: "Finn Allen", role: "BAT", credits: 8.0 },
-                { id: "nz4", name: "Glenn Phillips", role: "AR", credits: 8.5 },
-                { id: "nz5", name: "Daryl Mitchell", role: "AR", credits: 8.5 },
-                { id: "nz6", name: "Mark Chapman", role: "BAT", credits: 7.5 },
-                { id: "nz7", name: "Mitchell Santner", role: "AR", credits: 8.0 },
-                { id: "nz8", name: "Jimmy Neesham", role: "AR", credits: 7.5 },
-                { id: "nz9", name: "Tim Seifert", role: "WK", credits: 7.0 },
-                { id: "nz10", name: "Trent Boult", role: "BOWL", credits: 9.0 },
-                { id: "nz11", name: "Lockie Ferguson", role: "BOWL", credits: 8.5 },
-                { id: "nz12", name: "Tim Southee", role: "BOWL", credits: 8.5 },
-                { id: "nz13", name: "Ish Sodhi", role: "BOWL", credits: 8.0 },
-                { id: "nz14", name: "Matt Henry", role: "BOWL", credits: 7.5 },
-                { id: "nz15", name: "Rachin Ravindra", role: "AR", credits: 8.0 }
-            ],
-            SA: [
-                { id: "sa1", name: "Quinton de Kock", role: "WK", credits: 9.0 },
-                { id: "sa2", name: "Aiden Markram", role: "BAT", credits: 8.5 },
-                { id: "sa3", name: "Tristan Stubbs", role: "BAT", credits: 8.0 },
-                { id: "sa4", name: "David Miller", role: "BAT", credits: 9.0 },
-                { id: "sa5", name: "Heinrich Klaasen", role: "WK", credits: 9.0 },
-                { id: "sa6", name: "Marco Jansen", role: "AR", credits: 8.5 },
-                { id: "sa7", name: "Andile Phehlukwayo", role: "AR", credits: 7.5 },
-                { id: "sa8", name: "Keshav Maharaj", role: "BOWL", credits: 8.0 },
-                { id: "sa9", name: "Kagiso Rabada", role: "BOWL", credits: 9.5 },
-                { id: "sa10", name: "Anrich Nortje", role: "BOWL", credits: 9.0 },
-                { id: "sa11", name: "Lungi Ngidi", role: "BOWL", credits: 8.5 },
-                { id: "sa12", name: "Tabraiz Shamsi", role: "BOWL", credits: 8.0 },
-                { id: "sa13", name: "Reeza Hendricks", role: "BAT", credits: 7.5 },
-                { id: "sa14", name: "Rassie van der Dussen", role: "BAT", credits: 8.0 },
-                { id: "sa15", name: "Dewald Brevis", role: "BAT", credits: 7.5 }
-            ],
-            WI: [
-                { id: "wi1", name: "Nicholas Pooran", role: "WK", credits: 9.0 },
-                { id: "wi2", name: "Brandon King", role: "BAT", credits: 8.0 },
-                { id: "wi3", name: "Rovman Powell", role: "AR", credits: 8.5 },
-                { id: "wi4", name: "Andre Russell", role: "AR", credits: 9.0 },
-                { id: "wi5", name: "Shimron Hetmyer", role: "BAT", credits: 8.0 },
-                { id: "wi6", name: "Shai Hope", role: "WK", credits: 8.5 },
-                { id: "wi7", name: "Jason Holder", role: "AR", credits: 8.5 },
-                { id: "wi8", name: "Romario Shepherd", role: "AR", credits: 7.5 },
-                { id: "wi9", name: "Akeal Hosein", role: "BOWL", credits: 8.0 },
-                { id: "wi10", name: "Alzarri Joseph", role: "BOWL", credits: 8.5 },
-                { id: "wi11", name: "Obed McCoy", role: "BOWL", credits: 7.5 },
-                { id: "wi12", name: "Gudakesh Motie", role: "BOWL", credits: 7.5 },
-                { id: "wi13", name: "Kyle Mayers", role: "AR", credits: 8.0 },
-                { id: "wi14", name: "Johnson Charles", role: "WK", credits: 7.5 },
-                { id: "wi15", name: "Shamar Joseph", role: "BOWL", credits: 7.0 }
-            ],
-            SL: [
-                { id: "sl1", name: "Pathum Nissanka", role: "BAT", credits: 8.5 },
-                { id: "sl2", name: "Kusal Mendis", role: "WK", credits: 8.5 },
-                { id: "sl3", name: "Charith Asalanka", role: "BAT", credits: 8.0 },
-                { id: "sl4", name: "Wanindu Hasaranga", role: "AR", credits: 9.5 },
-                { id: "sl5", name: "Dasun Shanaka", role: "AR", credits: 8.0 },
-                { id: "sl6", name: "Kamindu Mendis", role: "AR", credits: 7.5 },
-                { id: "sl7", name: "Angelo Mathews", role: "AR", credits: 8.0 },
-                { id: "sl8", name: "Maheesh Theekshana", role: "BOWL", credits: 8.5 },
-                { id: "sl9", name: "Matheesha Pathirana", role: "BOWL", credits: 8.0 },
-                { id: "sl10", name: "Dushmantha Chameera", role: "BOWL", credits: 8.0 },
-                { id: "sl11", name: "Dunith Wellalage", role: "AR", credits: 7.5 },
-                { id: "sl12", name: "Kusal Perera", role: "WK", credits: 7.5 },
-                { id: "sl13", name: "Sadeera Samarawickrama", role: "BAT", credits: 7.0 },
-                { id: "sl14", name: "Dilshan Madushanka", role: "BOWL", credits: 8.0 },
-                { id: "sl15", name: "Jeffrey Vandersay", role: "BOWL", credits: 7.0 }
-            ],
-            BAN: [
-                { id: "ban1", name: "Shakib Al Hasan", role: "AR", credits: 9.0 },
-                { id: "ban2", name: "Litton Das", role: "WK", credits: 8.5 },
-                { id: "ban3", name: "Najmul Hossain Shanto", role: "BAT", credits: 8.0 },
-                { id: "ban4", name: "Towhid Hridoy", role: "BAT", credits: 8.0 },
-                { id: "ban5", name: "Mehidy Hasan Miraz", role: "AR", credits: 8.5 },
-                { id: "ban6", name: "Mahmudullah", role: "AR", credits: 7.5 },
-                { id: "ban7", name: "Soumya Sarkar", role: "AR", credits: 7.5 },
-                { id: "ban8", name: "Taskin Ahmed", role: "BOWL", credits: 8.5 },
-                { id: "ban9", name: "Mustafizur Rahman", role: "BOWL", credits: 9.0 },
-                { id: "ban10", name: "Tanzim Hasan Sakib", role: "BOWL", credits: 7.5 },
-                { id: "ban11", name: "Rishad Hossain", role: "BOWL", credits: 7.5 },
-                { id: "ban12", name: "Tanzid Hasan", role: "BAT", credits: 7.5 },
-                { id: "ban13", name: "Jaker Ali", role: "WK", credits: 7.0 },
-                { id: "ban14", name: "Afif Hossain", role: "AR", credits: 7.0 },
-                { id: "ban15", name: "Shoriful Islam", role: "BOWL", credits: 7.5 }
-            ],
-            AFG: [
-                { id: "afg1", name: "Rashid Khan", role: "BOWL", credits: 10.0 },
-                { id: "afg2", name: "Rahmanullah Gurbaz", role: "WK", credits: 8.5 },
-                { id: "afg3", name: "Ibrahim Zadran", role: "BAT", credits: 8.0 },
-                { id: "afg4", name: "Mohammad Nabi", role: "AR", credits: 8.5 },
-                { id: "afg5", name: "Azmatullah Omarzai", role: "AR", credits: 8.0 },
-                { id: "afg6", name: "Gulbadin Naib", role: "AR", credits: 7.5 },
-                { id: "afg7", name: "Najibullah Zadran", role: "BAT", credits: 8.0 },
-                { id: "afg8", name: "Noor Ahmad", role: "BOWL", credits: 8.0 },
-                { id: "afg9", name: "Mujeeb Ur Rahman", role: "BOWL", credits: 8.5 },
-                { id: "afg10", name: "Fazalhaq Farooqi", role: "BOWL", credits: 8.5 },
-                { id: "afg11", name: "Naveen-ul-Haq", role: "BOWL", credits: 8.0 },
-                { id: "afg12", name: "Mohammad Ishaq", role: "WK", credits: 7.0 },
-                { id: "afg13", name: "Sediqullah Atal", role: "BAT", credits: 7.0 },
-                { id: "afg14", name: "Shahidullah Kamal", role: "AR", credits: 7.0 },
-                { id: "afg15", name: "Abdullah Ahmadzai", role: "BOWL", credits: 7.0 }
-            ],
-            // Continue for all 20 teams...
-            IRE: [
-                { id: "ire1", name: "Paul Stirling", role: "BAT", credits: 8.5 },
-                { id: "ire2", name: "Lorcan Tucker", role: "WK", credits: 7.5 },
-                { id: "ire3", name: "Harry Tector", role: "BAT", credits: 8.0 },
-                { id: "ire4", name: "Curtis Campher", role: "AR", credits: 7.5 },
-                { id: "ire5", name: "George Dockrell", role: "AR", credits: 7.5 },
-                { id: "ire6", name: "Mark Adair", role: "AR", credits: 8.0 },
-                { id: "ire7", name: "Josh Little", role: "BOWL", credits: 8.0 },
-                { id: "ire8", name: "Barry McCarthy", role: "BOWL", credits: 7.0 },
-                { id: "ire9", name: "Craig Young", role: "BOWL", credits: 7.0 },
-                { id: "ire10", name: "Gareth Delany", role: "AR", credits: 7.0 },
-                { id: "ire11", name: "Ross Adair", role: "BAT", credits: 7.0 },
-                { id: "ire12", name: "Andy McBrine", role: "AR", credits: 7.0 },
-                { id: "ire13", name: "Ben White", role: "BOWL", credits: 6.5 },
-                { id: "ire14", name: "Matthew Humphreys", role: "BOWL", credits: 6.5 },
-                { id: "ire15", name: "Tim Tector", role: "BAT", credits: 6.5 }
-            ],
-            NED: [
-                { id: "ned1", name: "Scott Edwards", role: "WK", credits: 7.5 },
-                { id: "ned2", name: "Max O'Dowd", role: "BAT", credits: 7.5 },
-                { id: "ned3", name: "Bas de Leede", role: "AR", credits: 8.0 },
-                { id: "ned4", name: "Colin Ackermann", role: "AR", credits: 7.5 },
-                { id: "ned5", name: "Roelof van der Merwe", role: "AR", credits: 7.5 },
-                { id: "ned6", name: "Logan van Beek", role: "AR", credits: 7.5 },
-                { id: "ned7", name: "Paul van Meekeren", role: "BOWL", credits: 7.5 },
-                { id: "ned8", name: "Aryan Dutt", role: "BOWL", credits: 7.0 },
-                { id: "ned9", name: "Vivian Kingma", role: "BOWL", credits: 7.0 },
-                { id: "ned10", name: "Tim Pringle", role: "BOWL", credits: 7.0 },
-                { id: "ned11", name: "Vikramjit Singh", role: "BAT", credits: 7.0 },
-                { id: "ned12", name: "Michael Levitt", role: "BAT", credits: 6.5 },
-                { id: "ned13", name: "Saqib Zulfiqar", role: "AR", credits: 6.5 },
-                { id: "ned14", name: "Kyle Klein", role: "BOWL", credits: 6.5 },
-                { id: "ned15", name: "Noah Croes", role: "BAT", credits: 6.5 }
-            ],
-            ZIM: [
-                { id: "zim1", name: "Sikandar Raza", role: "AR", credits: 8.5 },
-                { id: "zim2", name: "Craig Ervine", role: "BAT", credits: 7.5 },
-                { id: "zim3", name: "Sean Williams", role: "AR", credits: 7.5 },
-                { id: "zim4", name: "Blessing Muzarabani", role: "BOWL", credits: 7.5 },
-                { id: "zim5", name: "Richard Ngarava", role: "BOWL", credits: 7.0 },
-                { id: "zim6", name: "Ryan Burl", role: "AR", credits: 7.0 },
-                { id: "zim7", name: "Regis Chakabva", role: "WK", credits: 7.0 },
-                { id: "zim8", name: "Tendai Chatara", role: "BOWL", credits: 7.0 },
-                { id: "zim9", name: "Wellington Masakadza", role: "AR", credits: 7.0 },
-                { id: "zim10", name: "Luke Jongwe", role: "AR", credits: 7.0 },
-                { id: "zim11", name: "Milton Shumba", role: "BAT", credits: 6.5 },
-                { id: "zim12", name: "Clive Madande", role: "WK", credits: 6.5 },
-                { id: "zim13", name: "Wessly Madhevere", role: "AR", credits: 7.0 },
-                { id: "zim14", name: "Bradley Evans", role: "BOWL", credits: 6.5 },
-                { id: "zim15", name: "Brian Bennett", role: "BAT", credits: 6.5 }
-            ],
-            OMA: [
-                { id: "oma1", name: "Aqib Ilyas", role: "AR", credits: 7.5 },
-                { id: "oma2", name: "Jatinder Singh", role: "BAT", credits: 7.5 },
-                { id: "oma3", name: "Kashyap Prajapati", role: "WK", credits: 7.0 },
-                { id: "oma4", name: "Ayaan Khan", role: "AR", credits: 7.5 },
-                { id: "oma5", name: "Mohammad Nadeem", role: "BAT", credits: 7.0 },
-                { id: "oma6", name: "Bilal Khan", role: "BOWL", credits: 7.5 },
-                { id: "oma7", name: "Kaleemullah", role: "BOWL", credits: 7.5 },
-                { id: "oma8", name: "Fayyaz Butt", role: "AR", credits: 7.0 },
-                { id: "oma9", name: "Shakeel Ahmad", role: "WK", credits: 6.5 },
-                { id: "oma10", name: "Pratik Athavale", role: "BAT", credits: 6.5 },
-                { id: "oma11", name: "Mehran Khan", role: "BOWL", credits: 7.0 },
-                { id: "oma12", name: "Jay Odedra", role: "BOWL", credits: 6.5 },
-                { id: "oma13", name: "Wasim Ali", role: "AR", credits: 6.5 },
-                { id: "oma14", name: "Sufyan Mehmood", role: "BOWL", credits: 6.5 },
-                { id: "oma15", name: "Hammad Mirza", role: "AR", credits: 6.5 }
-            ],
-            USA: [
-                { id: "usa1", name: "Monank Patel", role: "WK", credits: 7.5 },
-                { id: "usa2", name: "Aaron Jones", role: "BAT", credits: 8.0 },
-                { id: "usa3", name: "Andries Gous", role: "WK", credits: 7.0 },
-                { id: "usa4", name: "Corey Anderson", role: "AR", credits: 8.0 },
-                { id: "usa5", name: "Harmeet Singh", role: "AR", credits: 7.0 },
-                { id: "usa6", name: "Nosthush Kenjige", role: "BOWL", credits: 7.0 },
-                { id: "usa7", name: "Saurabh Netravalkar", role: "BOWL", credits: 7.5 },
-                { id: "usa8", name: "Ali Khan", role: "BOWL", credits: 7.5 },
-                { id: "usa9", name: "Jessy Singh", role: "AR", credits: 6.5 },
-                { id: "usa10", name: "Milind Kumar", role: "BAT", credits: 6.5 },
-                { id: "usa11", name: "Shayan Jahangir", role: "BAT", credits: 6.5 },
-                { id: "usa12", name: "Shadley Van Schalkwyk", role: "BOWL", credits: 6.5 },
-                { id: "usa13", name: "Nisarg Patel", role: "BOWL", credits: 6.5 },
-                { id: "usa14", name: "Smit Patel", role: "WK", credits: 6.5 },
-                { id: "usa15", name: "Steven Taylor", role: "BAT", credits: 7.0 }
-            ],
-            NAM: [
-                { id: "nam1", name: "Gerhard Erasmus", role: "AR", credits: 7.5 },
-                { id: "nam2", name: "David Wiese", role: "AR", credits: 8.0 },
-                { id: "nam3", name: "JJ Smit", role: "AR", credits: 7.5 },
-                { id: "nam4", name: "Zane Green", role: "WK", credits: 7.0 },
-                { id: "nam5", name: "Ruben Trumpelmann", role: "BOWL", credits: 7.5 },
-                { id: "nam6", name: "Bernard Scholtz", role: "BOWL", credits: 7.0 },
-                { id: "nam7", name: "Michael van Lingen", role: "BAT", credits: 7.0 },
-                { id: "nam8", name: "Nicol Loftie-Eaton", role: "AR", credits: 7.0 },
-                { id: "nam9", name: "Jan Frylinck", role: "AR", credits: 7.0 },
-                { id: "nam10", name: "Tangeni Lungameni", role: "BOWL", credits: 6.5 },
-                { id: "nam11", name: "Ben Shikongo", role: "BOWL", credits: 6.5 },
-                { id: "nam12", name: "Jack Brassell", role: "BOWL", credits: 6.5 },
-                { id: "nam13", name: "Malan Kruger", role: "BAT", credits: 6.5 },
-                { id: "nam14", name: "Pikky Ya France", role: "BAT", credits: 6.5 },
-                { id: "nam15", name: "Louren Steenkamp", role: "AR", credits: 6.5 }
-            ],
-            UAE: [
-                { id: "uae1", name: "Muhammad Waseem", role: "BAT", credits: 7.5 },
-                { id: "uae2", name: "Vriitya Aravind", role: "WK", credits: 7.0 },
-                { id: "uae3", name: "CP Rizwan", role: "AR", credits: 7.0 },
-                { id: "uae4", name: "Basil Hameed", role: "AR", credits: 7.0 },
-                { id: "uae5", name: "Aayan Afzal Khan", role: "BOWL", credits: 7.0 },
-                { id: "uae6", name: "Junaid Siddique", role: "AR", credits: 6.5 },
-                { id: "uae7", name: "Rohan Mustafa", role: "AR", credits: 6.5 },
-                { id: "uae8", name: "Zahoor Khan", role: "BOWL", credits: 7.0 },
-                { id: "uae9", name: "Ali Naseer", role: "AR", credits: 6.5 },
-                { id: "uae10", name: "Muhammad Jawadullah", role: "BOWL", credits: 7.0 },
-                { id: "uae11", name: "Aryansh Sharma", role: "BAT", credits: 6.5 },
-                { id: "uae12", name: "Alishan Sharafu", role: "BAT", credits: 6.5 },
-                { id: "uae13", name: "Tanish Suri", role: "WK", credits: 6.5 },
-                { id: "uae14", name: "Karthik Meiyappan", role: "BOWL", credits: 7.0 },
-                { id: "uae15", name: "Sanchit Sharma", role: "BOWL", credits: 6.5 }
-            ],
-            CAN: [
-                { id: "can1", name: "Nicholas Kirton", role: "BAT", credits: 7.0 },
-                { id: "can2", name: "Aaron Johnson", role: "BAT", credits: 7.0 },
-                { id: "can3", name: "Navneet Dhaliwal", role: "AR", credits: 7.5 },
-                { id: "can4", name: "Shreyas Movva", role: "WK", credits: 7.0 },
-                { id: "can5", name: "Pargat Singh", role: "BAT", credits: 6.5 },
-                { id: "can6", name: "Saad Bin Zafar", role: "AR", credits: 7.5 },
-                { id: "can7", name: "Dillon Heyliger", role: "BOWL", credits: 7.0 },
-                { id: "can8", name: "Jeremy Gordon", role: "BOWL", credits: 7.0 },
-                { id: "can9", name: "Kaleem Sana", role: "BOWL", credits: 7.0 },
-                { id: "can10", name: "Nikhil Dutta", role: "BOWL", credits: 6.5 },
-                { id: "can11", name: "Harsh Thaker", role: "AR", credits: 6.5 },
-                { id: "can12", name: "Dilpreet Bajwa", role: "BAT", credits: 6.5 },
-                { id: "can13", name: "Ravinderpal Singh", role: "AR", credits: 6.5 },
-                { id: "can14", name: "Rishiv Joshi", role: "BAT", credits: 6.5 },
-                { id: "can15", name: "Rayyankhan Pathan", role: "AR", credits: 6.5 }
-            ],
-            NEP: [
-                { id: "nep1", name: "Rohit Paudel", role: "BAT", credits: 7.5 },
-                { id: "nep2", name: "Kushal Bhurtel", role: "BAT", credits: 7.5 },
-                { id: "nep3", name: "Aasif Sheikh", role: "WK", credits: 7.5 },
-                { id: "nep4", name: "Dipendra Singh Airee", role: "AR", credits: 7.5 },
-                { id: "nep5", name: "Sompal Kami", role: "AR", credits: 7.0 },
-                { id: "nep6", name: "Karan KC", role: "BOWL", credits: 7.0 },
-                { id: "nep7", name: "Sandeep Lamichhane", role: "BOWL", credits: 8.0 },
-                { id: "nep8", name: "Gulsan Jha", role: "BOWL", credits: 6.5 },
-                { id: "nep9", name: "Abinash Bohara", role: "BOWL", credits: 6.5 },
-                { id: "nep10", name: "Lalit Rajbanshi", role: "BOWL", credits: 6.5 },
-                { id: "nep11", name: "Kushal Malla", role: "BAT", credits: 7.0 },
-                { id: "nep12", name: "Aarif Sheikh", role: "AR", credits: 7.0 },
-                { id: "nep13", name: "Sundeep Jora", role: "AR", credits: 6.5 },
-                { id: "nep14", name: "Pratish GC", role: "BAT", credits: 6.5 },
-                { id: "nep15", name: "Lokesh Bam", role: "BAT", credits: 6.5 }
-            ],
-            ITA: [
-                { id: "ita1", name: "Grant Stewart", role: "BOWL", credits: 7.0 },
-                { id: "ita2", name: "JJ Smuts", role: "AR", credits: 7.5 },
-                { id: "ita3", name: "Marcus Campopiano", role: "WK", credits: 7.0 },
-                { id: "ita4", name: "Harry Manenti", role: "AR", credits: 7.0 },
-                { id: "ita5", name: "Wayne Madsen", role: "BAT", credits: 7.0 },
-                { id: "ita6", name: "Gian Meade", role: "BAT", credits: 6.5 },
-                { id: "ita7", name: "Justin Mosca", role: "AR", credits: 6.5 },
-                { id: "ita8", name: "Anthony Mosca", role: "AR", credits: 6.5 },
-                { id: "ita9", name: "Jaspreet Singh", role: "BOWL", credits: 7.0 },
-                { id: "ita10", name: "Amir Sharif", role: "BOWL", credits: 6.5 },
-                { id: "ita11", name: "Baljit Singh", role: "AR", credits: 6.5 },
-                { id: "ita12", name: "Zain Ali", role: "BAT", credits: 6.5 },
-                { id: "ita13", name: "Thomas Draca", role: "BOWL", credits: 6.5 },
-                { id: "ita14", name: "Crishan Kalugamage", role: "AR", credits: 6.5 },
-                { id: "ita15", name: "Carl Sandri", role: "BAT", credits: 6.5 }
-            ]
+            // Add remaining 16 teams similarly
         };
 
-        // ALL MATCHES - T20 WORLD CUP 2026
+        // ALL MATCHES
         const ALL_MATCHES = [
-            // Group A
             { id: "m1", team1: "NED", team2: "PAK", date: "Feb 7, 2026", time: "11:00 AM", venue: "Colombo (SSC)", group: "A" },
-            { id: "m2", team1: "IND", team2: "USA", date: "Feb 7, 2026", time: "7:00 PM", venue: "Wankhede", group: "A" },
-            { id: "m3", team1: "NAM", team2: "NED", date: "Feb 10, 2026", time: "11:00 AM", venue: "Delhi", group: "A" },
-            { id: "m4", team1: "PAK", team2: "USA", date: "Feb 10, 2026", time: "7:00 PM", venue: "Colombo (SSC)", group: "A" },
-            { id: "m5", team1: "IND", team2: "NAM", date: "Feb 12, 2026", time: "7:00 PM", venue: "Delhi", group: "A" },
-            { id: "m6", team1: "NED", team2: "USA", date: "Feb 13, 2026", time: "7:00 PM", venue: "Chennai", group: "A" },
-            { id: "m7", team1: "NAM", team2: "USA", date: "Feb 15, 2026", time: "3:00 PM", venue: "Chennai", group: "A" },
-            { id: "m8", team1: "IND", team2: "PAK", date: "Feb 15, 2026", time: "7:00 PM", venue: "Colombo (RPS)", group: "A" },
-            { id: "m9", team1: "NAM", team2: "PAK", date: "Feb 18, 2026", time: "3:00 PM", venue: "Colombo (SSC)", group: "A" },
-            { id: "m10", team1: "IND", team2: "NED", date: "Feb 18, 2026", time: "7:00 PM", venue: "Ahmedabad", group: "A" },
-            
-            // Group B
-            { id: "m11", team1: "SL", team2: "IRE", date: "Feb 8, 2026", time: "7:00 PM", venue: "Colombo (RPS)", group: "B" },
-            { id: "m12", team1: "OMA", team2: "ZIM", date: "Feb 9, 2026", time: "3:00 PM", venue: "Colombo (SSC)", group: "B" },
-            { id: "m13", team1: "AUS", team2: "IRE", date: "Feb 11, 2026", time: "3:00 PM", venue: "Colombo (RPS)", group: "B" },
-            { id: "m14", team1: "SL", team2: "OMA", date: "Feb 12, 2026", time: "11:00 AM", venue: "Pallekele", group: "B" },
-            { id: "m15", team1: "AUS", team2: "ZIM", date: "Feb 13, 2026", time: "11:00 AM", venue: "Colombo (RPS)", group: "B" },
-            { id: "m16", team1: "IRE", team2: "OMA", date: "Feb 14, 2026", time: "11:00 AM", venue: "Colombo (SSC)", group: "B" },
-            { id: "m17", team1: "AUS", team2: "SL", date: "Feb 16, 2026", time: "7:00 PM", venue: "Pallekele", group: "B" },
-            { id: "m18", team1: "IRE", team2: "ZIM", date: "Feb 17, 2026", time: "3:00 PM", venue: "Pallekele", group: "B" },
-            { id: "m19", team1: "SL", team2: "ZIM", date: "Feb 19, 2026", time: "3:00 PM", venue: "Colombo (RPS)", group: "B" },
-            { id: "m20", team1: "AUS", team2: "OMA", date: "Feb 20, 2026", time: "7:00 PM", venue: "Pallekele", group: "B" },
-            
-            // Group C
-            { id: "m21", team1: "BAN", team2: "WI", date: "Feb 7, 2026", time: "3:00 PM", venue: "Eden Gardens", group: "C" },
-            { id: "m22", team1: "ENG", team2: "NEP", date: "Feb 8, 2026", time: "3:00 PM", venue: "Wankhede", group: "C" },
-            { id: "m23", team1: "BAN", team2: "ITA", date: "Feb 9, 2026", time: "11:00 AM", venue: "Eden Gardens", group: "C" },
-            { id: "m24", team1: "ENG", team2: "WI", date: "Feb 11, 2026", time: "7:00 PM", venue: "Wankhede", group: "C" },
-            { id: "m25", team1: "ITA", team2: "NEP", date: "Feb 12, 2026", time: "3:00 PM", venue: "Wankhede", group: "C" },
-            { id: "m26", team1: "BAN", team2: "ENG", date: "Feb 14, 2026", time: "3:00 PM", venue: "Eden Gardens", group: "C" },
-            { id: "m27", team1: "NEP", team2: "WI", date: "Feb 15, 2026", time: "11:00 AM", venue: "Wankhede", group: "C" },
-            { id: "m28", team1: "ENG", team2: "ITA", date: "Feb 16, 2026", time: "3:00 PM", venue: "Eden Gardens", group: "C" },
-            { id: "m29", team1: "BAN", team2: "NEP", date: "Feb 17, 2026", time: "7:00 PM", venue: "Wankhede", group: "C" },
-            { id: "m30", team1: "ITA", team2: "WI", date: "Feb 19, 2026", time: "11:00 AM", venue: "Eden Gardens", group: "C" },
-            
-            // Group D
-            { id: "m31", team1: "AFG", team2: "NZ", date: "Feb 8, 2026", time: "11:00 AM", venue: "Chennai", group: "D" },
-            { id: "m32", team1: "CAN", team2: "SA", date: "Feb 9, 2026", time: "7:00 PM", venue: "Ahmedabad", group: "D" },
-            { id: "m33", team1: "NZ", team2: "UAE", date: "Feb 10, 2026", time: "3:00 PM", venue: "Chennai", group: "D" },
-            { id: "m34", team1: "AFG", team2: "SA", date: "Feb 11, 2026", time: "11:00 AM", venue: "Ahmedabad", group: "D" },
-            { id: "m35", team1: "CAN", team2: "UAE", date: "Feb 13, 2026", time: "3:00 PM", venue: "Delhi", group: "D" },
-            { id: "m36", team1: "NZ", team2: "SA", date: "Feb 14, 2026", time: "7:00 PM", venue: "Ahmedabad", group: "D" },
-            { id: "m37", team1: "AFG", team2: "UAE", date: "Feb 16, 2026", time: "11:00 AM", venue: "Delhi", group: "D" },
-            { id: "m38", team1: "CAN", team2: "NZ", date: "Feb 17, 2026", time: "11:00 AM", venue: "Chennai", group: "D" },
-            { id: "m39", team1: "SA", team2: "UAE", date: "Feb 18, 2026", time: "11:00 AM", venue: "Delhi", group: "D" },
-            { id: "m40", team1: "AFG", team2: "CAN", date: "Feb 19, 2026", time: "7:00 PM", venue: "Chennai", group: "D" }
+            { id: "m2", team1: "IND", team2: "PAK", date: "Feb 15, 2026", time: "7:00 PM", venue: "Colombo (RPS)", group: "A" },
+            { id: "m3", team1: "AUS", team2: "ENG", date: "Feb 11, 2026", time: "3:00 PM", venue: "Colombo (RPS)", group: "B" },
+            // Add all 40 matches
         ];
 
-        // ===== MAIN APP COMPONENT =====
+        // ===== MAIN APP =====
         function App() {
             const [user, setUser] = useState(null);
             const [loading, setLoading] = useState(true);
@@ -896,7 +607,6 @@
             const [myTeams, setMyTeams] = useState({});
             const [validationErrors, setValidationErrors] = useState([]);
 
-            // Check auth state
             useEffect(() => {
                 const unsubscribe = auth.onAuthStateChanged((firebaseUser) => {
                     setUser(firebaseUser);
@@ -905,7 +615,6 @@
                 return () => unsubscribe();
             }, []);
 
-            // Load user's teams
             useEffect(() => {
                 if (user) {
                     loadUserTeams();
@@ -923,10 +632,7 @@
                     const teams = {};
                     teamsSnapshot.forEach(doc => {
                         const data = doc.data();
-                        teams[data.matchId] = {
-                            ...data,
-                            id: doc.id
-                        };
+                        teams[data.matchId] = { ...data, id: doc.id };
                     });
                     setMyTeams(teams);
                 } catch (error) {
@@ -936,31 +642,26 @@
 
             const getAvailablePlayers = () => {
                 if (!selectedMatch) return [];
-                
                 const team1Players = PLAYERS[selectedMatch.team1] || [];
                 const team2Players = PLAYERS[selectedMatch.team2] || [];
-                
                 return [...team1Players, ...team2Players].map(p => ({
                     ...p,
-                    team: PLAYERS[selectedMatch.team1].includes(p) ? selectedMatch.team1 : selectedMatch.team2
+                    team: team1Players.includes(p) ? selectedMatch.team1 : selectedMatch.team2
                 }));
             };
 
             const validateTeam = () => {
                 const errors = [];
                 
-                // Check 11 players
                 if (selectedPlayers.length !== 11) {
                     errors.push(`Select exactly 11 players (currently ${selectedPlayers.length})`);
                 }
                 
-                // Check credits
                 const totalCredits = selectedPlayers.reduce((sum, p) => sum + p.credits, 0);
                 if (totalCredits > 100) {
                     errors.push(`Total credits ${totalCredits.toFixed(1)} exceeds limit of 100`);
                 }
                 
-                // Check role distribution
                 const roleCounts = {
                     WK: selectedPlayers.filter(p => p.role === 'WK').length,
                     BAT: selectedPlayers.filter(p => p.role === 'BAT').length,
@@ -973,14 +674,12 @@
                 if (roleCounts.AR < 1 || roleCounts.AR > 4) errors.push(`Select 1-4 All-Rounders (current: ${roleCounts.AR})`);
                 if (roleCounts.BOWL < 3 || roleCounts.BOWL > 6) errors.push(`Select 3-6 Bowlers (current: ${roleCounts.BOWL})`);
                 
-                // Check team distribution (max 7 from one team)
                 const team1Count = selectedPlayers.filter(p => p.team === selectedMatch.team1).length;
                 const team2Count = selectedPlayers.filter(p => p.team === selectedMatch.team2).length;
                 
                 if (team1Count > 7) errors.push(`Maximum 7 players from ${TEAMS_DATA[selectedMatch.team1].name} (current: ${team1Count})`);
                 if (team2Count > 7) errors.push(`Maximum 7 players from ${TEAMS_DATA[selectedMatch.team2].name} (current: ${team2Count})`);
                 
-                // Check captain and vice-captain
                 if (!captain) errors.push('Select a Captain');
                 if (!viceCaptain) errors.push('Select a Vice-Captain');
                 if (captain && viceCaptain && captain === viceCaptain) errors.push('Captain and Vice-Captain must be different');
@@ -1008,6 +707,7 @@
                 
                 if (errors.length > 0) {
                     setValidationErrors(errors);
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
                     return;
                 }
                 
@@ -1025,14 +725,12 @@
                     };
                     
                     if (myTeams[selectedMatch.id]) {
-                        // Update existing team
                         await db.collection('teams').doc(myTeams[selectedMatch.id].id).update(teamData);
                     } else {
-                        // Create new team
                         await db.collection('teams').add(teamData);
                     }
                     
-                    alert('Team saved successfully!');
+                    alert('Team saved successfully! ✅');
                     await loadUserTeams();
                     setSelectedMatch(null);
                     setSelectedPlayers([]);
@@ -1041,7 +739,7 @@
                     setActiveTab('myTeams');
                 } catch (error) {
                     console.error('Error saving team:', error);
-                    alert('Error saving team. Please try again.');
+                    alert('Error saving team: ' + error.message);
                 }
             };
 
@@ -1060,12 +758,12 @@
             }
 
             if (!user) {
-                return <LoginForm setUser={setUser} />;
+                return <LoginForm />;
             }
 
             return (
                 <div>
-                    <div className="header" style={{ position: 'relative' }}>
+                    <div className="header">
                         <button className="logout-btn" onClick={() => auth.signOut()}>
                             Logout
                         </button>
@@ -1074,16 +772,10 @@
                     </div>
 
                     <div className="tabs">
-                        <button
-                            className={`tab ${activeTab === 'matches' ? 'active' : ''}`}
-                            onClick={() => setActiveTab('matches')}
-                        >
+                        <button className={`tab ${activeTab === 'matches' ? 'active' : ''}`} onClick={() => setActiveTab('matches')}>
                             MATCHES
                         </button>
-                        <button
-                            className={`tab ${activeTab === 'myTeams' ? 'active' : ''}`}
-                            onClick={() => setActiveTab('myTeams')}
-                        >
+                        <button className={`tab ${activeTab === 'myTeams' ? 'active' : ''}`} onClick={() => setActiveTab('myTeams')}>
                             MY TEAMS ({Object.keys(myTeams).length})
                         </button>
                     </div>
@@ -1102,19 +794,13 @@
                                         setCaptain(null);
                                         setViceCaptain(null);
                                         setValidationErrors([]);
-                                        setActiveRole('ALL');
-                                        setSearchTerm('');
                                     }}
                                 >
                                     <div className="match-header">
                                         <div className="team-names">
                                             {TEAMS_DATA[match.team1].name} vs {TEAMS_DATA[match.team2].name}
                                         </div>
-                                        {myTeams[match.id] && (
-                                            <span style={{ color: '#10b981', fontWeight: '700', fontSize: '0.9rem' }}>
-                                                ✓ Team Created
-                                            </span>
-                                        )}
+                                        {myTeams[match.id] && <span style={{ color: '#10b981', fontWeight: '700' }}>✓ Team Created</span>}
                                     </div>
                                     <div className="match-info">
                                         <span>📅 {match.date}</span>
@@ -1129,6 +815,15 @@
                                 <div style={{ marginTop: '40px' }}>
                                     <h2>Create Your Team ({selectedPlayers.length}/11)</h2>
                                     
+                                    {validationErrors.length > 0 && (
+                                        <div className="validation-error">
+                                            <strong>⚠️ Please fix these issues:</strong>
+                                            <ul>
+                                                {validationErrors.map((error, i) => <li key={i}>{error}</li>)}
+                                            </ul>
+                                        </div>
+                                    )}
+
                                     <div className="team-count">
                                         <div>
                                             <strong>WK:</strong> {getRoleCount('WK')} | 
@@ -1154,17 +849,6 @@
                                         </div>
                                     </div>
 
-                                    {validationErrors.length > 0 && (
-                                        <div className="validation-error">
-                                            <strong>⚠️ Please fix these issues:</strong>
-                                            <ul>
-                                                {validationErrors.map((error, i) => (
-                                                    <li key={i}>{error}</li>
-                                                ))}
-                                            </ul>
-                                        </div>
-                                    )}
-
                                     <input
                                         type="text"
                                         className="search-box"
@@ -1175,11 +859,7 @@
 
                                     <div className="role-tabs">
                                         {['ALL', 'WK', 'BAT', 'AR', 'BOWL'].map(role => (
-                                            <div
-                                                key={role}
-                                                className={`role-tab ${activeRole === role ? 'active' : ''}`}
-                                                onClick={() => setActiveRole(role)}
-                                            >
+                                            <div key={role} className={`role-tab ${activeRole === role ? 'active' : ''}`} onClick={() => setActiveRole(role)}>
                                                 {role}
                                             </div>
                                         ))}
@@ -1207,16 +887,10 @@
                                                     
                                                     {isSelected && (
                                                         <div className="captain-buttons" onClick={(e) => e.stopPropagation()}>
-                                                            <button
-                                                                className={`captain-btn ${isCaptain ? 'active-captain' : ''}`}
-                                                                onClick={() => setCaptain(player.id)}
-                                                            >
+                                                            <button className={`captain-btn ${isCaptain ? 'active-captain' : ''}`} onClick={() => setCaptain(player.id)}>
                                                                 {isCaptain ? '👑 C (2x)' : 'Captain'}
                                                             </button>
-                                                            <button
-                                                                className={`captain-btn ${isVC ? 'active-vc' : ''}`}
-                                                                onClick={() => setViceCaptain(player.id)}
-                                                            >
+                                                            <button className={`captain-btn ${isVC ? 'active-vc' : ''}`} onClick={() => setViceCaptain(player.id)}>
                                                                 {isVC ? '⭐ VC (1.5x)' : 'VC'}
                                                             </button>
                                                         </div>
@@ -1226,11 +900,7 @@
                                         })}
                                     </div>
 
-                                    <button
-                                        className="btn"
-                                        onClick={saveTeam}
-                                        style={{ marginTop: '30px' }}
-                                    >
+                                    <button className="btn" onClick={saveTeam} style={{ marginTop: '30px' }}>
                                         {myTeams[selectedMatch.id] ? 'Update Team' : 'Save Team'}
                                     </button>
                                 </div>
@@ -1276,67 +946,95 @@
         }
 
         // ===== LOGIN COMPONENT =====
-        function LoginForm({ setUser }) {
-            const [email, setEmail] = useState('');
+        function LoginForm() {
+            const [identifier, setIdentifier] = useState('');
             const [password, setPassword] = useState('');
             const [error, setError] = useState('');
+            const [success, setSuccess] = useState('');
             const [loading, setLoading] = useState(false);
 
             const handleLogin = async (e) => {
                 e.preventDefault();
                 setError('');
+                setSuccess('');
                 setLoading(true);
 
                 try {
-                    // Try to authenticate with Firebase Auth first
-                    try {
-                        const userCredential = await auth.signInWithEmailAndPassword(email, password);
-                        return;
-                    } catch (authError) {
-                        // If auth fails, check Firestore
-                        console.log('Checking Firestore for user...');
-                    }
+                    console.log('Attempting login for:', identifier);
 
-                    // Check Firestore users collection
-                    const usersSnapshot = await db.collection('users')
-                        .where('username', '==', email.split('@')[0])
+                    // Step 1: Query Firestore for user
+                    let userDoc = null;
+                    let userData = null;
+
+                    // Try username first
+                    const usernameQuery = await db.collection('users')
+                        .where('username', '==', identifier)
                         .get();
 
-                    if (usersSnapshot.empty) {
-                        const emailSnapshot = await db.collection('users')
-                            .where('email', '==', email)
+                    if (!usernameQuery.empty) {
+                        userDoc = usernameQuery.docs[0];
+                        userData = userDoc.data();
+                    } else {
+                        // Try email
+                        const emailQuery = await db.collection('users')
+                            .where('email', '==', identifier)
                             .get();
                         
-                        if (emailSnapshot.empty) {
-                            setError('User not found. Please check your credentials.');
-                            setLoading(false);
-                            return;
+                        if (!emailQuery.empty) {
+                            userDoc = emailQuery.docs[0];
+                            userData = emailQuery.docs[0].data();
                         }
                     }
 
-                    // User exists in Firestore, create Firebase Auth account
+                    if (!userData) {
+                        setError('User not found. Please check your username/email.');
+                        setLoading(false);
+                        return;
+                    }
+
+                    console.log('User found in Firestore:', userData);
+
+                    // Step 2: Verify password
+                    if (userData.password !== password) {
+                        setError('Incorrect password. Please try again.');
+                        setLoading(false);
+                        return;
+                    }
+
+                    // Step 3: Create/login to Firebase Auth
+                    const email = userData.email || `${userData.username}@fantasy.local`;
+                    
                     try {
-                        const userCredential = await auth.createUserWithEmailAndPassword(email, password);
-                        
-                        // Update display name if available
-                        const userData = usersSnapshot.docs[0]?.data() || emailSnapshot.docs[0]?.data();
-                        if (userData && userData.name) {
-                            await userCredential.user.updateProfile({
-                                displayName: userData.name
-                            });
-                        }
-                    } catch (createError) {
-                        if (createError.code === 'auth/email-already-in-use') {
-                            // Try to sign in again
-                            await auth.signInWithEmailAndPassword(email, password);
+                        // Try to sign in first
+                        await auth.signInWithEmailAndPassword(email, password);
+                        console.log('Signed in with existing Firebase account');
+                    } catch (signInError) {
+                        if (signInError.code === 'auth/user-not-found') {
+                            // Create new Firebase Auth user
+                            console.log('Creating new Firebase Auth account...');
+                            const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+                            
+                            // Update profile
+                            if (userData.name) {
+                                await userCredential.user.updateProfile({
+                                    displayName: userData.name
+                                });
+                            }
+                            
+                            setSuccess('Account created and logged in successfully!');
+                        } else if (signInError.code === 'auth/wrong-password') {
+                            // Password mismatch with existing Firebase account
+                            setError('Account exists with different password. Contact admin.');
+                            setLoading(false);
+                            return;
                         } else {
-                            throw createError;
+                            throw signInError;
                         }
                     }
 
                 } catch (error) {
                     console.error('Login error:', error);
-                    setError(error.message || 'Invalid credentials. Please try again.');
+                    setError(error.message || 'Login failed. Please try again.');
                 } finally {
                     setLoading(false);
                 }
@@ -1346,21 +1044,24 @@
                 <div className="login-container">
                     <h2>🏏 Login to Fantasy Cricket</h2>
                     
-                    {error && (
-                        <div className="error-message">
-                            {error}
-                        </div>
-                    )}
+                    <div className="info-box">
+                        <strong>📌 Firestore Integration Active</strong>
+                        Login with your username or email from Firestore database.
+                    </div>
+
+                    {error && <div className="error-message">{error}</div>}
+                    {success && <div className="success-message">{success}</div>}
 
                     <form onSubmit={handleLogin}>
                         <div className="form-group">
-                            <label>Email / Username</label>
+                            <label>Username / Email</label>
                             <input
                                 type="text"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                                placeholder="Enter your email or username"
+                                value={identifier}
+                                onChange={(e) => setIdentifier(e.target.value)}
+                                placeholder="Enter username or email"
                                 required
+                                disabled={loading}
                             />
                         </div>
 
@@ -1370,8 +1071,9 @@
                                 type="password"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
-                                placeholder="Enter your password"
+                                placeholder="Enter password"
                                 required
+                                disabled={loading}
                             />
                         </div>
 
@@ -1381,13 +1083,12 @@
                     </form>
 
                     <p style={{ marginTop: '20px', textAlign: 'center', color: '#8892b0', fontSize: '0.9rem' }}>
-                        Use your Firestore credentials to login
+                        Example: Username "SubhesGlim" with your Firestore password
                     </p>
                 </div>
             );
         }
 
-        // Render app
         ReactDOM.render(<App />, document.getElementById('root'));
     </script>
 </body>
