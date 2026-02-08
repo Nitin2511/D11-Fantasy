@@ -825,6 +825,25 @@
             const [loading, setLoading] = useState(true);
             const [hasJoined, setHasJoined] = useState(false);
 
+            // Team name mapping
+            const teamNameMap = {
+                'Ind': 'India', 'Pak': 'Pakistan', 'Aus': 'Australia', 'Eng': 'England',
+                'NZ': 'New Zealand', 'SA': 'South Africa', 'WI': 'West Indies',
+                'SL': 'Sri Lanka', 'Ban': 'Bangladesh', 'Afg': 'Afghanistan',
+                'Ire': 'Ireland', 'Sco': 'Scotland', 'Zim': 'Zimbabwe',
+                'USA': 'USA', 'Can': 'Canada', 'Ned': 'Netherlands',
+                'Nam': 'Namibia', 'PNG': 'Papua New Guinea', 'Oma': 'Oman',
+                'UAE': 'UAE', 'Nep': 'Nepal'
+            };
+
+            // Parse team names from match ID (e.g., "Ind vs Pak" -> ["India", "Pakistan"])
+            const parseTeamNames = (matchId) => {
+                const parts = matchId.split(' vs ');
+                if (parts.length !== 2) return [matchId, ''];
+                return parts.map(abbr => teamNameMap[abbr.trim()] || abbr.trim());
+            };
+
+
             useEffect(() => {
                 loadMatches();
             }, []);
@@ -838,37 +857,23 @@
 
             const loadMatches = async () => {
                 try {
-                    const { collection, getDocs, orderBy, query, doc, setDoc } = window.firebaseModules;
+                    const { collection, getDocs } = window.firebaseModules;
                     const matchesRef = collection(window.firebaseDb, 'matches');
-                    const q = query(matchesRef, orderBy('dateTime', 'asc'));
-                    const snapshot = await getDocs(q);
+                    const snapshot = await getDocs(matchesRef);
                     
-                    let matchesList = [];
+                    const matchesList = snapshot.docs.map(doc => ({
+                        id: doc.id,
+                        ...doc.data()
+                    }));
                     
-                    if (snapshot.empty) {
-                        // No matches in database, create them from fixtures
-                        console.log('Creating matches from fixtures...');
-                        for (let i = 0; i < WT20_2026_FIXTURES.length; i++) {
-                            const match = WT20_2026_FIXTURES[i];
-                            const matchId = `match_${(i + 1).toString().padStart(3, '0')}`;
-                            const matchData = {
-                                ...match,
-                                status: 'upcoming',
-                                createdAt: new Date().toISOString()
-                            };
-                            
-                            await setDoc(doc(window.firebaseDb, 'matches', matchId), matchData);
-                            matchesList.push({ id: matchId, ...matchData });
-                        }
-                        console.log(`Created ${matchesList.length} matches successfully!`);
-                    } else {
-                        matchesList = snapshot.docs.map(doc => ({
-                            id: doc.id,
-                            ...doc.data()
-                        }));
-                        console.log(`Loaded ${matchesList.length} matches from database`);
-                    }
+                    // Sort by match# if available
+                    matchesList.sort((a, b) => {
+                        const matchNumA = parseInt(a['match#']) || 0;
+                        const matchNumB = parseInt(b['match#']) || 0;
+                        return matchNumA - matchNumB;
+                    });
                     
+                    console.log(`Loaded ${matchesList.length} matches from database`);
                     setMatches(matchesList);
                 } catch (error) {
                     console.error('Error loading matches:', error);
@@ -880,26 +885,49 @@
 
 
             const loadPlayers = async () => {
-                if (!selectedMatch) return;
+                if (!selectedMatch) {
+                    setPlayers({ team1: [], team2: [] });
+                    return;
+                }
 
                 try {
-                    const { collection, query, where, getDocs } = window.firebaseModules;
-                    const playersRef = collection(window.firebaseDb, 'players');
+                    const { collection, getDocs } = window.firebaseModules;
                     
-                    const team1Query = query(playersRef, where('team', '==', selectedMatch.team1));
-                    const team2Query = query(playersRef, where('team', '==', selectedMatch.team2));
+                    // Parse team names from match ID
+                    const [team1Name, team2Name] = parseTeamNames(selectedMatch.id);
+                    
+                    if (!team1Name || !team2Name) {
+                        setPlayers({ team1: [], team2: [] });
+                        return;
+                    }
+                    
+                    // Fetch players from teams/{teamName}/playerName collection
+                    const team1PlayersRef = collection(window.firebaseDb, 'teams', team1Name, 'playerName');
+                    const team2PlayersRef = collection(window.firebaseDb, 'teams', team2Name, 'playerName');
                     
                     const [team1Snapshot, team2Snapshot] = await Promise.all([
-                        getDocs(team1Query),
-                        getDocs(team2Query)
+                        getDocs(team1PlayersRef),
+                        getDocs(team2PlayersRef)
                     ]);
                     
-                    const team1Players = team1Snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                    const team2Players = team2Snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                    const team1Players = team1Snapshot.docs.map(doc => ({ 
+                        id: doc.id, 
+                        name: doc.id,
+                        team: team1Name,
+                        ...doc.data() 
+                    }));
+                    
+                    const team2Players = team2Snapshot.docs.map(doc => ({ 
+                        id: doc.id,
+                        name: doc.id,
+                        team: team2Name,
+                        ...doc.data() 
+                    }));
                     
                     setPlayers({ team1: team1Players, team2: team2Players });
                 } catch (error) {
                     console.error('Error loading players:', error);
+                    setPlayers({ team1: [], team2: [] });
                 }
             };
 
@@ -986,7 +1014,7 @@
                         </button>
 
                         <div className="match-header">
-                            <div className="teams">{selectedMatch.team1} vs {selectedMatch.team2}</div>
+                            <div className="teams">{selectedMatch.id}</div>
                             <span className={`status-badge status-${selectedMatch.status || 'upcoming'}`}>
                                 {(selectedMatch.status || 'upcoming').toUpperCase()}
                             </span>
@@ -994,14 +1022,14 @@
 
                         <div className="match-info">
                             <div className="info-item">
-                                <span className="info-label">Date & Time</span>
-                                <span className="info-value">
-                                    {new Date(selectedMatch.dateTime).toLocaleString()}
-                                </span>
+                                <span className="info-label">Match #</span>
+                                <span className="info-value">{selectedMatch['match#'] || 'TBD'}</span>
                             </div>
                             <div className="info-item">
-                                <span className="info-label">Venue</span>
-                                <span className="info-value">{selectedMatch.venue}</span>
+                                <span className="info-label">Date & Time</span>
+                                <span className="info-value">
+                                    {selectedMatch.matchtime ? new Date(selectedMatch.matchtime.seconds * 1000).toLocaleString() : 'TBD'}
+                                </span>
                             </div>
                         </div>
 
@@ -1019,17 +1047,17 @@
                         <div className="players-section">
                             <div className="team-section">
                                 <div className="team-header">
-                                    {selectedMatch.team1} - Squad ({players.team1.length} players)
+                                    {parseTeamNames(selectedMatch.id)[0]} - Squad ({players.team1.length} players)
                                 </div>
                                 <div className="players-grid">
                                     {players.team1.map(player => (
                                         <div key={player.id} className="player-card">
                                             <div className="player-name">{player.name}</div>
-                                            <span className="player-role">{player.role}</span>
+                                            <span className="player-role">{player.playerType || 'Player'}</span>
                                             <div className="player-stats">
                                                 <div className="stat">
-                                                    <span className="stat-label">Type</span>
-                                                    <span className="stat-value">{player.type || 'All-rounder'}</span>
+                                                    <span className="stat-label">Credits</span>
+                                                    <span className="stat-value">{player.credits || 0}</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -1039,17 +1067,17 @@
 
                             <div className="team-section">
                                 <div className="team-header">
-                                    {selectedMatch.team2} - Squad ({players.team2.length} players)
+                                    {parseTeamNames(selectedMatch.id)[1]} - Squad ({players.team2.length} players)
                                 </div>
                                 <div className="players-grid">
                                     {players.team2.map(player => (
                                         <div key={player.id} className="player-card">
                                             <div className="player-name">{player.name}</div>
-                                            <span className="player-role">{player.role}</span>
+                                            <span className="player-role">{player.playerType || 'Player'}</span>
                                             <div className="player-stats">
                                                 <div className="stat">
-                                                    <span className="stat-label">Type</span>
-                                                    <span className="stat-value">{player.type || 'All-rounder'}</span>
+                                                    <span className="stat-label">Credits</span>
+                                                    <span className="stat-value">{player.credits || 0}</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -1078,7 +1106,7 @@
                                     onClick={() => setSelectedMatch(match)}
                                 >
                                     <div className="match-header">
-                                        <div className="teams">{match.team1} vs {match.team2}</div>
+                                        <div className="teams">{match.id}</div>
                                         <span className={`status-badge status-${match.status || 'upcoming'}`}>
                                             {(match.status || 'upcoming').toUpperCase()}
                                         </span>
@@ -1086,20 +1114,23 @@
                                     
                                     <div className="match-info">
                                         <div className="info-item">
-                                            <span className="info-label">Date & Time</span>
+                                            <span className="info-label">Match #</span>
                                             <span className="info-value">
-                                                {new Date(match.dateTime).toLocaleString()}
+                                                {match['match#'] || 'TBD'}
                                             </span>
                                         </div>
                                         <div className="info-item">
-                                            <span className="info-label">Venue</span>
-                                            <span className="info-value">{match.venue}</span>
+                                            <span className="info-label">Date & Time</span>
+                                            <span className="info-value">
+                                                {match.matchtime ? new Date(match.matchtime.seconds * 1000).toLocaleString() : 'TBD'}
+                                            </span>
                                         </div>
                                     </div>
                                 </div>
                             ))}
                         </div>
                     )}
+                    </div>
                 </div>
             );
         }
@@ -1177,6 +1208,7 @@
                             </tbody>
                         </table>
                     )}
+                    </div>
                 </div>
             );
         }
@@ -1188,7 +1220,25 @@
             const [playerScores, setPlayerScores] = useState({});
             const [loading, setLoading] = useState(true);
 
-            useEffect(() => {
+            // Team name mapping
+            const teamNameMap = {
+                'Ind': 'India', 'Pak': 'Pakistan', 'Aus': 'Australia', 'Eng': 'England',
+                'NZ': 'New Zealand', 'SA': 'South Africa', 'WI': 'West Indies',
+                'SL': 'Sri Lanka', 'Ban': 'Bangladesh', 'Afg': 'Afghanistan',
+                'Ire': 'Ireland', 'Sco': 'Scotland', 'Zim': 'Zimbabwe',
+                'USA': 'USA', 'Can': 'Canada', 'Ned': 'Netherlands',
+                'Nam': 'Namibia', 'PNG': 'Papua New Guinea', 'Oma': 'Oman',
+                'UAE': 'UAE', 'Nep': 'Nepal'
+            };
+
+            // Parse team names from match ID
+            const parseTeamNames = (matchId) => {
+                const parts = matchId.split(' vs ');
+                if (parts.length !== 2) return [matchId, ''];
+                return parts.map(abbr => teamNameMap[abbr.trim()] || abbr.trim());
+            };
+
+                        useEffect(() => {
                 loadMatches();
             }, []);
 
@@ -1196,7 +1246,7 @@
                 try {
                     const { collection, getDocs, orderBy, query } = window.firebaseModules;
                     const matchesRef = collection(window.firebaseDb, 'matches');
-                    const q = query(matchesRef, orderBy('dateTime', 'asc'));
+                    const q = query(matchesRef, orderBy('matchtime', 'asc'));
                     const snapshot = await getDocs(q);
                     
                     const matchesList = snapshot.docs.map(doc => ({
@@ -1214,22 +1264,45 @@
 
             const loadMatchPlayers = async (match) => {
                 try {
-                    const { collection, query, where, getDocs } = window.firebaseModules;
-                    const playersRef = collection(window.firebaseDb, 'players');
+                    const { collection, getDocs } = window.firebaseModules;
                     
-                    const team1Query = query(playersRef, where('team', '==', match.team1));
-                    const team2Query = query(playersRef, where('team', '==', match.team2));
+                    // Parse team names from match ID
+                    const [team1Name, team2Name] = parseTeamNames(match.id);
+                    
+                    if (!team1Name || !team2Name) {
+                        alert('Cannot parse team names from match!');
+                        return;
+                    }
+                    
+                    // Fetch players from teams/{teamName}/playerName collection
+                    const team1PlayersRef = collection(window.firebaseDb, 'teams', team1Name, 'playerName');
+                    const team2PlayersRef = collection(window.firebaseDb, 'teams', team2Name, 'playerName');
                     
                     const [team1Snapshot, team2Snapshot] = await Promise.all([
-                        getDocs(team1Query),
-                        getDocs(team2Query)
+                        getDocs(team1PlayersRef),
+                        getDocs(team2PlayersRef)
                     ]);
                     
                     const allPlayers = [
-                        ...team1Snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })),
-                        ...team2Snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }))
+                        ...team1Snapshot.docs.map(doc => ({ 
+                            id: doc.id, 
+                            name: doc.id,
+                            team: team1Name,
+                            ...doc.data() 
+                        })),
+                        ...team2Snapshot.docs.map(doc => ({ 
+                            id: doc.id,
+                            name: doc.id,
+                            team: team2Name,
+                            ...doc.data() 
+                        }))
                     ];
                     
+                    if (allPlayers.length === 0) {
+                        alert('No player data available for these teams yet!');
+                        return;
+                    }
+
                     setPlayers(allPlayers);
                     setSelectedMatch(match);
                     
@@ -1241,6 +1314,7 @@
                     setPlayerScores(scores);
                 } catch (error) {
                     console.error('Error loading players:', error);
+                    alert('Error loading players. Please try again.');
                 }
             };
 
@@ -1364,7 +1438,7 @@
                             ← Back to Matches
                         </button>
 
-                        <h2>Enter Match Results: {selectedMatch.team1} vs {selectedMatch.team2}</h2>
+                        <h2>Enter Match Results: {selectedMatch.id}</h2>
                         
                         <div className="admin-section">
                             <h3>Player Scores</h3>
@@ -1426,7 +1500,7 @@
                             {matches.map(match => (
                                 <div key={match.id} className="match-card">
                                     <div className="match-header">
-                                        <div className="teams">{match.team1} vs {match.team2}</div>
+                                        <div className="teams">{match.id}</div>
                                         <span className={`status-badge status-${match.status || 'upcoming'}`}>
                                             {(match.status || 'upcoming').toUpperCase()}
                                         </span>
@@ -1441,6 +1515,7 @@
                                 </div>
                             ))}
                         </div>
+                    </div>
                     </div>
                 </div>
             );
