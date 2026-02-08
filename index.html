@@ -165,183 +165,239 @@
         
         .btn-small { padding: 10px 25px; font-size: 14px; }
         
-        .match-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 20px;
+        .error-box {
+            background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
+            padding: 18px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border: 2px solid #f87171;
         }
         
-        .match-card {
-            background: #0a0e27;
-            border-radius: 16px;
-            padding: 22px;
-            border: 2px solid #2d3548;
-            transition: all 0.3s;
-            cursor: pointer;
+        .success-box {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            padding: 18px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border: 2px solid #34d399;
         }
-        .match-card:hover { border-color: #10b981; transform: translateY(-5px); }
-        .match-card h3 { color: #10b981; margin-bottom: 12px; font-size: 1.3rem; }
-        .match-card p { color: #94a3b8; margin: 6px 0; font-size: 14px; }
+        
+        .info-box {
+            background: linear-gradient(135deg, #0891b2 0%, #0e7490 100%);
+            padding: 18px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border: 2px solid #22d3ee;
+        }
+        
+        .info-box h3 { margin-bottom: 10px; font-size: 1.2rem; }
+        .info-box p { margin: 5px 0; opacity: 0.9; font-size: 14px; }
         
         .player-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 15px;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 18px;
             margin-top: 25px;
         }
         
         .player-card {
-            background: #0a0e27;
-            border-radius: 14px;
-            padding: 18px;
+            background: linear-gradient(135deg, #0a0e27 0%, #151930 100%);
             border: 2px solid #2d3548;
-            transition: all 0.3s;
+            border-radius: 15px;
+            padding: 20px;
             cursor: pointer;
+            transition: all 0.3s;
             position: relative;
         }
         
-        .player-card:hover { border-color: #10b981; }
-        .player-card.selected { border-color: #10b981; background: rgba(16, 185, 129, 0.15); }
-        .player-card h4 { margin-bottom: 8px; font-size: 1.1rem; padding-right: 60px; }
-        .player-card .role { color: #94a3b8; font-size: 13px; margin-bottom: 8px; }
-        .player-card .team { color: #64748b; font-size: 12px; }
-        .player-card .credit-badge {
+        .player-card:hover {
+            border-color: #10b981;
+            transform: translateY(-5px);
+            box-shadow: 0 12px 35px rgba(16, 185, 129, 0.3);
+        }
+        
+        .player-card.selected {
+            border-color: #10b981;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            box-shadow: 0 10px 30px rgba(16, 185, 129, 0.4);
+        }
+        
+        .player-card h3 {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1.4rem;
+            margin-bottom: 10px;
+            color: #fff;
+        }
+        
+        .player-card .role-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            background: rgba(16, 185, 129, 0.2);
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #10b981;
+            margin-bottom: 10px;
+        }
+        
+        .player-card.selected .role-badge { background: rgba(255,255,255,0.3); color: white; }
+        
+        .player-card .team-badge {
             position: absolute;
             top: 15px;
             right: 15px;
-            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-            color: white;
-            padding: 5px 11px;
+            background: rgba(59, 130, 246, 0.3);
+            color: #60a5fa;
+            padding: 5px 10px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .player-card.selected .team-badge { background: rgba(255,255,255,0.3); color: white; }
+        
+        .player-card .stats {
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            opacity: 0.8;
+        }
+        
+        .team-summary {
+            background: #0a0e27;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+        
+        .team-summary h3 {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: #10b981;
+        }
+        
+        .team-counts {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .count-item {
+            background: #1a1f3a;
+            padding: 15px;
+            border-radius: 12px;
+            text-align: center;
+        }
+        
+        .count-item .label { font-size: 13px; color: #94a3b8; margin-bottom: 8px; }
+        .count-item .value { font-size: 1.8rem; font-weight: 700; color: #10b981; font-family: 'Rajdhani', sans-serif; }
+        
+        .match-card {
+            background: linear-gradient(135deg, #0a0e27 0%, #151930 100%);
+            border: 2px solid #2d3548;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+            transition: all 0.3s;
+        }
+        
+        .match-card:hover {
+            border-color: #10b981;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(16, 185, 129, 0.2);
+        }
+        
+        .match-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .match-header h3 {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1.4rem;
+            color: #fff;
+        }
+        
+        .match-date {
+            background: rgba(16, 185, 129, 0.2);
+            padding: 5px 12px;
             border-radius: 8px;
             font-size: 13px;
-            font-weight: 700;
-            box-shadow: 0 2px 8px rgba(245, 158, 11, 0.4);
+            color: #10b981;
+            font-weight: 600;
         }
         
-        .selected-team {
-            background: #0a0e27;
-            border-radius: 14px;
-            padding: 22px;
-            margin-top: 25px;
-        }
-        
-        .selected-team h3 { color: #10b981; margin-bottom: 18px; font-size: 1.4rem; }
-        .selected-team .count { color: #94a3b8; margin-bottom: 15px; }
-        
-        .selected-players {
+        .captain-selection {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            grid-template-columns: 1fr 1fr;
             gap: 12px;
+            margin-top: 15px;
         }
         
-        .selected-player {
+        .captain-btn {
+            padding: 12px;
             background: #1a1f3a;
-            padding: 14px;
-            border-radius: 10px;
             border: 2px solid #2d3548;
+            border-radius: 10px;
+            color: #fff;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+        
+        .captain-btn:hover { border-color: #10b981; }
+        .captain-btn.selected {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            border-color: #10b981;
+            box-shadow: 0 5px 20px rgba(16, 185, 129, 0.4);
+        }
+        
+        .captain-label {
+            display: inline-block;
+            background: rgba(251, 191, 36, 0.2);
+            color: #fbbf24;
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 700;
+            margin-right: 8px;
+        }
+        
+        .vice-captain-label {
+            display: inline-block;
+            background: rgba(156, 163, 175, 0.2);
+            color: #9ca3af;
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 700;
+            margin-right: 8px;
+        }
+        
+        .team-list {
+            margin-top: 20px;
+        }
+        
+        .team-list-item {
+            background: #0a0e27;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 12px;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
         
-        .selected-player .name { font-weight: 600; font-size: 15px; }
-        .selected-player .role { color: #94a3b8; font-size: 12px; }
-        
-        .remove-btn {
-            background: #ef4444;
-            border: none;
-            color: white;
-            padding: 6px 10px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 13px;
-            font-weight: 600;
-        }
-        
-        .captain-selection {
-            background: #0a0e27;
-            border-radius: 14px;
-            padding: 22px;
-            margin-top: 25px;
-        }
-        
-        .captain-selection h3 { color: #10b981; margin-bottom: 18px; }
-        
-        .captain-options {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-            gap: 12px;
-        }
-        
-        .captain-option {
-            background: #1a1f3a;
-            padding: 14px;
-            border-radius: 10px;
-            border: 2px solid #2d3548;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        
-        .captain-option:hover { border-color: #10b981; }
-        .captain-option.selected { border-color: #f59e0b; background: rgba(245, 158, 11, 0.15); }
-        
-        .my-teams-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 20px;
-        }
-        
-        .team-card {
-            background: #0a0e27;
-            border-radius: 14px;
-            padding: 22px;
-            border: 2px solid #2d3548;
-        }
-        
-        .team-card h4 { color: #10b981; margin-bottom: 16px; font-size: 1.2rem; }
-        
-        .team-players-grid {
-            display: grid;
-            gap: 10px;
-        }
-        
-        .team-player {
-            background: #1a1f3a;
-            padding: 10px 14px;
-            border-radius: 8px;
-            font-size: 14px;
-            border: 1px solid #2d3548;
-        }
-        
-        .team-player.captain {
-            border-color: #f59e0b;
-            background: rgba(245, 158, 11, 0.15);
-        }
-        
-        .team-player.vc {
-            border-color: #3b82f6;
-            background: rgba(59, 130, 246, 0.15);
-        }
-        
-        .contest-code {
-            background: #0a0e27;
-            padding: 20px;
-            border-radius: 14px;
-            margin-top: 15px;
-        }
-        
-        .contest-code-value {
-            font-size: 2rem;
-            font-weight: 700;
-            color: #10b981;
-            letter-spacing: 4px;
-            font-family: 'Rajdhani', sans-serif;
-            text-align: center;
-            padding: 15px;
-            background: #1a1f3a;
-            border-radius: 10px;
-            margin-top: 8px;
-        }
+        .team-list-item .player-info { display: flex; align-items: center; gap: 12px; }
+        .team-list-item .player-name { font-weight: 600; font-size: 16px; }
+        .team-list-item .player-role { font-size: 13px; color: #94a3b8; }
         
         .leaderboard-table {
             width: 100%;
@@ -349,135 +405,58 @@
             margin-top: 20px;
         }
         
-        .leaderboard-table th, .leaderboard-table td {
-            padding: 18px;
-            text-align: left;
-            border-bottom: 1px solid #2d3548;
+        .leaderboard-table thead {
+            background: #0a0e27;
         }
         
         .leaderboard-table th {
-            background: #0a0e27;
-            color: #10b981;
+            padding: 15px;
+            text-align: left;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 16px;
             font-weight: 700;
-            font-size: 15px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            color: #10b981;
+            border-bottom: 2px solid #2d3548;
         }
         
-        .leaderboard-table tr:hover { background: rgba(16, 185, 129, 0.05); }
+        .leaderboard-table td {
+            padding: 15px;
+            border-bottom: 1px solid #2d3548;
+        }
+        
+        .leaderboard-table tbody tr:hover {
+            background: rgba(16, 185, 129, 0.05);
+        }
         
         .rank-badge {
             display: inline-block;
-            width: 35px;
-            height: 35px;
-            line-height: 35px;
-            text-align: center;
-            border-radius: 50%;
-            font-weight: 700;
+            padding: 5px 12px;
             background: #2d3548;
-        }
-        
-        .rank-badge.rank-1 {
-            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
-            box-shadow: 0 4px 15px rgba(251, 191, 36, 0.5);
-        }
-        
-        .rank-badge.rank-2 {
-            background: linear-gradient(135deg, #cbd5e1 0%, #94a3b8 100%);
-        }
-        
-        .rank-badge.rank-3 {
-            background: linear-gradient(135deg, #fb923c 0%, #f97316 100%);
-        }
-        
-        .info-box {
-            background: rgba(59, 130, 246, 0.1);
-            border-left: 4px solid #3b82f6;
-            padding: 18px;
-            border-radius: 10px;
-            margin-bottom: 25px;
-        }
-        
-        .info-box h3 { color: #3b82f6; margin-bottom: 12px; font-size: 1.1rem; }
-        .info-box p { color: #cbd5e1; margin: 8px 0; font-size: 14px; line-height: 1.6; }
-        
-        .rules-section {
-            background: linear-gradient(135deg, #1a1f3a 0%, #242b4a 100%);
-            border-radius: 16px;
-            padding: 25px;
-            margin-top: 25px;
-            margin-bottom: 25px;
-            border: 2px solid #2d3548;
-        }
-
-        .rules-section h3 {
-            color: #10b981;
-            font-size: 1.5rem;
-            margin-bottom: 20px;
-            font-family: 'Rajdhani', sans-serif;
-            letter-spacing: 1px;
-        }
-
-        .rule-item {
-            background: #0a0e27;
-            border-radius: 12px;
-            padding: 18px;
-            margin-bottom: 15px;
-            border-left: 4px solid #10b981;
-        }
-
-        .rule-item h4 {
-            color: #10b981;
-            margin-bottom: 10px;
-            font-size: 1.1rem;
-            font-family: 'Rajdhani', sans-serif;
-        }
-
-        .rule-item p {
-            color: #cbd5e1;
-            margin: 6px 0;
-            font-size: 14px;
-            line-height: 1.6;
-        }
-
-        .rule-table {
-            width: 100%;
-            margin: 12px 0;
-            border-collapse: collapse;
-        }
-
-        .rule-table th, .rule-table td {
-            padding: 10px;
-            text-align: left;
-            border: 1px solid #2d3548;
-        }
-
-        .rule-table th {
-            background: #1a1f3a;
-            color: #10b981;
-            font-weight: 600;
-        }
-
-        .rule-table td {
-            background: #0a0e27;
-            color: #cbd5e1;
-        }
-
-        .credit-summary {
-            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-            color: white;
-            padding: 15px 20px;
-            border-radius: 12px;
-            font-size: 1.1rem;
+            border-radius: 8px;
             font-weight: 700;
-            margin: 15px 0;
-            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4);
-            text-align: center;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 16px;
         }
-
-        .credit-summary .remaining {
-            font-size: 1.4rem;
-            margin-top: 5px;
+        
+        .rank-badge.rank-1 { background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%); }
+        .rank-badge.rank-2 { background: linear-gradient(135deg, #94a3b8 0%, #64748b 100%); }
+        .rank-badge.rank-3 { background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); }
+        
+        .contest-code {
+            background: #0a0e27;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .contest-code-value {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #10b981;
+            letter-spacing: 5px;
+            margin: 10px 0;
         }
         
         .points-grid {
@@ -487,1001 +466,675 @@
             margin-top: 20px;
         }
         
+        .points-input-item {
+            background: #0a0e27;
+            padding: 15px;
+            border-radius: 12px;
+        }
+        
         .points-input-item label {
             display: block;
-            margin-bottom: 6px;
-            color: #cbd5e1;
+            margin-bottom: 8px;
             font-weight: 600;
             font-size: 14px;
+            color: #cbd5e1;
         }
         
         .points-input-item input {
             width: 100%;
-            padding: 12px;
-            background: #0a0e27;
+            padding: 10px;
+            background: #1a1f3a;
             border: 2px solid #2d3548;
-            border-radius: 10px;
+            border-radius: 8px;
             color: white;
             font-size: 16px;
-        }
-        
-        .auth-container {
-            max-width: 450px;
-            margin: 100px auto;
-        }
-        
-        .auth-tabs {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-        
-        .auth-tab {
-            flex: 1;
-            padding: 12px;
-            background: #1a1f3a;
-            border: none;
-            color: #8892b0;
             font-weight: 600;
-            cursor: pointer;
-            border-radius: 12px;
-            transition: all 0.3s;
         }
         
-        .auth-tab.active {
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-            color: white;
+        .users-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
         }
         
-        .error-message {
-            background: rgba(239, 68, 68, 0.2);
-            border: 1px solid #ef4444;
-            color: #fca5a5;
-            padding: 12px;
-            border-radius: 10px;
-            margin-bottom: 15px;
+        .users-table thead {
+            background: #0a0e27;
+        }
+        
+        .users-table th {
+            padding: 15px;
+            text-align: left;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 14px;
+            font-weight: 700;
+            color: #10b981;
+            border-bottom: 2px solid #2d3548;
+        }
+        
+        .users-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #2d3548;
             font-size: 14px;
         }
         
-        .success-message {
-            background: rgba(16, 185, 129, 0.2);
-            border: 1px solid #10b981;
-            color: #6ee7b7;
-            padding: 12px;
-            border-radius: 10px;
-            margin-bottom: 15px;
-            font-size: 14px;
+        .users-table tbody tr:hover {
+            background: rgba(16, 185, 129, 0.05);
         }
 
         @media (max-width: 768px) {
             .header h1 { font-size: 2rem; }
-            .match-grid, .player-grid, .my-teams-grid { grid-template-columns: 1fr; }
+            .player-grid { grid-template-columns: 1fr; }
+            .tabs { flex-wrap: nowrap; overflow-x: auto; }
+            .captain-selection { grid-template-columns: 1fr; }
+            .user-badge { position: static; margin-top: 15px; justify-content: center; }
         }
     </style>
 </head>
 <body>
     <div id="root"></div>
-
-    <script>
-        // Initialize Firebase
-        const firebaseConfig = {
-            apiKey: "AIzaSyDacks7Qnk42D2898leU_kgG8DZsYTFxCw",
-            authDomain: "t20-fantasy-contest.firebaseapp.com",
-            projectId: "t20-fantasy-contest",
-            storageBucket: "t20-fantasy-contest.firebasestorage.app",
-            messagingSenderId: "180217303236",
-            appId: "1:180217303236:web:a6b078a7a7d0fa070c3991",
-            measurementId: "G-LYY944KN99"
-        };
-
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
-        const auth = firebase.auth();
-        
-        console.log("Firebase initialized successfully!");
-    </script>
-
+    
     <script type="text/babel">
         const { useState, useEffect } = React;
 
-        // Pre-defined users - Edit these credentials as needed
-        const PREDEFINED_USERS = [
-            { id: '1', username: 'rahul_sharma', password: 'cricket2026', name: 'Rahul Sharma' },
-            { id: '2', username: 'priya_singh', password: 'fantasy123', name: 'Priya Singh' },
-            { id: '3', username: 'amit_patel', password: 'team2026', name: 'Amit Patel' },
-            { id: '4', username: 'sneha_verma', password: 'worldcup26', name: 'Sneha Verma' },
-            { id: '5', username: 'vikram_reddy', password: 'player2026', name: 'Vikram Reddy' },
-            { id: '6', username: 'anjali_nair', password: 'match2026', name: 'Anjali Nair' },
-            { id: '7', username: 'rohan_gupta', password: 'dream11', name: 'Rohan Gupta' },
-            { id: '8', username: 'neha_kapoor', password: 'ipl2026', name: 'Neha Kapoor' },
-            { id: '9', username: 'arjun_mehta', password: 'fantasy26', name: 'Arjun Mehta' },
-            { id: '10', username: 'pooja_joshi', password: 'cricket26', name: 'Pooja Joshi' },
-            { id: '11', username: 'karthik_rao', password: 'sports2026', name: 'Karthik Rao' },
-            { id: '12', username: 'divya_iyer', password: 'game2026', name: 'Divya Iyer' },
-            { id: '13', username: 'sanjay_kumar', password: 'fantasy2k26', name: 'Sanjay Kumar' },
-            { id: '14', username: 'ritu_shah', password: 'worldt20', name: 'Ritu Shah' },
-            { id: '15', username: 'manish_desai', password: 'cricket123', name: 'Manish Desai' },
-            { id: '16', username: 'kavya_menon', password: 'player123', name: 'Kavya Menon' },
-            { id: '17', username: 'aakash_pandey', password: 'team123', name: 'Aakash Pandey' },
-            { id: '18', username: 'shreya_kulkarni', password: 'match123', name: 'Shreya Kulkarni' },
-            { id: '19', username: 'deepak_agarwal', password: 'fantasy321', name: 'Deepak Agarwal' },
-            { id: '20', username: 'megha_jain', password: 'cricket321', name: 'Megha Jain' },
-            { id: '21', username: 'nikhil_bajaj', password: 'sports321', name: 'Nikhil Bajaj' },
-            { id: '22', username: 'isha_chopra', password: 'game321', name: 'Isha Chopra' },
-            { id: '23', username: 'varun_malhotra', password: 'player321', name: 'Varun Malhotra' },
-            { id: '24', username: 'tanvi_saxena', password: 'team321', name: 'Tanvi Saxena' },
-            { id: '25', username: 'gaurav_bansal', password: 'worldcup123', name: 'Gaurav Bansal' },
-            { id: '26', username: 'aditi_thakur', password: 'fantasy456', name: 'Aditi Thakur' },
-            { id: '27', username: 'harsh_sinha', password: 'cricket456', name: 'Harsh Sinha' },
-            { id: '28', username: 'nidhi_arora', password: 'sports456', name: 'Nidhi Arora' },
-            { id: '29', username: 'abhishek_yadav', password: 'game456', name: 'Abhishek Yadav' },
-            { id: '30', username: 'simran_bhatia', password: 'player456', name: 'Simran Bhatia' }
+        // ============================================
+        // FIREBASE CONFIGURATION
+        // ============================================
+        // TODO: Replace with your Firebase config
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_AUTH_DOMAIN",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_STORAGE_BUCKET",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
+
+        // Initialize Firebase
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        const db = firebase.firestore();
+        const auth = firebase.auth();
+
+        // ============================================
+        // CONSTANTS
+        // ============================================
+        const PLAYERS = [
+            { id: 'p1', name: 'Virat Kohli', team: 'IND', role: 'Batsman', matchRate: 0.85 },
+            { id: 'p2', name: 'Rohit Sharma', team: 'IND', role: 'Batsman', matchRate: 0.80 },
+            { id: 'p3', name: 'Jasprit Bumrah', team: 'IND', role: 'Bowler', matchRate: 0.90 },
+            { id: 'p4', name: 'Hardik Pandya', team: 'IND', role: 'All-Rounder', matchRate: 0.75 },
+            { id: 'p5', name: 'KL Rahul', team: 'IND', role: 'Wicket-Keeper', matchRate: 0.70 },
+            
+            { id: 'p6', name: 'Babar Azam', team: 'PAK', role: 'Batsman', matchRate: 0.85 },
+            { id: 'p7', name: 'Mohammad Rizwan', team: 'PAK', role: 'Wicket-Keeper', matchRate: 0.80 },
+            { id: 'p8', name: 'Shaheen Afridi', team: 'PAK', role: 'Bowler', matchRate: 0.85 },
+            { id: 'p9', name: 'Shadab Khan', team: 'PAK', role: 'All-Rounder', matchRate: 0.70 },
+            
+            { id: 'p10', name: 'Joe Root', team: 'ENG', role: 'Batsman', matchRate: 0.80 },
+            { id: 'p11', name: 'Jos Buttler', team: 'ENG', role: 'Wicket-Keeper', matchRate: 0.75 },
+            { id: 'p12', name: 'Jofra Archer', team: 'ENG', role: 'Bowler', matchRate: 0.80 },
+            { id: 'p13', name: 'Ben Stokes', team: 'ENG', role: 'All-Rounder', matchRate: 0.85 },
+            
+            { id: 'p14', name: 'Steve Smith', team: 'AUS', role: 'Batsman', matchRate: 0.85 },
+            { id: 'p15', name: 'David Warner', team: 'AUS', role: 'Batsman', matchRate: 0.80 },
+            { id: 'p16', name: 'Pat Cummins', team: 'AUS', role: 'Bowler', matchRate: 0.85 },
+            { id: 'p17', name: 'Glenn Maxwell', team: 'AUS', role: 'All-Rounder', matchRate: 0.75 },
+            { id: 'p18', name: 'Alex Carey', team: 'AUS', role: 'Wicket-Keeper', matchRate: 0.70 },
         ];
 
         const MATCHES = [
-            // Group A Matches
-            { id: 1, team1: 'Netherlands', team2: 'Pakistan', date: '2026-02-07', venue: 'Colombo (SSC)' },
-            { id: 3, team1: 'India', team2: 'United States', date: '2026-02-07', venue: 'Mumbai (Wankhede)' },
-            { id: 10, team1: 'Namibia', team2: 'Netherlands', date: '2026-02-10', venue: 'Delhi' },
-            { id: 12, team1: 'Pakistan', team2: 'United States', date: '2026-02-10', venue: 'Colombo (SSC)' },
-            { id: 18, team1: 'India', team2: 'Namibia', date: '2026-02-12', venue: 'Delhi' },
-            { id: 21, team1: 'Netherlands', team2: 'United States', date: '2026-02-13', venue: 'Chennai' },
-            { id: 26, team1: 'Namibia', team2: 'United States', date: '2026-02-15', venue: 'Chennai' },
-            { id: 27, team1: 'India', team2: 'Pakistan', date: '2026-02-15', venue: 'Colombo (RPS)' },
-            { id: 35, team1: 'Namibia', team2: 'Pakistan', date: '2026-02-18', venue: 'Colombo (SSC)' },
-            { id: 36, team1: 'India', team2: 'Netherlands', date: '2026-02-18', venue: 'Ahmedabad' },
-            
-            // Group B Matches  
-            { id: 6, team1: 'Sri Lanka', team2: 'Ireland', date: '2026-02-08', venue: 'Colombo (RPS)' },
-            { id: 8, team1: 'Oman', team2: 'Zimbabwe', date: '2026-02-09', venue: 'Colombo (SSC)' },
-            { id: 14, team1: 'Australia', team2: 'Ireland', date: '2026-02-11', venue: 'Colombo (RPS)' },
-            { id: 16, team1: 'Sri Lanka', team2: 'Oman', date: '2026-02-12', venue: 'Pallekele' },
-            { id: 19, team1: 'Australia', team2: 'Zimbabwe', date: '2026-02-13', venue: 'Colombo (RPS)' },
-            { id: 22, team1: 'Ireland', team2: 'Oman', date: '2026-02-14', venue: 'Colombo (SSC)' },
-            { id: 30, team1: 'Australia', team2: 'Sri Lanka', date: '2026-02-16', venue: 'Pallekele' },
-            { id: 32, team1: 'Ireland', team2: 'Zimbabwe', date: '2026-02-17', venue: 'Pallekele' },
-            { id: 38, team1: 'Sri Lanka', team2: 'Zimbabwe', date: '2026-02-19', venue: 'Colombo (RPS)' },
-            { id: 40, team1: 'Australia', team2: 'Oman', date: '2026-02-20', venue: 'Pallekele' },
-            
-            // Group C Matches
-            { id: 2, team1: 'Bangladesh', team2: 'West Indies', date: '2026-02-07', venue: 'Kolkata (Eden Gardens)' },
-            { id: 5, team1: 'England', team2: 'Nepal', date: '2026-02-08', venue: 'Mumbai (Wankhede)' },
-            { id: 7, team1: 'Bangladesh', team2: 'Italy', date: '2026-02-09', venue: 'Kolkata (Eden Gardens)' },
-            { id: 15, team1: 'England', team2: 'West Indies', date: '2026-02-11', venue: 'Mumbai (Wankhede)' },
-            { id: 17, team1: 'Italy', team2: 'Nepal', date: '2026-02-12', venue: 'Mumbai (Wankhede)' },
-            { id: 23, team1: 'Bangladesh', team2: 'England', date: '2026-02-14', venue: 'Kolkata (Eden Gardens)' },
-            { id: 25, team1: 'Nepal', team2: 'West Indies', date: '2026-02-15', venue: 'Mumbai (Wankhede)' },
-            { id: 29, team1: 'England', team2: 'Italy', date: '2026-02-16', venue: 'Kolkata (Eden Gardens)' },
-            { id: 33, team1: 'Bangladesh', team2: 'Nepal', date: '2026-02-17', venue: 'Mumbai (Wankhede)' },
-            { id: 37, team1: 'Italy', team2: 'West Indies', date: '2026-02-19', venue: 'Kolkata (Eden Gardens)' },
-            
-            // Group D Matches
-            { id: 4, team1: 'Afghanistan', team2: 'New Zealand', date: '2026-02-08', venue: 'Chennai' },
-            { id: 9, team1: 'Canada', team2: 'South Africa', date: '2026-02-09', venue: 'Ahmedabad' },
-            { id: 11, team1: 'New Zealand', team2: 'United Arab Emirates', date: '2026-02-10', venue: 'Chennai' },
-            { id: 13, team1: 'Afghanistan', team2: 'South Africa', date: '2026-02-11', venue: 'Ahmedabad' },
-            { id: 20, team1: 'Canada', team2: 'United Arab Emirates', date: '2026-02-13', venue: 'Delhi' },
-            { id: 24, team1: 'New Zealand', team2: 'South Africa', date: '2026-02-14', venue: 'Ahmedabad' },
-            { id: 28, team1: 'Afghanistan', team2: 'United Arab Emirates', date: '2026-02-16', venue: 'Delhi' },
-            { id: 31, team1: 'Canada', team2: 'New Zealand', date: '2026-02-17', venue: 'Chennai' },
-            { id: 34, team1: 'South Africa', team2: 'United Arab Emirates', date: '2026-02-18', venue: 'Delhi' },
-            { id: 39, team1: 'Afghanistan', team2: 'Canada', date: '2026-02-19', venue: 'Chennai' },
+            { id: 'm1', team1: 'IND', team2: 'PAK', date: '2026-02-15', venue: 'Dubai' },
+            { id: 'm2', team1: 'ENG', team2: 'AUS', date: '2026-02-16', venue: 'Dubai' },
+            { id: 'm3', team1: 'IND', team2: 'ENG', date: '2026-02-18', venue: 'Abu Dhabi' },
+            { id: 'm4', team1: 'PAK', team2: 'AUS', date: '2026-02-19', venue: 'Sharjah' },
+            { id: 'm5', team1: 'IND', team2: 'AUS', date: '2026-02-21', venue: 'Dubai' },
+            { id: 'm6', team1: 'PAK', team2: 'ENG', date: '2026-02-22', venue: 'Dubai' }
         ];
 
-        // Verified squads — ICC Men's T20 World Cup 2026 (20 teams × 15 players)
-const PLAYERS = [
-  // Group A — India
-  { id: 1, name: "Suryakumar Yadav", team: "India", role: "Batsman", credits: 10.5 },
-  { id: 2, name: "Abhishek Sharma", team: "India", role: "Batsman", credits: 10.5 },
-  { id: 3, name: "Ishan Kishan", team: "India", role: "Wicketkeeper", credits: 10.5 },
-  { id: 4, name: "Tilak Varma", team: "India", role: "Batsman", credits: 10.5 },
-  { id: 5, name: "Sanju Samson", team: "India", role: "Wicketkeeper", credits: 10.5 },
-  { id: 6, name: "Rinku Singh", team: "India", role: "Batsman", credits: 9.5 },
-  { id: 7, name: "Hardik Pandya", team: "India", role: "All-rounder", credits: 9.5 },
-  { id: 8, name: "Shivam Dube", team: "India", role: "All-rounder", credits: 9.5 },
-  { id: 9, name: "Axar Patel", team: "India", role: "All-rounder", credits: 9.5 },
-  { id: 10, name: "Washington Sundar", team: "India", role: "All-rounder", credits: 9.5 },
-  { id: 11, name: "Jasprit Bumrah", team: "India", role: "Bowler", credits: 8.5 },
-  { id: 12, name: "Arshdeep Singh", team: "India", role: "Bowler", credits: 8.5 },
-  { id: 13, name: "Kuldeep Yadav", team: "India", role: "Bowler", credits: 8.5 },
-  { id: 14, name: "Varun Chakravarthy", team: "India", role: "Bowler", credits: 8.5 },
-  { id: 15, name: "Mohammed Siraj", team: "India", role: "Bowler", credits: 8.5 }, // replacement confirmed by BCCI/ICC. :contentReference[oaicite:2]{index=2}
+        // Team composition rules (not displayed but used for validation)
+        const TEAM_RULES = {
+            minBatsmen: 3,
+            maxBatsmen: 6,
+            minBowlers: 3,
+            maxBowlers: 6,
+            minAllRounders: 1,
+            maxAllRounders: 4,
+            minWicketKeepers: 1,
+            maxWicketKeepers: 2,
+            totalPlayers: 11,
+            maxFromOneTeam: 7
+        };
 
-  // Group A — Pakistan
-  { id: 101, name: "Babar Azam", team: "Pakistan", role: "Batsman", credits: 10.5 },
-  { id: 102, name: "Shaheen Shah Afridi", team: "Pakistan", role: "Bowler", credits: 10.0 },
-  { id: 103, name: "Naseem Shah", team: "Pakistan", role: "Bowler", credits: 10.0 },
-  { id: 104, name: "Shadab Khan", team: "Pakistan", role: "All-rounder", credits: 10.5 },
-  { id: 105, name: "Fakhar Zaman", team: "Pakistan", role: "Batsman", credits: 10.5 },
-  { id: 106, name: "Saim Ayub", team: "Pakistan", role: "Batsman", credits: 9.5 },
-  { id: 107, name: "Mohammad Nawaz", team: "Pakistan", role: "All-rounder", credits: 9.5 },
-  { id: 108, name: "Abrar Ahmed", team: "Pakistan", role: "Bowler", credits: 9.0 },
-  { id: 109, name: "Usman Khan", team: "Pakistan", role: "Wicketkeeper", credits: 9.5 },
-  { id: 110, name: "Salman Ali Agha", team: "Pakistan", role: "All-rounder", credits: 9.5 },
-  { id: 111, name: "Sahibzada Farhan", team: "Pakistan", role: "Batsman", credits: 9.0 },
-  { id: 112, name: "Faheem Ashraf", team: "Pakistan", role: "All-rounder", credits: 9.0 },
-  { id: 113, name: "Khawaja Nafay", team: "Pakistan", role: "Wicketkeeper", credits: 9.0 },
-  { id: 114, name: "Usman Tariq", team: "Pakistan", role: "Batsman", credits: 9.0 },
-  { id: 115, name: "Salman Mirza", team: "Pakistan", role: "All-rounder", credits: 9.0 },
-
-  // Group A — Netherlands (verified)
-  { id: 201, name: "Scott Edwards", team: "Netherlands", role: "Wicketkeeper", credits: 10.5 },
-  { id: 202, name: "Max O'Dowd", team: "Netherlands", role: "Batsman", credits: 10.5 },
-  { id: 203, name: "Bas de Leede", team: "Netherlands", role: "All-rounder", credits: 10.5 },
-  { id: 204, name: "Colin Ackermann", team: "Netherlands", role: "All-rounder", credits: 10.5 },
-  { id: 205, name: "Roelof van der Merwe", team: "Netherlands", role: "All-rounder", credits: 10.5 },
-  { id: 206, name: "Logan van Beek", team: "Netherlands", role: "Bowler", credits: 9.0 },
-  { id: 207, name: "Fred Klaassen", team: "Netherlands", role: "Bowler", credits: 9.0 },
-  { id: 208, name: "Timm van der Gugten", team: "Netherlands", role: "Bowler", credits: 9.0 },
-  { id: 209, name: "Paul van Meekeren", team: "Netherlands", role: "Bowler", credits: 9.0 },
-  { id: 210, name: "Noah Croes", team: "Netherlands", role: "All-rounder", credits: 9.5 },
-  { id: 211, name: "Aryan Dutt", team: "Netherlands", role: "Bowler", credits: 8.5 },
-  { id: 212, name: "Maxwell van Otterdijk", team: "Netherlands", role: "Batsman", credits: 9.0 },
-  { id: 213, name: "Saqib Zulfiqar", team: "Netherlands", role: "Batsman", credits: 9.0 },
-  { id: 214, name: "Michael Levitt", team: "Netherlands", role: "Batsman", credits: 9.0 },
-  { id: 215, name: "Zach Lion-Cachet", team: "Netherlands", role: "Bowler", credits: 8.5 },
-
-  // Group B — Sri Lanka (host) — verified; replacement: Pramod Madushan for Eshan Malinga. :contentReference[oaicite:3]{index=3}
-  { id: 301, name: "Dasun Shanaka", team: "Sri Lanka", role: "All-rounder", credits: 10.5 },
-  { id: 302, name: "Kusal Mendis", team: "Sri Lanka", role: "Batsman", credits: 10.5 },
-  { id: 303, name: "Pathum Nissanka", team: "Sri Lanka", role: "Batsman", credits: 10.5 },
-  { id: 304, name: "Wanindu Hasaranga", team: "Sri Lanka", role: "All-rounder", credits: 10.5 },
-  { id: 305, name: "Matheesha Pathirana", team: "Sri Lanka", role: "Bowler", credits: 10.0 },
-  { id: 306, name: "Pramod Madushan", team: "Sri Lanka", role: "Bowler", credits: 9.0 }, // replacement confirmed. :contentReference[oaicite:4]{index=4}
-  { id: 307, name: "Dunith Wellalage", team: "Sri Lanka", role: "All-rounder", credits: 9.5 },
-  { id: 308, name: "Charith Asalanka", team: "Sri Lanka", role: "All-rounder", credits: 9.5 },
-  { id: 309, name: "Janith Liyanage", team: "Sri Lanka", role: "All-rounder", credits: 9.5 },
-  { id: 310, name: "Praveen Jayawickrama", team: "Sri Lanka", role: "Bowler", credits: 9.0 },
-  { id: 311, name: "Kusal Perera", team: "Sri Lanka", role: "Wicketkeeper", credits: 9.0 },
-  { id: 312, name: "Lasith Croospulle", team: "Sri Lanka", role: "Batsman", credits: 9.0 },
-  { id: 313, name: "Dushan Hemantha", team: "Sri Lanka", role: "All-rounder", credits: 9.0 },
-  { id: 314, name: "Asitha Fernando", team: "Sri Lanka", role: "Bowler", credits: 8.5 },
-  { id: 315, name: "Sadeera Samarawickrama", team: "Sri Lanka", role: "Wicketkeeper", credits: 9.0 },
-
-  // Group B — Ireland (verified)
-  { id: 401, name: "Andy Balbirnie", team: "Ireland", role: "Batsman", credits: 10.5 },
-  { id: 402, name: "George Dockrell", team: "Ireland", role: "All-rounder", credits: 10.5 },
-  { id: 403, name: "Harry Tector", team: "Ireland", role: "Batsman", credits: 10.5 },
-  { id: 404, name: "Paul Stirling", team: "Ireland", role: "Batsman", credits: 10.5 },
-  { id: 405, name: "Lorcan Tucker", team: "Ireland", role: "Wicketkeeper", credits: 10.5 },
-  { id: 406, name: "Mark Adair", team: "Ireland", role: "Bowler", credits: 9.0 },
-  { id: 407, name: "Curtis Campher", team: "Ireland", role: "All-rounder", credits: 9.5 },
-  { id: 408, name: "Ben White", team: "Ireland", role: "Bowler", credits: 9.0 },
-  { id: 409, name: "Fionn Hand", team: "Ireland", role: "Bowler", credits: 9.0 },
-  { id: 410, name: "Stephen Doheny", team: "Ireland", role: "Batsman", credits: 9.5 },
-  { id: 411, name: "Gareth Delany", team: "Ireland", role: "All-rounder", credits: 9.0 },
-  { id: 412, name: "Josh Little", team: "Ireland", role: "Bowler", credits: 8.5 },
-  { id: 413, name: "Curtis Campher", team: "Ireland", role: "All-rounder", credits: 9.0 },
-  { id: 414, name: "Andrew Balbirnie", team: "Ireland", role: "Batsman", credits: 9.0 },
-  { id: 415, name: "Ben White", team: "Ireland", role: "Bowler", credits: 8.5 },
-
-  // Group C — England (verified)
-  { id: 501, name: "Jos Buttler", team: "England", role: "Wicketkeeper", credits: 10.5 },
-  { id: 502, name: "Harry Brook", team: "England", role: "Batsman", credits: 10.5 },
-  { id: 503, name: "Ben Stokes", team: "England", role: "All-rounder", credits: 10.5 },
-  { id: 504, name: "Adil Rashid", team: "England", role: "Bowler", credits: 10.0 },
-  { id: 505, name: "Sam Curran", team: "England", role: "All-rounder", credits: 10.5 },
-  { id: 506, name: "Jofra Archer", team: "England", role: "Bowler", credits: 9.0 },
-  { id: 507, name: "Will Jacks", team: "England", role: "All-rounder", credits: 9.5 },
-  { id: 508, name: "Tom Banton", team: "England", role: "Batsman", credits: 9.5 },
-  { id: 509, name: "Phil Salt", team: "England", role: "Batsman", credits: 9.5 },
-  { id: 510, name: "Jamie Overton", team: "England", role: "Bowler", credits: 9.0 },
-  { id: 511, name: "Luke Wood", team: "England", role: "Bowler", credits: 8.5 },
-  { id: 512, name: "Reece Topley", team: "England", role: "Bowler", credits: 8.5 },
-  { id: 513, name: "Dawid Malan", team: "England", role: "Batsman", credits: 9.0 },
-  { id: 514, name: "Liam Dawson", team: "England", role: "All-rounder", credits: 9.0 },
-  { id: 515, name: "Gus Atkinson", team: "England", role: "Bowler", credits: 8.5 },
-
-  // Group C — South Africa (verified)
-  { id: 601, name: "Aiden Markram", team: "South Africa", role: "Batsman", credits: 10.5 },
-  { id: 602, name: "Quinton de Kock", team: "South Africa", role: "Wicketkeeper", credits: 10.5 },
-  { id: 603, name: "Dewald Brevis", team: "South Africa", role: "Batsman", credits: 10.5 },
-  { id: 604, name: "David Miller", team: "South Africa", role: "Batsman", credits: 10.5 },
-  { id: 605, name: "Jonathan Trott", team: "South Africa", role: "Batsman", credits: 10.5 }, // note: listed where applicable by sources
-  { id: 606, name: "Kagiso Rabada", team: "South Africa", role: "Bowler", credits: 9.0 },
-  { id: 607, name: "Marco Jansen", team: "South Africa", role: "Bowler", credits: 9.0 },
-  { id: 608, name: "Lungi Ngidi", team: "South Africa", role: "Bowler", credits: 9.0 },
-  { id: 609, name: "Keshav Maharaj", team: "South Africa", role: "Bowler", credits: 9.0 },
-  { id: 610, name: "Gerald Coetzee", team: "South Africa", role: "Bowler", credits: 9.0 },
-  { id: 611, name: "George Linde", team: "South Africa", role: "All-rounder", credits: 9.0 },
-  { id: 612, name: "Reeza Hendricks", team: "South Africa", role: "Batsman", credits: 9.0 },
-  { id: 613, name: "Heinrich Klaasen", team: "South Africa", role: "Wicketkeeper", credits: 9.0 },
-  { id: 614, name: "Andile Phehlukwayo", team: "South Africa", role: "All-rounder", credits: 9.0 },
-  { id: 615, name: "Wihan Lubbe", team: "South Africa", role: "All-rounder", credits: 9.0 },
-
-  // Group C — Zimbabwe (verified)
-  { id: 701, name: "Craig Ervine", team: "Zimbabwe", role: "Batsman", credits: 10.5 },
-  { id: 702, name: "Sikandar Raza", team: "Zimbabwe", role: "All-rounder", credits: 10.5 },
-  { id: 703, name: "Brendan Taylor", team: "Zimbabwe", role: "Wicketkeeper", credits: 10.5 },
-  { id: 704, name: "Tendai Chatara", team: "Zimbabwe", role: "Bowler", credits: 10.0 },
-  { id: 705, name: "Ryan Burl", team: "Zimbabwe", role: "All-rounder", credits: 10.5 },
-  { id: 706, name: "Sean Williams", team: "Zimbabwe", role: "All-rounder", credits: 9.5 },
-  { id: 707, name: "Blessing Muzarabani", team: "Zimbabwe", role: "Bowler", credits: 9.0 },
-  { id: 708, name: "Donald Tiripano", team: "Zimbabwe", role: "Bowler", credits: 9.0 },
-  { id: 709, name: "Wesley Madhevere", team: "Zimbabwe", role: "All-rounder", credits: 9.5 },
-  { id: 710, name: "Milton Shumba", team: "Zimbabwe", role: "Batsman", credits: 9.5 },
-  { id: 711, name: "Tinashe Kamunhukamwe", team: "Zimbabwe", role: "Batsman", credits: 9.0 },
-  { id: 712, name: "Brad Evans", team: "Zimbabwe", role: "Bowler", credits: 8.5 },
-  { id: 713, name: "Richard Ngarava", team: "Zimbabwe", role: "Bowler", credits: 8.5 },
-  { id: 714, name: "Wesley Nyasha", team: "Zimbabwe", role: "All-rounder", credits: 9.0 },
-  { id: 715, name: "Victor Nyauchi", team: "Zimbabwe", role: "Bowler", credits: 8.5 },
-
-  // Group D — New Zealand (verified)
-  { id: 801, name: "Kane Williamson", team: "New Zealand", role: "Batsman", credits: 10.5 },
-  { id: 802, name: "Devon Conway", team: "New Zealand", role: "Batsman", credits: 10.5 },
-  { id: 803, name: "Daryl Mitchell", team: "New Zealand", role: "All-rounder", credits: 10.5 },
-  { id: 804, name: "Trent Boult", team: "New Zealand", role: "Bowler", credits: 10.0 },
-  { id: 805, name: "Matt Henry", team: "New Zealand", role: "Bowler", credits: 10.0 },
-  { id: 806, name: "Tim Southee", team: "New Zealand", role: "Bowler", credits: 9.0 },
-  { id: 807, name: "Glenn Phillips", team: "New Zealand", role: "Wicketkeeper", credits: 9.5 },
-  { id: 808, name: "Michael Bracewell", team: "New Zealand", role: "All-rounder", credits: 9.5 },
-  { id: 809, name: "Lockie Ferguson", team: "New Zealand", role: "Bowler", credits: 9.0 },
-  { id: 810, name: "Finn Allen", team: "New Zealand", role: "Batsman", credits: 9.5 },
-  { id: 811, name: "Rachin Ravindra", team: "New Zealand", role: "All-rounder", credits: 9.0 },
-  { id: 812, name: "Mitchell Santner", team: "New Zealand", role: "All-rounder", credits: 9.0 },
-  { id: 813, name: "Kyle Jamieson", team: "New Zealand", role: "Bowler", credits: 8.5 },
-  { id: 814, name: "Cole McConchie", team: "New Zealand", role: "All-rounder", credits: 9.0 },
-  { id: 815, name: "James Neesham", team: "New Zealand", role: "All-rounder", credits: 9.0 },
-
-  // Group D — Afghanistan (verified)
-  { id: 901, name: "Rashid Khan", team: "Afghanistan", role: "All-rounder", credits: 10.5 },
-  { id: 902, name: "Ibrahim Zadran", team: "Afghanistan", role: "Batsman", credits: 10.5 },
-  { id: 903, name: "Rahmanullah Gurbaz", team: "Afghanistan", role: "Wicketkeeper", credits: 10.5 },
-  { id: 904, name: "Mohammad Nabi", team: "Afghanistan", role: "All-rounder", credits: 10.5 },
-  { id: 905, name: "Naveen-ul-Haq", team: "Afghanistan", role: "Bowler", credits: 10.0 },
-  { id: 906, name: "Noor Ahmad", team: "Afghanistan", role: "Bowler", credits: 9.0 },
-  { id: 907, name: "Azmatullah Omarzai", team: "Afghanistan", role: "All-rounder", credits: 9.5 },
-  { id: 908, name: "Fazalhaq Farooqi", team: "Afghanistan", role: "Bowler", credits: 9.0 },
-  { id: 909, name: "Gulbadin Naib", team: "Afghanistan", role: "All-rounder", credits: 9.5 },
-  { id: 910, name: "Ikram Alikhil", team: "Afghanistan", role: "Wicketkeeper", credits: 9.5 },
-  { id: 911, name: "Najibullah Zadran", team: "Afghanistan", role: "Batsman", credits: 9.0 },
-  { id: 912, name: "Usman Ghani", team: "Afghanistan", role: "Batsman", credits: 9.0 },
-  { id: 913, name: "Azmatullah Omarzai", team: "Afghanistan", role: "All-rounder", credits: 9.0 },
-  { id: 914, name: "Aftab Alam", team: "Afghanistan", role: "Bowler", credits: 8.5 },
-  { id: 915, name: "Hamdullah Qadri", team: "Afghanistan", role: "Bowler", credits: 8.5 },
-
-  // Group D — West Indies (verified)
-  { id: 1001, name: "Nicholas Pooran", team: "West Indies", role: "Wicketkeeper", credits: 10.5 },
-  { id: 1002, name: "Andre Russell", team: "West Indies", role: "All-rounder", credits: 10.5 },
-  { id: 1003, name: "Rovman Powell", team: "West Indies", role: "All-rounder", credits: 10.5 },
-  { id: 1004, name: "Kyle Mayers", team: "West Indies", role: "Batsman", credits: 10.5 },
-  { id: 1005, name: "Sherfane Rutherford", team: "West Indies", role: "All-rounder", credits: 10.5 },
-  { id: 1006, name: "Fabian Allen", team: "West Indies", role: "All-rounder", credits: 9.5 },
-  { id: 1007, name: "Shai Hope", team: "West Indies", role: "Batsman", credits: 9.5 },
-  { id: 1008, name: "Alzarri Joseph", team: "West Indies", role: "Bowler", credits: 9.0 },
-  { id: 1009, name: "Oshane Thomas", team: "West Indies", role: "Bowler", credits: 9.0 },
-  { id: 1010, name: "Jason Holder", team: "West Indies", role: "All-rounder", credits: 9.5 },
-  { id: 1011, name: "Hayden Walsh Jr.", team: "West Indies", role: "Bowler", credits: 8.5 },
-  { id: 1012, name: "Brandon King", team: "West Indies", role: "Batsman", credits: 9.0 },
-  { id: 1013, name: "Johnson Charles", team: "West Indies", role: "Batsman", credits: 9.0 },
-  { id: 1014, name: "Nkrumah Bonner", team: "West Indies", role: "Batsman", credits: 9.0 },
-  { id: 1015, name: "Shimron Hetmyer", team: "West Indies", role: "Batsman", credits: 9.0 },
-
-  // Group B — Canada (verified)
-  { id: 1101, name: "Aaron Johnson", team: "Canada", role: "Batsman", credits: 10.5 },
-  { id: 1102, name: "Navneet Dhaliwal", team: "Canada", role: "Batsman", credits: 10.5 },
-  { id: 1103, name: "Jesse Briggs", team: "Canada", role: "All-rounder", credits: 10.5 },
-  { id: 1104, name: "Harsh Thaker", team: "Canada", role: "Bowler", credits: 10.0 },
-  { id: 1105, name: "Saad Bin Zafar", team: "Canada", role: "All-rounder", credits: 10.5 },
-  { id: 1106, name: "Asif Mulla", team: "Canada", role: "All-rounder", credits: 9.5 },
-  { id: 1107, name: "Taranjit Bharaj", team: "Canada", role: "All-rounder", credits: 9.5 },
-  { id: 1108, name: "Nicholas Kirton", team: "Canada", role: "Batsman", credits: 9.5 },
-  { id: 1109, name: "Steven Taylor", team: "Canada", role: "Batsman", credits: 9.5 },
-  { id: 1110, name: "Akeem Dodson", team: "Canada", role: "Wicketkeeper", credits: 9.5 },
-  { id: 1111, name: "Yasir Mohammad", team: "Canada", role: "Batsman", credits: 9.0 },
-  { id: 1112, name: "Kamal Singh", team: "Canada", role: "Bowler", credits: 8.5 },
-  { id: 1113, name: "Ovais Yousof", team: "Canada", role: "Bowler", credits: 8.5 },
-  { id: 1114, name: "Sikandar Raza Jr.", team: "Canada", role: "All-rounder", credits: 9.0 },
-  { id: 1115, name: "Sumon Khan", team: "Canada", role: "Bowler", credits: 8.5 },
-
-  // Group C — Australia (verified)
-  { id: 1201, name: "Aaron Finch", team: "Australia", role: "Batsman", credits: 10.5 },
-  { id: 1202, name: "Steve Smith", team: "Australia", role: "Batsman", credits: 10.5 },
-  { id: 1203, name: "Pat Cummins", team: "Australia", role: "Bowler", credits: 10.0 },
-  { id: 1204, name: "Glenn Maxwell", team: "Australia", role: "All-rounder", credits: 10.5 },
-  { id: 1205, name: "Mitchell Marsh", team: "Australia", role: "All-rounder", credits: 10.5 },
-  { id: 1206, name: "Josh Hazlewood", team: "Australia", role: "Bowler", credits: 9.0 },
-  { id: 1207, name: "Adam Zampa", team: "Australia", role: "Bowler", credits: 9.0 },
-  { id: 1208, name: "Travis Head", team: "Australia", role: "Batsman", credits: 9.5 },
-  { id: 1209, name: "Josh Inglis", team: "Australia", role: "Wicketkeeper", credits: 9.5 },
-  { id: 1210, name: "Cameron Green", team: "Australia", role: "All-rounder", credits: 9.5 },
-  { id: 1211, name: "Jason Behrendorff", team: "Australia", role: "Bowler", credits: 8.5 },
-  { id: 1212, name: "Sean Abbott", team: "Australia", role: "Bowler", credits: 8.5 },
-  { id: 1213, name: "Alex Carey", team: "Australia", role: "Wicketkeeper", credits: 9.0 },
-  { id: 1214, name: "Hilton Cartwright", team: "Australia", role: "All-rounder", credits: 9.0 },
-  { id: 1215, name: "Ben McDermott", team: "Australia", role: "Batsman", credits: 9.0 },
-
-  // Group A — USA (verified)
-  { id: 1301, name: "Monank Patel", team: "United States", role: "Wicketkeeper", credits: 10.5 },
-  { id: 1302, name: "Andries Gous", team: "United States", role: "Batsman", credits: 10.5 },
-  { id: 1303, name: "Nosthush Kenjige", team: "United States", role: "Bowler", credits: 10.0 },
-  { id: 1304, name: "Saurabh Netravalkar", team: "United States", role: "Bowler", credits: 10.0 },
-  { id: 1305, name: "Ali Khan", team: "United States", role: "Bowler", credits: 10.0 },
-  { id: 1306, name: "Milind Kumar", team: "United States", role: "Batsman", credits: 9.5 },
-  { id: 1307, name: "Harmeet Singh", team: "United States", role: "Bowler", credits: 9.0 },
-  { id: 1308, name: "Shehan Jayasuriya", team: "United States", role: "All-rounder", credits: 9.5 },
-  { id: 1309, name: "Jessy Singh", team: "United States", role: "Batsman", credits: 9.5 },
-  { id: 1310, name: "Shayan Jahangir", team: "United States", role: "Batsman", credits: 9.5 },
-  { id: 1311, name: "Saiteja Mukkamala", team: "United States", role: "All-rounder", credits: 9.0 },
-  { id: 1312, name: "Sanjay Krishnamurthi", team: "United States", role: "All-rounder", credits: 9.0 },
-  { id: 1313, name: "Mohammad Mohsin", team: "United States", role: "Bowler", credits: 8.5 },
-  { id: 1314, name: "Shadley van Schalkwyk", team: "United States", role: "All-rounder", credits: 9.0 },
-  { id: 1315, name: "Steven Taylor Jr.", team: "United States", role: "Batsman", credits: 9.0 },
-
-  // Group B — Nepal (verified)
-  { id: 1401, name: "Dipendra Singh Airee", team: "Nepal", role: "All-rounder", credits: 10.5 },
-  { id: 1402, name: "Aasif Sheikh", team: "Nepal", role: "Batsman", credits: 10.5 },
-  { id: 1403, name: "Gyanendra Malla", team: "Nepal", role: "Batsman", credits: 10.5 },
-  { id: 1404, name: "Sandeep Lamichhane", team: "Nepal", role: "Bowler", credits: 10.0 },
-  { id: 1405, name: "Kushal Bhurtel", team: "Nepal", role: "Batsman", credits: 10.5 },
-  { id: 1406, name: "Sompal Kami", team: "Nepal", role: "All-rounder", credits: 9.5 },
-  { id: 1407, name: "Karan KC", team: "Nepal", role: "Bowler", credits: 9.0 },
-  { id: 1408, name: "Sharad Vesawkar", team: "Nepal", role: "Batsman", credits: 9.5 },
-  { id: 1409, name: "Rohit Paudel", team: "Nepal", role: "Batsman", credits: 9.5 },
-  { id: 1410, name: "Sharad Bhattarai", team: "Nepal", role: "All-rounder", credits: 9.5 },
-  { id: 1411, name: "Aman Hamble", team: "Nepal", role: "Batsman", credits: 9.0 },
-  { id: 1412, name: "Anil Mandal", team: "Nepal", role: "Batsman", credits: 9.0 },
-  { id: 1413, name: "Kamal Singh Airee", team: "Nepal", role: "Bowler", credits: 8.5 },
-  { id: 1414, name: "Pratis GC", team: "Nepal", role: "All-rounder", credits: 9.0 },
-  { id: 1415, name: "Binod Bhandari", team: "Nepal", role: "Wicketkeeper", credits: 9.0 },
-
-  // Group A — Namibia (verified)
-  { id: 1501, name: "Gerhard Erasmus", team: "Namibia", role: "Batsman", credits: 10.5 },
-  { id: 1502, name: "Zane Green", team: "Namibia", role: "Wicketkeeper", credits: 10.5 },
-  { id: 1503, name: "JJ Smit", team: "Namibia", role: "All-rounder", credits: 10.5 },
-  { id: 1504, name: "Bernard Scholtz", team: "Namibia", role: "All-rounder", credits: 10.5 },
-  { id: 1505, name: "Ben Shikongo", team: "Namibia", role: "Bowler", credits: 10.0 },
-  { id: 1506, name: "Ruben Trumpelmann", team: "Namibia", role: "Bowler", credits: 9.0 },
-  { id: 1507, name: "Jan Frylinck", team: "Namibia", role: "All-rounder", credits: 9.5 },
-  { id: 1508, name: "Malan Kruger", team: "Namibia", role: "Batsman", credits: 9.5 },
-  { id: 1509, name: "Nicol Loftie-Eaton", team: "Namibia", role: "Batsman", credits: 9.5 },
-  { id: 1510, name: "Louren Steenkamp", team: "Namibia", role: "Batsman", credits: 9.5 },
-  { id: 1511, name: "Jack Brassell", team: "Namibia", role: "Bowler", credits: 8.5 },
-  { id: 1512, name: "Max Heingo", team: "Namibia", role: "All-rounder", credits: 9.0 },
-  { id: 1513, name: "WP Myburgh", team: "Namibia", role: "All-rounder", credits: 9.0 },
-  { id: 1514, name: "Dylan Leicher", team: "Namibia", role: "Bowler", credits: 8.5 },
-  { id: 1515, name: "Jan Balt", team: "Namibia", role: "All-rounder", credits: 9.0 },
-
-  // Group B — UAE (verified)
-  { id: 1601, name: "Muhammad Waseem", team: "United Arab Emirates", role: "Batsman", credits: 10.5 },
-  { id: 1602, name: "Rohan Mustafa", team: "United Arab Emirates", role: "All-rounder", credits: 10.5 },
-  { id: 1603, name: "Vriitya Aravind", team: "United Arab Emirates", role: "Batsman", credits: 10.5 },
-  { id: 1604, name: "Alishan Sharafu", team: "United Arab Emirates", role: "All-rounder", credits: 10.5 },
-  { id: 1605, name: "Junaid Siddique", team: "United Arab Emirates", role: "All-rounder", credits: 10.5 },
-  { id: 1606, name: "Karthik Meiyappan", team: "United Arab Emirates", role: "Bowler", credits: 9.0 },
-  { id: 1607, name: "Owais Shah Jr.", team: "United Arab Emirates", role: "Batsman", credits: 9.5 },
-  { id: 1608, name: "Zahoor Khan", team: "United Arab Emirates", role: "Bowler", credits: 9.0 },
-  { id: 1609, name: "Sanchit Sharma", team: "United Arab Emirates", role: "Bowler", credits: 9.0 },
-  { id: 1610, name: "Aayan Afzal Khan", team: "United Arab Emirates", role: "All-rounder", credits: 9.5 },
-  { id: 1611, name: "Fahad Nawaz", team: "United Arab Emirates", role: "Batsman", credits: 9.0 },
-  { id: 1612, name: "Mehboob Alam", team: "United Arab Emirates", role: "Batsman", credits: 9.0 },
-  { id: 1613, name: "Shahid Anwar", team: "United Arab Emirates", role: "Bowler", credits: 8.5 },
-  { id: 1614, name: "Ikram Alikhil", team: "United Arab Emirates", role: "Wicketkeeper", credits: 9.0 },
-  { id: 1615, name: "Muhammad Farooq", team: "United Arab Emirates", role: "Bowler", credits: 8.5 },
-
-  // Group C — Scotland (verified)
-  { id: 1701, name: "George Munsey", team: "Scotland", role: "Batsman", credits: 10.5 },
-  { id: 1702, name: "Matthew Cross", team: "Scotland", role: "Wicketkeeper", credits: 10.5 },
-  { id: 1703, name: "Richie Berrington", team: "Scotland", role: "All-rounder", credits: 10.5 },
-  { id: 1704, name: "Mark Watt", team: "Scotland", role: "Bowler", credits: 10.0 },
-  { id: 1705, name: "Safyaan Sharif", team: "Scotland", role: "Bowler", credits: 10.0 },
-  { id: 1706, name: "Josh Davey", team: "Scotland", role: "Bowler", credits: 9.0 },
-  { id: 1707, name: "Calum MacLeod", team: "Scotland", role: "Batsman", credits: 9.5 },
-  { id: 1708, name: "Dewald Brevis Jr.", team: "Scotland", role: "All-rounder", credits: 9.5 },
-  { id: 1709, name: "Michael Leask", team: "Scotland", role: "All-rounder", credits: 9.5 },
-  { id: 1710, name: "Chris Greaves", team: "Scotland", role: "All-rounder", credits: 9.5 },
-  { id: 1711, name: "Hamza Tahir", team: "Scotland", role: "Bowler", credits: 8.5 },
-  { id: 1712, name: "Alasdair Evans", team: "Scotland", role: "Bowler", credits: 8.5 },
-  { id: 1713, name: "Nicholas Forrester", team: "Scotland", role: "Batsman", credits: 9.0 },
-  { id: 1714, name: "Ollie Hairs", team: "Scotland", role: "Batsman", credits: 9.0 },
-  { id: 1715, name: "Tom Sole", team: "Scotland", role: "All-rounder", credits: 9.0 },
-
-  // Group D — Bangladesh (verified)
-  { id: 1801, name: "Shakib Al Hasan", team: "Bangladesh", role: "All-rounder", credits: 10.5 },
-  { id: 1802, name: "Mushfiqur Rahim", team: "Bangladesh", role: "Wicketkeeper", credits: 10.5 },
-  { id: 1803, name: "Mahmudullah", team: "Bangladesh", role: "All-rounder", credits: 10.5 },
-  { id: 1804, name: "Taskin Ahmed", team: "Bangladesh", role: "Bowler", credits: 10.0 },
-  { id: 1805, name: "Mustafizur Rahman", team: "Bangladesh", role: "Bowler", credits: 10.0 },
-  { id: 1806, name: "Najmul Hossain Shanto", team: "Bangladesh", role: "Batsman", credits: 9.5 },
-  { id: 1807, name: "Towhid Hridoy", team: "Bangladesh", role: "Batsman", credits: 9.5 },
-  { id: 1808, name: "Liton Das", team: "Bangladesh", role: "Wicketkeeper", credits: 9.5 },
-  { id: 1809, name: "Najmul Hasan", team: "Bangladesh", role: "All-rounder", credits: 9.5 },
-  { id: 1810, name: "Afif Hossain", team: "Bangladesh", role: "All-rounder", credits: 9.5 },
-  { id: 1811, name: "Nurul Hasan", team: "Bangladesh", role: "Wicketkeeper", credits: 9.0 },
-  { id: 1812, name: "Mehidy Hasan Miraz", team: "Bangladesh", role: "All-rounder", credits: 9.0 },
-  { id: 1813, name: "Shoriful Islam", team: "Bangladesh", role: "Bowler", credits: 8.5 },
-  { id: 1814, name: "Ebadot Hossain", team: "Bangladesh", role: "Bowler", credits: 8.5 },
-  { id: 1815, name: "Towhid Hridoy Jr.", team: "Bangladesh", role: "Batsman", credits: 9.0 }
-];
-
-
-        // Admin credentials
-        const ADMIN_USERNAME = 'Nitin';
-        const ADMIN_PASSWORD = 'RishiNitin123';
-
+        // ============================================
+        // MAIN APP COMPONENT
+        // ============================================
         function App() {
+            // Auth & User State
             const [currentUser, setCurrentUser] = useState(null);
-            const [loginUsername, setLoginUsername] = useState('');
-            const [loginPassword, setLoginPassword] = useState('');
-            const [authError, setAuthError] = useState('');
-
-            const [activeTab, setActiveTab] = useState('matches');
-            const [selectedMatch, setSelectedMatch] = useState(null);
+            const [isLogin, setIsLogin] = useState(true);
+            const [username, setUsername] = useState('');
+            const [password, setPassword] = useState('');
+            const [name, setName] = useState('');
+            const [error, setError] = useState('');
+            const [success, setSuccess] = useState('');
+            
+            // App State
+            const [activeTab, setActiveTab] = useState('myTeam');
             const [selectedPlayers, setSelectedPlayers] = useState([]);
-            const [captain, setCaptain] = useState(null);
-            const [viceCaptain, setViceCaptain] = useState(null);
-            const [myTeams, setMyTeams] = useState({});
+            const [captainSelections, setCaptainSelections] = useState({});
             const [contest, setContest] = useState(null);
+            const [allUsers, setAllUsers] = useState({});
+            const [contestCode, setContestCode] = useState('');
             const [contestName, setContestName] = useState('');
             const [joinContestCode, setJoinContestCode] = useState('');
+            
+            // Admin State
             const [updateMatchId, setUpdateMatchId] = useState(null);
             const [playerPoints, setPlayerPoints] = useState({});
+            
+            // Loading State
             const [loading, setLoading] = useState(true);
-            const [allUsers, setAllUsers] = useState([]);
 
-            // Load data from Firestore on mount
+            // ============================================
+            // FIREBASE LISTENERS
+            // ============================================
             useEffect(() => {
-                const loadFirestoreData = async () => {
-                    try {
-                        // Load current user from localStorage (for session persistence)
-                        const savedUser = localStorage.getItem('currentUser');
-                        if (savedUser) {
-                            const user = JSON.parse(savedUser);
-                            setCurrentUser(user);
-                            
-                            // Load user's teams from Firestore
-                            if (!user.isAdmin) {
-                                const teamsDoc = await db.collection('userTeams').doc(user.id).get();
-                                if (teamsDoc.exists) {
-                                    setMyTeams(teamsDoc.data().teams || {});
-                                }
-                            }
-                        }
-
-                        // Load contest from Firestore
-                        const contestDoc = await db.collection('contests').doc('main').get();
-                        if (contestDoc.exists) {
-                            setContest(contestDoc.data());
-                        }
-
-                        // Load player points from Firestore
-                        const pointsDoc = await db.collection('gameData').doc('playerPoints').get();
-                        if (pointsDoc.exists) {
-                            setPlayerPoints(pointsDoc.data().points || {});
-                        }
-
-                        // Load all users who have created teams
-                        const usersSnapshot = await db.collection('userTeams').get();
-                        const usersList = usersSnapshot.docs.map(doc => ({
-                            id: doc.data().userId,
-                            username: doc.data().username,
-                            name: doc.data().name
-                        }));
-                        setAllUsers(usersList);
-
-                        setLoading(false);
-                    } catch (error) {
-                        console.error("Error loading data:", error);
-                        setLoading(false);
+                // Listen to contest changes
+                const unsubscribeContest = db.collection('contests').doc('main').onSnapshot((doc) => {
+                    if (doc.exists) {
+                        setContest(doc.data());
                     }
-                };
+                });
 
-                loadFirestoreData();
-
-                // Real-time listener for contest updates
-                const unsubscribeContest = db.collection('contests').doc('main')
-                    .onSnapshot((doc) => {
-                        if (doc.exists) {
-                            setContest(doc.data());
-                        }
+                // Listen to users changes
+                const unsubscribeUsers = db.collection('users').onSnapshot((snapshot) => {
+                    const usersData = {};
+                    snapshot.forEach((doc) => {
+                        usersData[doc.id] = doc.data();
                     });
+                    setAllUsers(usersData);
+                });
 
-                // Real-time listener for player points
-                const unsubscribePoints = db.collection('gameData').doc('playerPoints')
-                    .onSnapshot((doc) => {
-                        if (doc.exists) {
-                            setPlayerPoints(doc.data().points || {});
-                        }
-                    });
-
-                // Real-time listener for users
-                const unsubscribeUsers = db.collection('userTeams')
-                    .onSnapshot((snapshot) => {
-                        const usersList = snapshot.docs.map(doc => ({
-                            id: doc.data().userId,
-                            username: doc.data().username,
-                            name: doc.data().name
-                        }));
-                        setAllUsers(usersList);
-                    });
+                setLoading(false);
 
                 return () => {
                     unsubscribeContest();
-                    unsubscribePoints();
                     unsubscribeUsers();
                 };
             }, []);
 
-            // Save current user to localStorage for session
+            // Load current user from localStorage (session management)
             useEffect(() => {
-                if (currentUser) {
-                    localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                const savedUser = localStorage.getItem('currentUser');
+                if (savedUser) {
+                    setCurrentUser(JSON.parse(savedUser));
                 }
-            }, [currentUser]);
+            }, []);
 
-            // Save user teams to Firestore
-            useEffect(() => {
-                if (currentUser && !currentUser.isAdmin && Object.keys(myTeams).length > 0) {
-                    db.collection('userTeams').doc(currentUser.id).set({
-                        userId: currentUser.id,
-                        username: currentUser.username,
-                        name: currentUser.name,
-                        teams: myTeams,
-                        lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
-                    }).catch(error => console.error("Error saving teams:", error));
-                }
-            }, [myTeams, currentUser]);
-
-            // Save contest to Firestore
-            useEffect(() => {
-                if (contest && currentUser?.isAdmin) {
-                    db.collection('contests').doc('main').set(contest)
-                        .catch(error => console.error("Error saving contest:", error));
-                }
-            }, [contest, currentUser]);
-
-            // Save player points to Firestore
-            useEffect(() => {
-                if (currentUser?.isAdmin && Object.keys(playerPoints).length > 0) {
-                    db.collection('gameData').doc('playerPoints').set({
-                        points: playerPoints,
-                        lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
-                    }).catch(error => console.error("Error saving points:", error));
-                }
-            }, [playerPoints, currentUser]);
-
-            const handleLogin = () => {
-                setAuthError('');
+            // ============================================
+            // AUTH FUNCTIONS
+            // ============================================
+            const handleAuth = async () => {
+                setError('');
+                setSuccess('');
                 
-                // Check admin credentials
-                if (loginUsername === ADMIN_USERNAME && loginPassword === ADMIN_PASSWORD) {
-                    const adminUser = {
-                        id: 'admin',
-                        username: ADMIN_USERNAME,
-                        name: 'Admin',
-                        isAdmin: true
-                    };
-                    setCurrentUser(adminUser);
-                    return;
-                }
+                if (isLogin) {
+                    // Login
+                    if (!username || !password) {
+                        setError('Please enter username and password');
+                        return;
+                    }
 
-                // Check predefined users
-                const user = PREDEFINED_USERS.find(u => u.username === loginUsername && u.password === loginPassword);
-                
-                if (user) {
-                    setCurrentUser({
-                        id: user.id,
-                        username: user.username,
-                        name: user.name,
-                        isAdmin: false
-                    });
+                    try {
+                        const userDoc = await db.collection('users').doc(username).get();
+                        
+                        if (!userDoc.exists) {
+                            setError('User not found');
+                            return;
+                        }
+
+                        const userData = userDoc.data();
+                        if (userData.password !== password) {
+                            setError('Incorrect password');
+                            return;
+                        }
+
+                        const user = { id: username, ...userData };
+                        setCurrentUser(user);
+                        localStorage.setItem('currentUser', JSON.stringify(user));
+                        setSuccess('Login successful!');
+                    } catch (err) {
+                        setError('Login failed: ' + err.message);
+                    }
                 } else {
-                    setAuthError('Invalid username or password. Please contact admin for credentials.');
+                    // Register
+                    if (!username || !password || !name) {
+                        setError('Please fill all fields');
+                        return;
+                    }
+
+                    try {
+                        const userDoc = await db.collection('users').doc(username).get();
+                        
+                        if (userDoc.exists) {
+                            setError('Username already exists');
+                            return;
+                        }
+
+                        const newUser = {
+                            username,
+                            password,
+                            name,
+                            isAdmin: username === 'admin',
+                            createdAt: Date.now()
+                        };
+
+                        await db.collection('users').doc(username).set(newUser);
+                        
+                        const user = { id: username, ...newUser };
+                        setCurrentUser(user);
+                        localStorage.setItem('currentUser', JSON.stringify(user));
+                        setSuccess('Registration successful!');
+                    } catch (err) {
+                        setError('Registration failed: ' + err.message);
+                    }
                 }
             };
 
             const handleLogout = () => {
                 setCurrentUser(null);
                 localStorage.removeItem('currentUser');
-                setActiveTab('matches');
+                setUsername('');
+                setPassword('');
+                setName('');
             };
 
-            const selectMatch = (match) => {
-                setSelectedMatch(match);
-                setSelectedPlayers([]);
-                setCaptain(null);
-                setViceCaptain(null);
-                setActiveTab('teamSelection');
-            };
-
-            const getAvailablePlayers = () => {
-                if (!selectedMatch) return [];
-                return PLAYERS.filter(p => 
-                    p.team === selectedMatch.team1 || p.team === selectedMatch.team2
-                );
-            };
-
-            const getTotalCredits = (players) => {
-                return players.reduce((sum, player) => sum + (player.credits || 0), 0);
-            };
-
-            const validateTeamComposition = (players) => {
-                const roleCounts = {
-                    'Batsman': 0,
-                    'Bowler': 0,
-                    'All-rounder': 0,
-                    'Wicketkeeper': 0
-                };
-                const teamCounts = {};
-
-                players.forEach(player => {
-                    roleCounts[player.role] = (roleCounts[player.role] || 0) + 1;
-                    teamCounts[player.team] = (teamCounts[player.team] || 0) + 1;
-                });
-
-                return { roleCounts, teamCounts };
-            };
-
+            // ============================================
+            // TEAM BUILDING FUNCTIONS
+            // ============================================
             const togglePlayerSelection = (player) => {
+                setError('');
+                
                 if (selectedPlayers.find(p => p.id === player.id)) {
                     setSelectedPlayers(selectedPlayers.filter(p => p.id !== player.id));
-                    if (captain === player.id) setCaptain(null);
-                    if (viceCaptain === player.id) setViceCaptain(null);
-                } else if (selectedPlayers.length < 11) {
-                    const newTeam = [...selectedPlayers, player];
-                    
-                    // Check credit limit
-                    const totalCredits = getTotalCredits(newTeam);
-                    if (totalCredits > 100) {
-                        alert(`Cannot add player. Total credits would be ${totalCredits.toFixed(1)}/100. Credit limit exceeded!`);
-                        return;
-                    }
-                    
-                    // Check max 7 from one team
-                    const { teamCounts } = validateTeamComposition(newTeam);
-                    for (const team in teamCounts) {
-                        if (teamCounts[team] > 7) {
-                            alert(`Cannot add player. You already have 7 players from ${team}. Maximum 7 players allowed from one team.`);
-                            return;
-                        }
-                    }
-                    
-                    setSelectedPlayers(newTeam);
-                }
-            };
-
-            const saveTeam = () => {
-                if (selectedPlayers.length !== 11) {
-                    alert('Please select exactly 11 players');
-                    return;
-                }
-
-                const { roleCounts, teamCounts } = validateTeamComposition(selectedPlayers);
-
-                // Validate role composition
-                if (roleCounts['Batsman'] < 3 || roleCounts['Batsman'] > 6) {
-                    alert('You must select 3-6 batsmen');
-                    return;
-                }
-                if (roleCounts['Bowler'] < 3 || roleCounts['Bowler'] > 6) {
-                    alert('You must select 3-6 bowlers');
-                    return;
-                }
-                if (roleCounts['All-rounder'] < 1 || roleCounts['All-rounder'] > 4) {
-                    alert('You must select 1-4 all-rounders');
-                    return;
-                }
-                if (roleCounts['Wicketkeeper'] < 1 || roleCounts['Wicketkeeper'] > 4) {
-                    alert('You must select 1-4 wicketkeepers');
-                    return;
-                }
-
-                // Validate max 7 players from one team
-                for (const team in teamCounts) {
-                    if (teamCounts[team] > 7) {
-                        alert(`You have ${teamCounts[team]} players from ${team}. Maximum 7 players allowed from one team.`);
-                        return;
-                    }
-                }
-
-                // Validate credit limit
-                const totalCredits = getTotalCredits(selectedPlayers);
-                if (totalCredits > 100) {
-                    alert(`Total credits ${totalCredits.toFixed(1)} exceeds the limit of 100`);
-                    return;
-                }
-
-                if (!captain || !viceCaptain) {
-                    alert('Please select captain and vice-captain');
-                    return;
-                }
-                if (captain === viceCaptain) {
-                    alert('Captain and vice-captain must be different');
-                    return;
-                }
-
-                const newTeam = {
-                    matchId: selectedMatch.id,
-                    matchName: `${selectedMatch.team1} vs ${selectedMatch.team2}`,
-                    players: selectedPlayers,
-                    captain,
-                    viceCaptain,
-                    totalCredits: totalCredits.toFixed(1)
-                };
-
-                setMyTeams({ ...myTeams, [selectedMatch.id]: newTeam });
-                alert('Team saved successfully!');
-                setActiveTab('myTeams');
-            };
-
-            const createContest = () => {
-                if (!contestName) {
-                    alert('Please enter contest name');
-                    return;
-                }
-
-                const code = Math.random().toString(36).substring(2, 8).toUpperCase();
-                const newContest = {
-                    name: contestName,
-                    code,
-                    matches: MATCHES,
-                    participants: {}
-                };
-
-                setContest(newContest);
-                setContestName('');
-            };
-
-            const joinContest = () => {
-                if (!joinContestCode) {
-                    alert('Please enter contest code');
-                    return;
-                }
-
-                if (contest && contest.code === joinContestCode.toUpperCase()) {
-                    const updatedContest = { ...contest };
-                    updatedContest.participants[currentUser.id] = {
-                        userId: currentUser.id,
-                        name: currentUser.name,
-                        totalPoints: 0,
-                        matchPoints: {}
-                    };
-                    setContest(updatedContest);
-                    setJoinContestCode('');
-                    alert('Joined contest successfully!');
                 } else {
-                    alert('Invalid contest code');
+                    if (selectedPlayers.length >= TEAM_RULES.totalPlayers) {
+                        setError(`You can only select ${TEAM_RULES.totalPlayers} players`);
+                        return;
+                    }
+                    setSelectedPlayers([...selectedPlayers, player]);
                 }
             };
 
+            const validateTeam = () => {
+                const batsmen = selectedPlayers.filter(p => p.role === 'Batsman').length;
+                const bowlers = selectedPlayers.filter(p => p.role === 'Bowler').length;
+                const allRounders = selectedPlayers.filter(p => p.role === 'All-Rounder').length;
+                const wicketKeepers = selectedPlayers.filter(p => p.role === 'Wicket-Keeper').length;
+                
+                const teamCounts = {};
+                selectedPlayers.forEach(p => {
+                    teamCounts[p.team] = (teamCounts[p.team] || 0) + 1;
+                });
+                
+                const errors = [];
+                
+                if (selectedPlayers.length !== TEAM_RULES.totalPlayers) {
+                    errors.push(`Select exactly ${TEAM_RULES.totalPlayers} players`);
+                }
+                if (batsmen < TEAM_RULES.minBatsmen) {
+                    errors.push(`Need at least ${TEAM_RULES.minBatsmen} batsmen`);
+                }
+                if (batsmen > TEAM_RULES.maxBatsmen) {
+                    errors.push(`Maximum ${TEAM_RULES.maxBatsmen} batsmen allowed`);
+                }
+                if (bowlers < TEAM_RULES.minBowlers) {
+                    errors.push(`Need at least ${TEAM_RULES.minBowlers} bowlers`);
+                }
+                if (bowlers > TEAM_RULES.maxBowlers) {
+                    errors.push(`Maximum ${TEAM_RULES.maxBowlers} bowlers allowed`);
+                }
+                if (allRounders < TEAM_RULES.minAllRounders) {
+                    errors.push(`Need at least ${TEAM_RULES.minAllRounders} all-rounder`);
+                }
+                if (allRounders > TEAM_RULES.maxAllRounders) {
+                    errors.push(`Maximum ${TEAM_RULES.maxAllRounders} all-rounders allowed`);
+                }
+                if (wicketKeepers < TEAM_RULES.minWicketKeepers) {
+                    errors.push(`Need at least ${TEAM_RULES.minWicketKeepers} wicket-keeper`);
+                }
+                if (wicketKeepers > TEAM_RULES.maxWicketKeepers) {
+                    errors.push(`Maximum ${TEAM_RULES.maxWicketKeepers} wicket-keepers allowed`);
+                }
+                
+                Object.entries(teamCounts).forEach(([team, count]) => {
+                    if (count > TEAM_RULES.maxFromOneTeam) {
+                        errors.push(`Maximum ${TEAM_RULES.maxFromOneTeam} players from ${team}`);
+                    }
+                });
+                
+                return errors;
+            };
+
+            const saveTeam = async () => {
+                setError('');
+                setSuccess('');
+                
+                const errors = validateTeam();
+                if (errors.length > 0) {
+                    setError(errors.join(', '));
+                    return;
+                }
+
+                try {
+                    const contestDoc = await db.collection('contests').doc('main').get();
+                    if (!contestDoc.exists) {
+                        setError('No contest available');
+                        return;
+                    }
+
+                    const contestData = contestDoc.data();
+                    const updatedParticipants = {
+                        ...contestData.participants,
+                        [currentUser.id]: {
+                            name: currentUser.name,
+                            team: selectedPlayers.map(p => p.id),
+                            captainSelections: captainSelections,
+                            totalPoints: contestData.participants[currentUser.id]?.totalPoints || 0
+                        }
+                    };
+
+                    await db.collection('contests').doc('main').update({
+                        participants: updatedParticipants
+                    });
+
+                    setSuccess('Team saved successfully!');
+                } catch (err) {
+                    setError('Failed to save team: ' + err.message);
+                }
+            };
+
+            // ============================================
+            // CAPTAIN SELECTION FUNCTIONS
+            // ============================================
+            const setCaptain = (matchId, playerId) => {
+                const newSelections = { ...captainSelections };
+                if (!newSelections[matchId]) {
+                    newSelections[matchId] = {};
+                }
+                newSelections[matchId].captain = playerId;
+                setCaptainSelections(newSelections);
+            };
+
+            const setViceCaptain = (matchId, playerId) => {
+                const newSelections = { ...captainSelections };
+                if (!newSelections[matchId]) {
+                    newSelections[matchId] = {};
+                }
+                newSelections[matchId].viceCaptain = playerId;
+                setCaptainSelections(newSelections);
+            };
+
+            const getMatchPlayers = (match) => {
+                return selectedPlayers.filter(p => p.team === match.team1 || p.team === match.team2);
+            };
+
+            // ============================================
+            // CONTEST FUNCTIONS
+            // ============================================
+            const createContest = async () => {
+                setError('');
+                setSuccess('');
+                
+                if (!contestCode || !contestName) {
+                    setError('Please enter contest code and name');
+                    return;
+                }
+
+                try {
+                    const newContest = {
+                        code: contestCode,
+                        name: contestName,
+                        createdBy: currentUser.id,
+                        createdAt: Date.now(),
+                        participants: {},
+                        matches: MATCHES.map(m => ({ ...m, pointsUpdated: false }))
+                    };
+
+                    await db.collection('contests').doc('main').set(newContest);
+                    setSuccess('Contest created successfully!');
+                    setContestCode('');
+                    setContestName('');
+                } catch (err) {
+                    setError('Failed to create contest: ' + err.message);
+                }
+            };
+
+            const joinContest = async () => {
+                setError('');
+                setSuccess('');
+                
+                if (!joinContestCode) {
+                    setError('Please enter contest code');
+                    return;
+                }
+
+                if (!contest) {
+                    setError('No contest available');
+                    return;
+                }
+
+                if (contest.code !== joinContestCode) {
+                    setError('Invalid contest code');
+                    return;
+                }
+
+                try {
+                    const updatedParticipants = {
+                        ...contest.participants,
+                        [currentUser.id]: {
+                            name: currentUser.name,
+                            team: [],
+                            captainSelections: {},
+                            totalPoints: 0
+                        }
+                    };
+
+                    await db.collection('contests').doc('main').update({
+                        participants: updatedParticipants
+                    });
+
+                    setSuccess('Joined contest successfully!');
+                    setJoinContestCode('');
+                } catch (err) {
+                    setError('Failed to join contest: ' + err.message);
+                }
+            };
+
+            // ============================================
+            // ADMIN FUNCTIONS
+            // ============================================
             const updatePlayerPointsValue = (playerId, value) => {
                 const key = `${updateMatchId}-${playerId}`;
-                setPlayerPoints({ ...playerPoints, [key]: parseInt(value) || 0 });
+                setPlayerPoints({
+                    ...playerPoints,
+                    [key]: parseInt(value) || 0
+                });
             };
 
-            const calculateAndUpdateLeaderboard = () => {
-                if (!contest || !updateMatchId) {
-                    alert('Please select a match');
+            const calculateAndUpdateLeaderboard = async () => {
+                setError('');
+                setSuccess('');
+                
+                if (!updateMatchId) {
+                    setError('Please select a match');
                     return;
                 }
 
-                const updatedContest = { ...contest };
-
-                Object.values(updatedContest.participants).forEach(participant => {
-                    const team = myTeams[updateMatchId];
+                try {
+                    const updatedParticipants = { ...contest.participants };
                     
-                    if (team && team.players) {
+                    Object.entries(updatedParticipants).forEach(([userId, participant]) => {
                         let matchPoints = 0;
+                        const captainId = participant.captainSelections[updateMatchId]?.captain;
+                        const viceCaptainId = participant.captainSelections[updateMatchId]?.viceCaptain;
                         
-                        team.players.forEach(player => {
-                            const key = `${updateMatchId}-${player.id}`;
+                        participant.team.forEach(playerId => {
+                            const key = `${updateMatchId}-${playerId}`;
                             const points = playerPoints[key] || 0;
                             
-                            if (player.id === team.captain) {
+                            if (playerId === captainId) {
                                 matchPoints += points * 2;
-                            } else if (player.id === team.viceCaptain) {
+                            } else if (playerId === viceCaptainId) {
                                 matchPoints += points * 1.5;
                             } else {
                                 matchPoints += points;
                             }
                         });
+                        
+                        updatedParticipants[userId].totalPoints = 
+                            (updatedParticipants[userId].totalPoints || 0) + matchPoints;
+                    });
 
-                        participant.matchPoints[updateMatchId] = matchPoints;
-                        participant.totalPoints = Object.values(participant.matchPoints).reduce((a, b) => a + b, 0);
-                    }
-                });
+                    const updatedMatches = contest.matches.map(m => 
+                        m.id === updateMatchId ? { ...m, pointsUpdated: true } : m
+                    );
 
-                setContest(updatedContest);
-                alert('Leaderboard updated successfully!');
+                    await db.collection('contests').doc('main').update({
+                        participants: updatedParticipants,
+                        matches: updatedMatches
+                    });
+
+                    setSuccess('Leaderboard updated successfully!');
+                    setUpdateMatchId(null);
+                    setPlayerPoints({});
+                } catch (err) {
+                    setError('Failed to update leaderboard: ' + err.message);
+                }
+            };
+
+            // ============================================
+            // HELPER FUNCTIONS
+            // ============================================
+            const getAvailablePlayers = () => {
+                if (!updateMatchId) return [];
+                const match = MATCHES.find(m => m.id === updateMatchId);
+                if (!match) return [];
+                return PLAYERS.filter(p => p.team === match.team1 || p.team === match.team2);
             };
 
             const getLeaderboard = () => {
                 if (!contest) return [];
-                return Object.values(contest.participants).sort((a, b) => b.totalPoints - a.totalPoints);
+                return Object.entries(contest.participants)
+                    .map(([userId, data]) => ({
+                        userId,
+                        name: data.name,
+                        totalPoints: data.totalPoints || 0
+                    }))
+                    .sort((a, b) => b.totalPoints - a.totalPoints);
             };
 
             const getAllUsers = () => {
-                return allUsers;
+                return Object.entries(allUsers).map(([id, data]) => ({
+                    id,
+                    ...data
+                }));
             };
 
-            // Show loading screen while Firebase loads
+            const getTeamCounts = () => {
+                const batsmen = selectedPlayers.filter(p => p.role === 'Batsman').length;
+                const bowlers = selectedPlayers.filter(p => p.role === 'Bowler').length;
+                const allRounders = selectedPlayers.filter(p => p.role === 'All-Rounder').length;
+                const wicketKeepers = selectedPlayers.filter(p => p.role === 'Wicket-Keeper').length;
+                
+                return { batsmen, bowlers, allRounders, wicketKeepers };
+            };
+
+            // Load user's team when contest loads
+            useEffect(() => {
+                if (contest && currentUser && contest.participants[currentUser.id]) {
+                    const userTeam = contest.participants[currentUser.id];
+                    const teamPlayers = PLAYERS.filter(p => userTeam.team.includes(p.id));
+                    setSelectedPlayers(teamPlayers);
+                    setCaptainSelections(userTeam.captainSelections || {});
+                }
+            }, [contest, currentUser]);
+
+            // ============================================
+            // RENDER
+            // ============================================
             if (loading) {
-                return (
-                    <div className="auth-container">
-                        <div className="header">
-                            <h1>🏏 T20 Fantasy</h1>
-                            <p>Loading...</p>
-                        </div>
-                        <div className="card" style={{textAlign: 'center', padding: '40px'}}>
-                            <p style={{fontSize: '1.2rem', color: '#10b981'}}>🔄 Loading data from Firebase...</p>
-                        </div>
-                    </div>
-                );
+                return <div style={{textAlign: 'center', padding: '50px'}}>Loading...</div>;
             }
 
-            // Authentication screen
             if (!currentUser) {
                 return (
-                    <div className="auth-container">
+                    <div>
                         <div className="header">
-                            <h1>🏏 T20 Fantasy</h1>
-                            <p>Login or Create Account</p>
+                            <h1>🏏 T20 FANTASY</h1>
+                            <p>Build Your Dream Team & Compete</p>
                         </div>
-
-                        <div className="card">
-                            <h2 style={{marginBottom: '20px', textAlign: 'center'}}>Login</h2>
-
-                            {authError && <div className="error-message">{authError}</div>}
-
+                        
+                        <div className="card" style={{maxWidth: '500px', margin: '0 auto'}}>
+                            <h2>{isLogin ? 'Login' : 'Register'}</h2>
+                            
+                            {error && <div className="error-box">{error}</div>}
+                            {success && <div className="success-box">{success}</div>}
+                            
                             <div className="input-group">
                                 <label>Username</label>
-                                <input 
-                                    type="text" 
-                                    value={loginUsername}
-                                    onChange={(e) => setLoginUsername(e.target.value)}
-                                    placeholder="Enter username"
-                                    onKeyPress={(e) => e.key === 'Enter' && handleLogin()}
-                                />
+                                <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} placeholder="Enter username" />
                             </div>
+                            
                             <div className="input-group">
                                 <label>Password</label>
-                                <input 
-                                    type="password" 
-                                    value={loginPassword}
-                                    onChange={(e) => setLoginPassword(e.target.value)}
-                                    placeholder="Enter password"
-                                    onKeyPress={(e) => e.key === 'Enter' && handleLogin()}
-                                />
+                                <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Enter password" />
                             </div>
-                            <button className="btn" onClick={handleLogin} style={{width: '100%'}}>
-                                Login
+                            
+                            {!isLogin && (
+                                <div className="input-group">
+                                    <label>Full Name</label>
+                                    <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="Enter your name" />
+                                </div>
+                            )}
+                            
+                            <button className="btn" onClick={handleAuth} style={{width: '100%'}}>
+                                {isLogin ? 'Login' : 'Register'}
                             </button>
-                        </div>
-
-                        <div className="info-box" style={{marginTop: '20px'}}>
-                            <h3>ℹ️ Account Information</h3>
-                            <p><strong>Pre-registered Users:</strong> Use credentials provided by admin</p>
-                            <p><strong>Need Credentials?</strong> Contact the contest admin</p>
-                            <p style={{marginTop: '10px', color: '#10b981'}}>✅ Your data is safely stored in the cloud. Login from any device!</p>
+                            
+                            <p style={{textAlign: 'center', marginTop: '20px', color: '#94a3b8'}}>
+                                {isLogin ? "Don't have an account? " : "Already have an account? "}
+                                <span style={{color: '#10b981', cursor: 'pointer', fontWeight: '600'}} onClick={() => {
+                                    setIsLogin(!isLogin);
+                                    setError('');
+                                    setSuccess('');
+                                }}>
+                                    {isLogin ? 'Register' : 'Login'}
+                                </span>
+                            </p>
                         </div>
                     </div>
                 );
             }
 
-            // Main app for logged in users
             return (
                 <div>
                     <div className="header">
-                        <h1>🏏 T20 WORLD CUP FANTASY</h1>
-                        <p>Build Your Dream Team & Compete!</p>
+                        <h1>🏏 T20 FANTASY</h1>
+                        <p>Build Your Dream Team & Compete</p>
                         <div className="user-badge">
-                            {currentUser.isAdmin && <span className="admin-badge">ADMIN</span>}
                             <span>{currentUser.name}</span>
+                            {currentUser.isAdmin && <span className="admin-badge">ADMIN</span>}
                         </div>
                     </div>
 
                     <div className="tabs">
+                        <button className={`tab ${activeTab === 'myTeam' ? 'active' : ''}`} onClick={() => setActiveTab('myTeam')}>
+                            My Team
+                        </button>
                         <button className={`tab ${activeTab === 'matches' ? 'active' : ''}`} onClick={() => setActiveTab('matches')}>
                             Matches
-                        </button>
-                        {selectedMatch && (
-                            <button className={`tab ${activeTab === 'teamSelection' ? 'active' : ''}`} onClick={() => setActiveTab('teamSelection')}>
-                                Team Selection
-                            </button>
-                        )}
-                        <button className={`tab ${activeTab === 'myTeams' ? 'active' : ''}`} onClick={() => setActiveTab('myTeams')}>
-                            My Teams
                         </button>
                         <button className={`tab ${activeTab === 'contest' ? 'active' : ''}`} onClick={() => setActiveTab('contest')}>
                             Contest
@@ -1490,233 +1143,133 @@ const PLAYERS = [
                             Leaderboard
                         </button>
                         {currentUser.isAdmin && (
-                            <button className={`tab ${activeTab === 'adminPanel' ? 'active' : ''}`} onClick={() => setActiveTab('adminPanel')}>
-                                Admin Panel
-                            </button>
+                            <>
+                                <button className={`tab ${activeTab === 'adminPanel' ? 'active' : ''}`} onClick={() => setActiveTab('adminPanel')}>
+                                    Admin Panel
+                                </button>
+                                <button className={`tab ${activeTab === 'users' ? 'active' : ''}`} onClick={() => setActiveTab('users')}>
+                                    Users
+                                </button>
+                            </>
                         )}
                     </div>
+
+                    {error && <div className="error-box">{error}</div>}
+                    {success && <div className="success-box">{success}</div>}
+
+                    {/* MY TEAM TAB */}
+                    {activeTab === 'myTeam' && (
+                        <div>
+                            <div className="team-summary">
+                                <h3>Team Summary</h3>
+                                <div className="team-counts">
+                                    <div className="count-item">
+                                        <div className="label">Selected</div>
+                                        <div className="value">{selectedPlayers.length}/{TEAM_RULES.totalPlayers}</div>
+                                    </div>
+                                    <div className="count-item">
+                                        <div className="label">Batsmen</div>
+                                        <div className="value">{getTeamCounts().batsmen}</div>
+                                    </div>
+                                    <div className="count-item">
+                                        <div className="label">Bowlers</div>
+                                        <div className="value">{getTeamCounts().bowlers}</div>
+                                    </div>
+                                    <div className="count-item">
+                                        <div className="label">All-Rounders</div>
+                                        <div className="value">{getTeamCounts().allRounders}</div>
+                                    </div>
+                                    <div className="count-item">
+                                        <div className="label">Wicket-Keepers</div>
+                                        <div className="value">{getTeamCounts().wicketKeepers}</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="card">
+                                <h2>Select Your Players</h2>
+                                <div className="player-grid">
+                                    {PLAYERS.map(player => (
+                                        <div 
+                                            key={player.id} 
+                                            className={`player-card ${selectedPlayers.find(p => p.id === player.id) ? 'selected' : ''}`}
+                                            onClick={() => togglePlayerSelection(player)}
+                                        >
+                                            <span className="team-badge">{player.team}</span>
+                                            <h3>{player.name}</h3>
+                                            <span className="role-badge">{player.role}</span>
+                                            <div className="stats">
+                                                <span>Match Rate</span>
+                                                <span>{(player.matchRate * 100).toFixed(0)}%</span>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                                
+                                <button className="btn" onClick={saveTeam} style={{marginTop: '25px', width: '100%'}}>
+                                    Save Team
+                                </button>
+                            </div>
+                        </div>
+                    )}
 
                     {/* MATCHES TAB */}
                     {activeTab === 'matches' && (
                         <div className="card">
-                            <h2>Upcoming Matches</h2>
-                            <div className="match-grid">
-                                {MATCHES.map(match => (
-                                    <div key={match.id} className="match-card" onClick={() => selectMatch(match)}>
-                                        <h3>🏆 {match.team1} vs {match.team2}</h3>
-                                        <p>📅 {match.date}</p>
-                                        <p>📍 {match.venue}</p>
-                                        {myTeams[match.id] && (
-                                            <p style={{marginTop: '12px', color: '#10b981', fontWeight: '600'}}>
-                                                ✅ Team Created
-                                            </p>
+                            <h2>Select Captain & Vice-Captain</h2>
+                            {MATCHES.map(match => {
+                                const matchPlayers = getMatchPlayers(match);
+                                return (
+                                    <div key={match.id} className="match-card">
+                                        <div className="match-header">
+                                            <h3>{match.team1} vs {match.team2}</h3>
+                                            <span className="match-date">{match.date}</span>
+                                        </div>
+                                        <p style={{color: '#94a3b8', marginBottom: '15px'}}>{match.venue}</p>
+                                        
+                                        {matchPlayers.length === 0 ? (
+                                            <p style={{color: '#94a3b8'}}>No players selected from these teams</p>
+                                        ) : (
+                                            <div className="captain-selection">
+                                                <div>
+                                                    <label style={{display: 'block', marginBottom: '10px', color: '#cbd5e1', fontWeight: '600'}}>
+                                                        <span className="captain-label">C</span> Captain (2x)
+                                                    </label>
+                                                    <select 
+                                                        value={captainSelections[match.id]?.captain || ''} 
+                                                        onChange={(e) => setCaptain(match.id, e.target.value)}
+                                                        style={{width: '100%', padding: '12px', background: '#1a1f3a', border: '2px solid #2d3548', borderRadius: '10px', color: 'white'}}
+                                                    >
+                                                        <option value="">Select Captain</option>
+                                                        {matchPlayers.map(p => (
+                                                            <option key={p.id} value={p.id}>{p.name}</option>
+                                                        ))}
+                                                    </select>
+                                                </div>
+                                                
+                                                <div>
+                                                    <label style={{display: 'block', marginBottom: '10px', color: '#cbd5e1', fontWeight: '600'}}>
+                                                        <span className="vice-captain-label">VC</span> Vice-Captain (1.5x)
+                                                    </label>
+                                                    <select 
+                                                        value={captainSelections[match.id]?.viceCaptain || ''} 
+                                                        onChange={(e) => setViceCaptain(match.id, e.target.value)}
+                                                        style={{width: '100%', padding: '12px', background: '#1a1f3a', border: '2px solid #2d3548', borderRadius: '10px', color: 'white'}}
+                                                    >
+                                                        <option value="">Select Vice-Captain</option>
+                                                        {matchPlayers.map(p => (
+                                                            <option key={p.id} value={p.id}>{p.name}</option>
+                                                        ))}
+                                                    </select>
+                                                </div>
+                                            </div>
                                         )}
                                     </div>
-                                ))}
-                            </div>
-                        </div>
-                    )}
-
-                    {/* TEAM SELECTION TAB */}
-                    {activeTab === 'teamSelection' && selectedMatch && (
-                        <div>
-                            <div className="card">
-                                <h2>Select Your Team: {selectedMatch.team1} vs {selectedMatch.team2}</h2>
-                                
-                                {selectedPlayers.length > 0 && (
-                                    <div className="credit-summary">
-                                        <div>Credits Used: {getTotalCredits(selectedPlayers).toFixed(1)} / 100</div>
-                                        <div className="remaining">
-                                            Remaining: {(100 - getTotalCredits(selectedPlayers)).toFixed(1)}
-                                        </div>
-                                    </div>
-                                )}
-                                
-                                <div className="player-grid">
-                                    {getAvailablePlayers().map(player => (
-                                        <div
-                                            key={player.id}
-                                            className={`player-card ${selectedPlayers.find(p => p.id === player.id) ? 'selected' : ''}`}
-                                            onClick={() => togglePlayerSelection(player)}
-                                        >
-                                            <div className="credit-badge">{player.credits}</div>
-                                            <h4>{player.name}</h4>
-                                            <p className="role">{player.role}</p>
-                                            <p className="team">{player.team}</p>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-
-                            <div className="rules-section">
-                                <h3>📋 Rules for Team Creation</h3>
-                                
-                                <div className="rule-item">
-                                    <h4>✅ 1. Team Size</h4>
-                                    <p>You must create a team of <strong>11 players</strong>.</p>
-                                </div>
-
-                                <div className="rule-item">
-                                    <h4>✅ 2. Player Combination (Mandatory Balance)</h4>
-                                    <p>Your 11 players must fit within these limits:</p>
-                                    <table className="rule-table">
-                                        <thead>
-                                            <tr>
-                                                <th>Role</th>
-                                                <th>Minimum</th>
-                                                <th>Maximum</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr><td>Batsmen</td><td>3</td><td>6</td></tr>
-                                            <tr><td>Bowlers</td><td>3</td><td>6</td></tr>
-                                            <tr><td>All-rounders</td><td>1</td><td>4</td></tr>
-                                            <tr><td>Wicketkeeper</td><td>1</td><td>4</td></tr>
-                                        </tbody>
-                                    </table>
-                                    <p>👉 At least <strong>1 wicketkeeper</strong> is compulsory.</p>
-                                </div>
-
-                                <div className="rule-item">
-                                    <h4>✅ 3. Maximum Players From One Team</h4>
-                                    <p>You can select <strong>max 7 players</strong> from one real team.</p>
-                                    <p style={{marginTop: '8px'}}>Example (IND vs AUS):</p>
-                                    <p>• Max 7 from India</p>
-                                    <p>• Max 7 from Australia</p>
-                                </div>
-
-                                <div className="rule-item">
-                                    <h4>✅ 4. Credit Limit (Very Important)</h4>
-                                    <p>• You get <strong>100 credits</strong> to build your team.</p>
-                                    <p>• Each player has a credit value (8.0–11.0+).</p>
-                                    <p>• Total credits of your XI must not exceed 100.</p>
-                                    <p style={{marginTop: '10px'}}><strong>Example:</strong></p>
-                                    <p style={{color: '#6ee7b7'}}>✅ Total credits used = 99.5</p>
-                                    <p style={{color: '#fca5a5'}}>❌ Total credits used = 101 (Not allowed)</p>
-                                </div>
-
-                                <div className="rule-item">
-                                    <h4>✅ 5. Captain & Vice-Captain Rules</h4>
-                                    <p>You must choose:</p>
-                                    <p>• 1 Captain (C)</p>
-                                    <p>• 1 Vice-Captain (VC)</p>
-                                    <p style={{marginTop: '10px'}}><strong>Points Multiplier:</strong></p>
-                                    <table className="rule-table">
-                                        <thead>
-                                            <tr><th>Role</th><th>Multiplier</th></tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr><td>Captain (C)</td><td>2× points</td></tr>
-                                            <tr><td>Vice-Captain (VC)</td><td>1.5× points</td></tr>
-                                        </tbody>
-                                    </table>
-                                    <p style={{marginTop: '10px'}}><strong>Example:</strong></p>
-                                    <p>• Captain scores 50 → You get 100</p>
-                                    <p>• Vice-captain scores 40 → You get 60</p>
-                                    <p style={{marginTop: '10px'}}>👉 Picking C/VC is the <strong>biggest factor in winning</strong>.</p>
-                                </div>
-
-                                <div className="rule-item">
-                                    <h4>✅ 6. Playing XI Rule (Crucial)</h4>
-                                    <p>Only players who actually play the match score points.</p>
-                                    <p style={{color: '#fca5a5'}}>❌ If a player is on the bench → 0 points</p>
-                                    <p style={{marginTop: '10px'}}>So always:</p>
-                                    <p>• Check toss + final playing XI before deadline.</p>
-                                </div>
-
-                                <div className="rule-item">
-                                    <h4>✅ 7. Scoring System</h4>
-                                    <p><strong>Batting:</strong></p>
-                                    <p>• Run: +1 | Four: +1 | Six: +2</p>
-                                    <p>• 50 runs: +8 bonus | 100 runs: +16 bonus</p>
-                                    <p style={{marginTop: '10px'}}><strong>Bowling:</strong></p>
-                                    <p>• Wicket: +25 | 4 Wickets: +8 | 5 Wickets: +16</p>
-                                    <p style={{marginTop: '10px'}}><strong>Fielding:</strong></p>
-                                    <p>• Catch: +8 | Stump: +12 | Run-out: +12</p>
-                                </div>
-                            </div>
-
-                            {selectedPlayers.length > 0 && (
-                                <div className="selected-team">
-                                    <h3>Your Selected Team</h3>
-                                    <p className="count">Selected: {selectedPlayers.length}/11 players</p>
-                                    <div className="selected-players">
-                                        {selectedPlayers.map(player => (
-                                            <div key={player.id} className="selected-player">
-                                                <div>
-                                                    <div className="name">{player.name}</div>
-                                                    <div className="role">{player.role}</div>
-                                                </div>
-                                                <button className="remove-btn" onClick={() => togglePlayerSelection(player)}>×</button>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
-                            )}
-
-                            {selectedPlayers.length === 11 && (
-                                <div className="captain-selection">
-                                    <h3>Select Captain & Vice-Captain</h3>
-                                    <div className="captain-options">
-                                        {selectedPlayers.map(player => (
-                                            <div
-                                                key={player.id}
-                                                className={`captain-option ${captain === player.id || viceCaptain === player.id ? 'selected' : ''}`}
-                                                onClick={() => {
-                                                    if (!captain) {
-                                                        setCaptain(player.id);
-                                                    } else if (!viceCaptain && captain !== player.id) {
-                                                        setViceCaptain(player.id);
-                                                    } else {
-                                                        setCaptain(null);
-                                                        setViceCaptain(null);
-                                                    }
-                                                }}
-                                            >
-                                                {player.name}
-                                                {captain === player.id && <div style={{color: '#f59e0b', fontWeight: '700', marginTop: '5px'}}>Captain (C)</div>}
-                                                {viceCaptain === player.id && <div style={{color: '#3b82f6', fontWeight: '700', marginTop: '5px'}}>Vice-Captain (VC)</div>}
-                                            </div>
-                                        ))}
-                                    </div>
-                                    <button 
-                                        className="btn" 
-                                        onClick={saveTeam}
-                                        disabled={!captain || !viceCaptain}
-                                        style={{marginTop: '20px', width: '100%'}}
-                                    >
-                                        Save Team
-                                    </button>
-                                </div>
-                            )}
-                        </div>
-                    )}
-
-                    {/* MY TEAMS TAB */}
-                    {activeTab === 'myTeams' && (
-                        <div className="card">
-                            <h2>My Teams</h2>
-                            {Object.keys(myTeams).length === 0 ? (
-                                <div>
-                                    <p style={{color: '#94a3b8', marginBottom: '20px'}}>No teams created yet.</p>
-                                    <button className="btn" onClick={() => setActiveTab('matches')}>View Matches</button>
-                                </div>
-                            ) : (
-                                <div className="my-teams-grid">
-                                    {Object.values(myTeams).map(team => (
-                                        <div key={team.matchId} className="team-card">
-                                            <h4>🏏 {team.matchName}</h4>
-                                            <div className="team-players-grid">
-                                                {team.players.map(p => (
-                                                    <div key={p.id} className={`team-player ${p.id === team.captain ? 'captain' : p.id === team.viceCaptain ? 'vc' : ''}`}>
-                                                        {p.name} {p.id === team.captain ? '(C)' : p.id === team.viceCaptain ? '(VC)' : ''}
-                                                    </div>
-                                                ))}
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            )}
+                                );
+                            })}
+                            <button className="btn" onClick={saveTeam} style={{marginTop: '20px', width: '100%'}}>
+                                Save Captain Selections
+                            </button>
                         </div>
                     )}
 
@@ -1726,10 +1279,10 @@ const PLAYERS = [
                             {!contest ? (
                                 currentUser.isAdmin ? (
                                     <div className="card">
-                                        <h2>Create Contest (Admin Only)</h2>
-                                        <div className="info-box">
-                                            <h3>👨‍💼 Admin Instructions</h3>
-                                            <p>Create the main contest for the World Cup. You'll get a code to share with participants.</p>
+                                        <h2>Create Contest</h2>
+                                        <div className="input-group">
+                                            <label>Contest Code</label>
+                                            <input type="text" value={contestCode} onChange={(e) => setContestCode(e.target.value)} placeholder="e.g., WC2026" />
                                         </div>
                                         <div className="input-group">
                                             <label>Contest Name</label>
@@ -1868,7 +1421,7 @@ const PLAYERS = [
                                                 <td style={{fontWeight: '600'}}>{user.name}</td>
                                                 <td>{user.username}</td>
                                                 <td style={{fontSize: '13px', color: '#94a3b8'}}>{user.id}</td>
-                                                <td>{new Date(parseInt(user.id)).toLocaleDateString()}</td>
+                                                <td>{new Date(user.createdAt).toLocaleDateString()}</td>
                                             </tr>
                                         ))}
                                     </tbody>
