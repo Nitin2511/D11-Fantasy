@@ -876,6 +876,8 @@ const firebaseConfig = {
                 try {
                     const { collection, query, where, getDocs, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile } = window.firebaseModules;
                     
+                    console.log('🔍 Step 1: Searching for user with identifier:', identifier);
+                    
                     // Step 1: Query Firestore for user
                     let userData = null;
 
@@ -886,55 +888,88 @@ const firebaseConfig = {
 
                     if (!usernameSnapshot.empty) {
                         userData = usernameSnapshot.docs[0].data();
+                        console.log('✅ Found user by username:', userData);
                     } else {
+                        console.log('❌ Username not found, trying email...');
                         // Try email
                         const emailQuery = query(usersRef, where('email', '==', identifier));
                         const emailSnapshot = await getDocs(emailQuery);
                         
                         if (!emailSnapshot.empty) {
                             userData = emailSnapshot.docs[0].data();
+                            console.log('✅ Found user by email:', userData);
                         }
                     }
 
                     if (!userData) {
+                        console.log('❌ User not found in Firestore');
                         setError('User not found. Please check your username/email.');
                         setLoading(false);
                         return;
                     }
 
+                    console.log('🔍 Step 2: Verifying password...');
+                    console.log('Stored password:', userData.password);
+                    console.log('Entered password:', password);
+                    
                     // Step 2: Verify password
                     if (userData.password !== password) {
+                        console.log('❌ Password mismatch!');
                         setError('Incorrect password. Please try again.');
                         setLoading(false);
                         return;
                     }
+                    
+                    console.log('✅ Password verified!');
 
                     // Step 3: Sign in to Firebase Auth
                     const email = userData.email || `${userData.username}@fantasy.local`;
+                    console.log('🔍 Step 3: Authenticating with Firebase Auth using email:', email);
                     
                     try {
-                        await signInWithEmailAndPassword(window.firebaseAuth, email, password);
+                        const userCred = await signInWithEmailAndPassword(window.firebaseAuth, email, password);
+                        console.log('✅ Signed in successfully!', userCred);
                         setSuccess('Logged in successfully!');
                     } catch (signInError) {
-                        if (signInError.code === 'auth/user-not-found') {
+                        console.log('⚠️ Sign-in failed, error code:', signInError.code);
+                        console.log('Full error:', signInError);
+                        
+                        if (signInError.code === 'auth/user-not-found' || signInError.code === 'auth/invalid-credential') {
                             // Create new Firebase Auth user
-                            const userCredential = await createUserWithEmailAndPassword(window.firebaseAuth, email, password);
+                            console.log('🔧 Creating new Firebase Auth account...');
                             
-                            if (userData.name) {
-                                await updateProfile(userCredential.user, {
-                                    displayName: userData.name
-                                });
+                            try {
+                                const userCredential = await createUserWithEmailAndPassword(window.firebaseAuth, email, password);
+                                console.log('✅ Account created successfully!', userCredential);
+                                
+                                if (userData.name) {
+                                    await updateProfile(userCredential.user, {
+                                        displayName: userData.name
+                                    });
+                                }
+                                
+                                setSuccess('Account created and logged in successfully!');
+                            } catch (createError) {
+                                console.log('❌ Account creation failed:', createError.code, createError.message);
+                                
+                                if (createError.code === 'auth/email-already-in-use') {
+                                    setError('Email already registered with different password. Please contact admin.');
+                                } else if (createError.code === 'auth/weak-password') {
+                                    setError('Password must be at least 6 characters long.');
+                                } else {
+                                    throw createError;
+                                }
                             }
-                            
-                            setSuccess('Account created and logged in successfully!');
+                        } else if (signInError.code === 'auth/wrong-password') {
+                            setError('Firebase Auth password mismatch. Contact admin to reset.');
                         } else {
                             throw signInError;
                         }
                     }
 
                 } catch (error) {
-                    console.error('Login error:', error);
-                    setError(error.message || 'Login failed. Please try again.');
+                    console.error('❌ Login error:', error);
+                    setError(`Error: ${error.code || error.message || 'Login failed'}`);
                 } finally {
                     setLoading(false);
                 }
