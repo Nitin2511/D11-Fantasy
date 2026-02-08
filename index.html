@@ -6,17 +6,16 @@
     <title>T20 World Cup 2026 Fantasy League</title>
     
     <!-- React -->
-    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     
     <!-- Firebase v9 (Modular SDK) -->
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
-        import { getFirestore, collection, query, where, getDocs, doc, setDoc, getDoc, addDoc, updateDoc, deleteDoc, orderBy, onSnapshot, writeBatch, Timestamp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+        import { getFirestore, collection, query, where, getDocs, addDoc, orderBy, Timestamp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
 
-        // Firebase Configuration
         const firebaseConfig = {
             apiKey: "AIzaSyDacks7Qnk42D2898leU_kgG8DZsYTFxCw",
             authDomain: "t20-fantasy-contest.firebaseapp.com",
@@ -27,33 +26,25 @@
             measurementId: "G-LYY944KN99"
         };
 
-        // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
         
-        // Make globally available
         window.firebaseAuth = auth;
         window.firebaseDb = db;
         window.firebaseModules = {
-            collection, query, where, getDocs, doc, setDoc, getDoc, addDoc, 
-            updateDoc, deleteDoc, orderBy, onSnapshot, writeBatch,
-            signInWithEmailAndPassword, createUserWithEmailAndPassword,
-            signOut, onAuthStateChanged, Timestamp
+            collection, query, where, getDocs, addDoc, orderBy,
+            signInWithEmailAndPassword, signOut, onAuthStateChanged, Timestamp
         };
         window.firebaseReady = true;
         
-        console.log("✅ Firebase initialized successfully!");
+        console.log("✅ Firebase initialized");
     </script>
 
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Exo+2:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         
         body {
             font-family: 'Exo 2', sans-serif;
@@ -67,10 +58,7 @@
         body::before {
             content: '';
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
+            top: 0; left: 0; right: 0; bottom: 0;
             background: 
                 radial-gradient(circle at 20% 30%, rgba(16, 185, 129, 0.1) 0%, transparent 50%),
                 radial-gradient(circle at 80% 70%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
@@ -131,9 +119,7 @@
             backdrop-filter: blur(10px);
         }
 
-        .logout-btn:hover {
-            background: rgba(255,255,255,0.3);
-        }
+        .logout-btn:hover { background: rgba(255,255,255,0.3); }
 
         .tabs {
             display: flex;
@@ -177,10 +163,7 @@
             font-size: 1.8rem;
         }
 
-        .match-list {
-            display: grid;
-            gap: 20px;
-        }
+        .match-list { display: grid; gap: 20px; }
 
         .match-card {
             background: #1a1f2e;
@@ -240,9 +223,7 @@
             transition: all 0.3s;
         }
 
-        .player-card:hover {
-            border-color: #10b981;
-        }
+        .player-card:hover { border-color: #10b981; }
 
         .player-card.selected {
             border-color: #10b981;
@@ -354,9 +335,7 @@
             gap: 15px;
         }
 
-        .summary-item {
-            text-align: center;
-        }
+        .summary-item { text-align: center; }
 
         .summary-label {
             font-size: 0.9rem;
@@ -419,9 +398,7 @@
             font-size: 2rem;
         }
 
-        .form-group {
-            margin-bottom: 20px;
-        }
+        .form-group { margin-bottom: 20px; }
 
         .form-group label {
             display: block;
@@ -492,39 +469,6 @@
             border-color: #10b981;
         }
 
-        .leaderboard-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .leaderboard-table th,
-        .leaderboard-table td {
-            padding: 15px;
-            text-align: left;
-            border-bottom: 1px solid #2a3142;
-        }
-
-        .leaderboard-table th {
-            background: #1a1f2e;
-            color: #10b981;
-            font-weight: 700;
-        }
-
-        .leaderboard-table tr:hover {
-            background: rgba(16, 185, 129, 0.05);
-        }
-
-        .rank-badge {
-            display: inline-block;
-            width: 35px;
-            height: 35px;
-            background: linear-gradient(135deg, #10b981, #059669);
-            border-radius: 50%;
-            text-align: center;
-            line-height: 35px;
-            font-weight: 700;
-        }
-
         .admin-badge {
             background: #ef4444;
             color: white;
@@ -535,29 +479,26 @@
             font-weight: 700;
         }
 
-        @media (max-width: 768px) {
-            .header h1 {
-                font-size: 2rem;
-            }
+        .error-display {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid #ef4444;
+            color: #fca5a5;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
 
+        @media (max-width: 768px) {
+            .header h1 { font-size: 2rem; }
             .user-badge, .logout-btn {
                 position: static;
                 display: block;
                 margin: 10px auto;
                 width: fit-content;
             }
-
-            .players-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .tabs {
-                flex-direction: column;
-            }
-
-            .tab {
-                min-width: 100%;
-            }
+            .players-grid { grid-template-columns: 1fr; }
+            .tabs { flex-direction: column; }
+            .tab { min-width: 100%; }
         }
     </style>
 </head>
@@ -572,7 +513,6 @@
             const [loading, setLoading] = useState(true);
 
             useEffect(() => {
-                // Wait for Firebase to initialize
                 const checkAuth = setInterval(() => {
                     if (window.firebaseReady) {
                         clearInterval(checkAuth);
@@ -672,7 +612,7 @@
                                 </button>
                             </form>
                             <div className="auth-toggle">
-                                Contact admin for access credentials
+                                Contact admin for credentials
                             </div>
                         </div>
                     </div>
@@ -709,26 +649,10 @@
                         >
                             👥 My Teams
                         </button>
-                        <button 
-                            className={`tab ${activeTab === 'leaderboard' ? 'active' : ''}`}
-                            onClick={() => setActiveTab('leaderboard')}
-                        >
-                            🏆 Leaderboard
-                        </button>
-                        {user.role === 'admin' && (
-                            <button 
-                                className={`tab ${activeTab === 'admin' ? 'active' : ''}`}
-                                onClick={() => setActiveTab('admin')}
-                            >
-                                ⚙️ Admin
-                            </button>
-                        )}
                     </div>
 
                     {activeTab === 'matches' && <MatchesTab user={user} />}
                     {activeTab === 'my-teams' && <MyTeamsTab user={user} />}
-                    {activeTab === 'leaderboard' && <LeaderboardTab />}
-                    {activeTab === 'admin' && user.role === 'admin' && <AdminTab />}
                 </>
             );
         }
@@ -807,6 +731,7 @@
             const [searchTerm, setSearchTerm] = useState('');
             const [loading, setLoading] = useState(true);
             const [validationErrors, setValidationErrors] = useState([]);
+            const [errorMsg, setErrorMsg] = useState('');
 
             useEffect(() => {
                 loadPlayers();
@@ -814,32 +739,52 @@
 
             const loadPlayers = async () => {
                 try {
-                    // Get match teams (e.g., "Ind vs Pak")
+                    setErrorMsg('');
                     const matchTeams = match.id.split(' vs ').map(t => t.trim());
-                    
                     const allPlayers = [];
                     
                     for (const teamName of matchTeams) {
-                        const { collection, getDocs } = window.firebaseModules;
-                        const teamRef = collection(window.firebaseDb, 'teams', teamName, 'playerName');
-                        const snapshot = await getDocs(teamRef);
-                        
-                        snapshot.forEach(doc => {
-                            const playerData = doc.data();
-                            allPlayers.push({
-                                id: doc.id,
-                                name: doc.id,
-                                team: teamName,
-                                credits: playerData.credits || 10,
-                                playerType: playerData.playerType || 'Batter',
-                                role: mapPlayerTypeToRole(playerData.playerType)
+                        try {
+                            const { collection, getDocs } = window.firebaseModules;
+                            const teamRef = collection(window.firebaseDb, 'teams', teamName, 'playerName');
+                            const snapshot = await getDocs(teamRef);
+                            
+                            snapshot.forEach(doc => {
+                                try {
+                                    const playerData = doc.data();
+                                    const playerId = String(doc.id || '').trim();
+                                    const playerName = playerId;
+                                    
+                                    // Sanitize and validate data
+                                    const credits = parseFloat(playerData.credits) || 10;
+                                    const playerType = String(playerData.playerType || 'Batter').trim();
+                                    const role = mapPlayerTypeToRole(playerType);
+                                    
+                                    allPlayers.push({
+                                        id: playerId,
+                                        name: playerName,
+                                        team: teamName,
+                                        credits: Math.max(5, Math.min(15, credits)), // Clamp between 5-15
+                                        playerType: playerType,
+                                        role: role
+                                    });
+                                } catch (playerError) {
+                                    console.warn('Error processing player:', doc.id, playerError);
+                                }
                             });
-                        });
+                        } catch (teamError) {
+                            console.error(`Error loading team ${teamName}:`, teamError);
+                        }
+                    }
+                    
+                    if (allPlayers.length === 0) {
+                        setErrorMsg('No players found for this match. Please check Firestore data.');
                     }
                     
                     setPlayers(allPlayers);
                 } catch (error) {
                     console.error('Error loading players:', error);
+                    setErrorMsg('Failed to load players. Please try again.');
                 } finally {
                     setLoading(false);
                 }
@@ -847,7 +792,7 @@
 
             const mapPlayerTypeToRole = (playerType) => {
                 if (!playerType) return 'BAT';
-                const type = playerType.toLowerCase();
+                const type = String(playerType).toLowerCase();
                 if (type.includes('keeper') || type.includes('wk')) return 'WK';
                 if (type.includes('all')) return 'AR';
                 if (type.includes('bowl')) return 'BOWL';
@@ -861,7 +806,7 @@
                     errors.push(`Select exactly 11 players (currently ${selectedPlayers.length})`);
                 }
                 
-                const totalCredits = selectedPlayers.reduce((sum, p) => sum + (p.credits || 10), 0);
+                const totalCredits = selectedPlayers.reduce((sum, p) => sum + (parseFloat(p.credits) || 10), 0);
                 if (totalCredits > 100) {
                     errors.push(`Total credits ${totalCredits.toFixed(1)} exceeds limit of 100`);
                 }
@@ -900,18 +845,23 @@
             };
 
             const togglePlayer = (player) => {
-                const isSelected = selectedPlayers.find(p => p.id === player.id);
-                
-                if (isSelected) {
-                    setSelectedPlayers(selectedPlayers.filter(p => p.id !== player.id));
-                    if (captain === player.id) setCaptain(null);
-                    if (viceCaptain === player.id) setViceCaptain(null);
-                } else {
-                    if (selectedPlayers.length < 11) {
-                        setSelectedPlayers([...selectedPlayers, player]);
+                try {
+                    const isSelected = selectedPlayers.find(p => p.id === player.id);
+                    
+                    if (isSelected) {
+                        setSelectedPlayers(selectedPlayers.filter(p => p.id !== player.id));
+                        if (captain === player.id) setCaptain(null);
+                        if (viceCaptain === player.id) setViceCaptain(null);
+                    } else {
+                        if (selectedPlayers.length < 11) {
+                            setSelectedPlayers([...selectedPlayers, player]);
+                        }
                     }
+                    setValidationErrors([]);
+                } catch (error) {
+                    console.error('Error toggling player:', error);
+                    setErrorMsg('Error selecting player. Please try again.');
                 }
-                setValidationErrors([]);
             };
 
             const saveTeam = async () => {
@@ -930,15 +880,15 @@
                         userId: user.uid,
                         matchId: match.id,
                         players: selectedPlayers.map(p => ({
-                            id: p.id,
-                            name: p.name,
-                            team: p.team,
-                            credits: p.credits,
-                            role: p.role
+                            id: String(p.id),
+                            name: String(p.name),
+                            team: String(p.team),
+                            credits: parseFloat(p.credits),
+                            role: String(p.role)
                         })),
-                        captain,
-                        viceCaptain,
-                        totalCredits: selectedPlayers.reduce((sum, p) => sum + (p.credits || 10), 0),
+                        captain: String(captain),
+                        viceCaptain: String(viceCaptain),
+                        totalCredits: selectedPlayers.reduce((sum, p) => sum + (parseFloat(p.credits) || 10), 0),
                         createdAt: Timestamp.now()
                     };
                     
@@ -953,13 +903,18 @@
             };
 
             const filteredPlayers = players.filter(player => {
-                const matchesRole = activeRole === 'ALL' || player.role === activeRole;
-                const matchesSearch = player.name.toLowerCase().includes(searchTerm.toLowerCase());
-                return matchesRole && matchesSearch;
+                try {
+                    const matchesRole = activeRole === 'ALL' || player.role === activeRole;
+                    const matchesSearch = String(player.name || '').toLowerCase().includes(searchTerm.toLowerCase());
+                    return matchesRole && matchesSearch;
+                } catch (error) {
+                    console.error('Error filtering player:', error);
+                    return false;
+                }
             });
 
             const getRoleCount = (role) => selectedPlayers.filter(p => p.role === role).length;
-            const totalCredits = selectedPlayers.reduce((sum, p) => sum + (p.credits || 10), 0);
+            const totalCredits = selectedPlayers.reduce((sum, p) => sum + (parseFloat(p.credits) || 10), 0);
 
             if (loading) {
                 return (
@@ -979,6 +934,12 @@
                     </button>
 
                     <h2>Create Team - {match.id}</h2>
+
+                    {errorMsg && (
+                        <div className="error-display">
+                            <strong>⚠️ Error:</strong> {errorMsg}
+                        </div>
+                    )}
 
                     {validationErrors.length > 0 && (
                         <div className="validation-errors">
@@ -1042,42 +1003,47 @@
 
                     <div className="players-grid">
                         {filteredPlayers.map(player => {
-                            const isSelected = selectedPlayers.find(p => p.id === player.id);
-                            const isCaptain = captain === player.id;
-                            const isVC = viceCaptain === player.id;
-                            const canSelect = selectedPlayers.length < 11 || isSelected;
-                            
-                            return (
-                                <div
-                                    key={player.id}
-                                    className={`player-card ${isSelected ? 'selected' : ''} ${!canSelect ? 'disabled' : ''}`}
-                                    onClick={() => canSelect && togglePlayer(player)}
-                                >
-                                    <div className="player-name">{player.name}</div>
-                                    <div className="player-team">{player.team}</div>
-                                    <div className="player-meta">
-                                        <span className="player-role">{player.role}</span>
-                                        <span className="player-credits">{player.credits} Cr</span>
-                                    </div>
-                                    
-                                    {isSelected && (
-                                        <div className="captain-buttons" onClick={(e) => e.stopPropagation()}>
-                                            <button
-                                                className={`captain-btn ${isCaptain ? 'active-captain' : ''}`}
-                                                onClick={() => setCaptain(player.id)}
-                                            >
-                                                {isCaptain ? '👑 C (2x)' : 'Captain'}
-                                            </button>
-                                            <button
-                                                className={`captain-btn ${isVC ? 'active-vc' : ''}`}
-                                                onClick={() => setViceCaptain(player.id)}
-                                            >
-                                                {isVC ? '⭐ VC (1.5x)' : 'VC'}
-                                            </button>
+                            try {
+                                const isSelected = selectedPlayers.find(p => p.id === player.id);
+                                const isCaptain = captain === player.id;
+                                const isVC = viceCaptain === player.id;
+                                const canSelect = selectedPlayers.length < 11 || isSelected;
+                                
+                                return (
+                                    <div
+                                        key={player.id}
+                                        className={`player-card ${isSelected ? 'selected' : ''} ${!canSelect ? 'disabled' : ''}`}
+                                        onClick={() => canSelect && togglePlayer(player)}
+                                    >
+                                        <div className="player-name">{player.name}</div>
+                                        <div className="player-team">{player.team}</div>
+                                        <div className="player-meta">
+                                            <span className="player-role">{player.role}</span>
+                                            <span className="player-credits">{player.credits} Cr</span>
                                         </div>
-                                    )}
-                                </div>
-                            );
+                                        
+                                        {isSelected && (
+                                            <div className="captain-buttons" onClick={(e) => e.stopPropagation()}>
+                                                <button
+                                                    className={`captain-btn ${isCaptain ? 'active-captain' : ''}`}
+                                                    onClick={() => setCaptain(player.id)}
+                                                >
+                                                    {isCaptain ? '👑 C (2x)' : 'Captain'}
+                                                </button>
+                                                <button
+                                                    className={`captain-btn ${isVC ? 'active-vc' : ''}`}
+                                                    onClick={() => setViceCaptain(player.id)}
+                                                >
+                                                    {isVC ? '⭐ VC (1.5x)' : 'VC'}
+                                                </button>
+                                            </div>
+                                        )}
+                                    </div>
+                                );
+                            } catch (renderError) {
+                                console.error('Error rendering player:', player.id, renderError);
+                                return null;
+                            }
                         })}
                     </div>
 
@@ -1157,28 +1123,6 @@
                             ))}
                         </div>
                     )}
-                </div>
-            );
-        }
-
-        function LeaderboardTab() {
-            return (
-                <div className="card">
-                    <h2>Leaderboard</h2>
-                    <p style={{ textAlign: 'center', padding: '40px', color: '#8b92a7' }}>
-                        Leaderboard will be available after matches are completed.
-                    </p>
-                </div>
-            );
-        }
-
-        function AdminTab() {
-            return (
-                <div className="card">
-                    <h2>⚙️ Admin Panel</h2>
-                    <p style={{ textAlign: 'center', padding: '40px', color: '#8b92a7' }}>
-                        Admin features coming soon...
-                    </p>
                 </div>
             );
         }
